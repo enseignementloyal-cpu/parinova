@@ -2066,7 +2066,7 @@ app.get('/api/admin/stats', requireAdmin, async (req, res) => {
       ['price_annuel',     '18000'],
       ['alert_days',       '7'],
       ['football_api_key', process.env.FOOTBALL_API_KEY || ''],
-      ['default_server',   process.env.SERVER_URL || ''],
+      ['default_server',   process.env.SERVER_URL || 'https://parinova-rmkp.onrender.com'],
     ];
     for (const [k, v] of defaultConfig) {
       await pool.query(

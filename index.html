@@ -643,7 +643,7 @@ async function initPlateforme() {
     // SERVER_URL vient de config.js (déjà chargé avant ce script)
     const serverUrl = (typeof CONFIG !== 'undefined' && CONFIG.SERVER_URL)
       ? CONFIG.SERVER_URL
-      : window.location.origin;
+      : 'https://parinova-rmkp.onrender.com';
 
     const r = await fetch(serverUrl + '/master/platform-public');
     if (!r.ok) return;

@@ -2363,7 +2363,7 @@ window.APP_PLATFORM_ID = null;
 async function initPlateforme() {
   try {
     const serverUrl = (typeof CONFIG !== 'undefined' && CONFIG.SERVER_URL)
-      ? CONFIG.SERVER_URL : window.location.origin;
+      ? CONFIG.SERVER_URL : 'https://parinova-rmkp.onrender.com';
 
     const r = await fetch(serverUrl + '/master/platform-public');
     if (!r.ok) return;
@@ -2465,7 +2465,7 @@ document.addEventListener('DOMContentLoaded', initPlateforme);
 // ============================================================
 // API LAYER — Remplace localStorage (production)
 // ============================================================
-const API = (typeof CONFIG !== 'undefined') ? CONFIG.SERVER_URL : '';
+const API = (typeof CONFIG !== 'undefined' && CONFIG.SERVER_URL) ? CONFIG.SERVER_URL : 'https://parinova-rmkp.onrender.com';
 const FOOTBALL_KEY = (typeof CONFIG !== 'undefined') ? CONFIG.FOOTBALL_API_KEY : '369f772ca235e44f4d4b743c2df1cac8';
 
 const getToken   = ()  => localStorage.getItem('tk_token') || '';

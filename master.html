@@ -195,7 +195,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <h2>ACCÈS RESTREINT · MASTER UNIQUEMENT</h2>
       <div class="fg">
         <label>URL DU SERVEUR</label>
-        <input type="text" id="srv-url" placeholder="https://mon-serveur.onrender.com">
+        <input type="text" id="srv-url" placeholder="https://mon-serveur.onrender.com" value="https://parinova-rmkp.onrender.com">
       </div>
       <div class="fg">
         <label>IDENTIFIANT MASTER</label>
@@ -582,14 +582,16 @@ async function startApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('master-name-display').textContent = masterUsername;
-  if (API_BASE) document.getElementById('srv-url').value = API_BASE;
+  if (!API_BASE) API_BASE = 'https://parinova-rmkp.onrender.com';
+  document.getElementById('srv-url').value = API_BASE;
   await loadConfig();
   loadDashboard();
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('c-start').value = new Date().toISOString().split('T')[0];
-  if (API_BASE) document.getElementById('srv-url').value = API_BASE;
+  if (!API_BASE) API_BASE = 'https://parinova-rmkp.onrender.com';
+  document.getElementById('srv-url').value = API_BASE;
   if (MASTER_TOKEN && API_BASE) {
     try {
       const r = await fetch(API_BASE + '/master/me', { headers:{'X-Master-Token': MASTER_TOKEN} });
