@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MASTER · Gestionnaire de Plateformes</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --bg:#05060f;--bg2:#0c0e1e;--border:rgba(255,255,255,0.07);
+  --gold:#e8b800;--gold2:#ffd84d;--red:#ff3b5c;--green:#00e59b;
+  --blue:#00b4ff;--purple:#9b5cff;--text:#e8eaf6;--muted:#6b7194;
+  --card:rgba(255,255,255,0.03);--card2:rgba(255,255,255,0.06);
+  --r:14px;--sh:0 8px 32px rgba(0,0,0,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;}
+button{cursor:pointer;font-family:inherit;}
+input,select{font-family:inherit;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(232,184,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(232,184,0,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg);}
+.login-box{width:100%;max-width:440px;padding:20px;animation:fadeUp .5s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.login-logo{text-align:center;margin-bottom:28px;}
+.login-logo .mbadge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:4px;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.login-logo h1{font-family:'Rajdhani',sans-serif;font-size:2.8rem;font-weight:700;color:var(--gold);letter-spacing:4px;line-height:1;}
+.login-logo p{color:var(--muted);font-size:11px;letter-spacing:2px;margin-top:6px;}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:var(--sh);}
+.login-card h2{font-size:.85rem;margin-bottom:24px;color:var(--muted);font-weight:400;letter-spacing:1px;}
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:11px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;font-weight:600;}
+.fg input,.fg select{width:100%;padding:11px 15px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;transition:.2s;}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,0,.1);}
+.btn-master-login{width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#c99800,var(--gold2));color:#000;font-weight:700;font-size:15px;letter-spacing:1px;font-family:'Rajdhani',sans-serif;transition:.2s;cursor:pointer;}
+.btn-master-login:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,184,0,.3);}
+.login-error{color:var(--red);font-size:13px;margin-top:12px;text-align:center;display:none;}
+
+/* APP LAYOUT */
+#app{display:none;position:relative;z-index:1;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:60px;position:sticky;top:0;z-index:50;}
+.topbar-brand{display:flex;align-items:center;gap:12px;}
+.topbar-brand .badge{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:700;font-size:10px;letter-spacing:3px;padding:3px 10px;border-radius:20px;font-family:'Rajdhani',sans-serif;}
+.topbar-brand h1{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;color:var(--gold);letter-spacing:3px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-admin{font-size:12px;color:var(--muted);}
+.topbar-admin span{color:var(--gold);font-weight:700;}
+.layout{display:flex;min-height:calc(100vh - 60px);}
+
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:16px 10px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+.slabel{font-size:10px;letter-spacing:2px;color:var(--muted);padding:0 10px;margin:14px 0 5px;font-weight:600;display:block;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;transition:.15s;color:var(--muted);font-size:13px;font-weight:500;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;}
+.nav-item i{width:16px;text-align:center;}
+.nav-item:hover{background:var(--card);color:var(--text);}
+.nav-item.active{background:rgba(232,184,0,.1);color:var(--gold);border:1px solid rgba(232,184,0,.15);}
+
+/* CONTENT */
+.content{flex:1;padding:26px;overflow-x:hidden;}
+.tab-content{display:none;}.tab-content.active{display:block;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.sec-title{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:2px;display:flex;align-items:center;gap:10px;}
+.sec-title i{color:var(--gold);}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,var(--gold));}
+.stat-icon{font-size:1.6rem;margin-bottom:8px;opacity:.7;}
+.stat-value{font-family:'Rajdhani',sans-serif;font-size:1.9rem;font-weight:700;line-height:1;}
+.stat-label{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:1px;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border:none;border-radius:10px;font-weight:600;font-size:13px;transition:.2s;display:inline-flex;align-items:center;gap:7px;cursor:pointer;}
+.btn-gold{background:linear-gradient(135deg,#c99800,var(--gold2));color:#000;}
+.btn-gold:hover{box-shadow:0 4px 16px rgba(232,184,0,.3);transform:translateY(-1px);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{border-color:rgba(255,255,255,.2);background:var(--card);}
+.btn-danger{background:rgba(255,59,92,.15);border:1px solid rgba(255,59,92,.3);color:var(--red);}
+.btn-danger:hover{background:rgba(255,59,92,.25);}
+.btn-success{background:rgba(0,229,155,.15);border:1px solid rgba(0,229,155,.3);color:var(--green);}
+.btn-success:hover{background:rgba(0,229,155,.25);}
+.btn-sm{padding:6px 13px;font-size:12px;}
+.btn-xs{padding:4px 9px;font-size:11px;}
+.btn-logout{background:rgba(255,59,92,.15);border:1px solid rgba(255,59,92,.3);color:var(--red);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;transition:.2s;cursor:pointer;}
+.btn-logout:hover{background:rgba(255,59,92,.25);}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;}
+th{padding:11px 14px;text-align:left;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:600;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);}
+td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+
+/* BADGES */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.badge-green{background:rgba(0,229,155,.15);color:var(--green);border:1px solid rgba(0,229,155,.25);}
+.badge-red{background:rgba(255,59,92,.15);color:var(--red);border:1px solid rgba(255,59,92,.25);}
+.badge-gold{background:rgba(232,184,0,.15);color:var(--gold);border:1px solid rgba(232,184,0,.25);}
+.badge-blue{background:rgba(0,180,255,.15);color:var(--blue);border:1px solid rgba(0,180,255,.25);}
+.badge-purple{background:rgba(155,92,255,.15);color:var(--purple);border:1px solid rgba(155,92,255,.25);}
+
+/* ALERT */
+.alert{padding:12px 16px;border-radius:10px;margin-bottom:14px;display:none;font-size:13px;}
+.alert-success{background:rgba(0,229,155,.1);border:1px solid rgba(0,229,155,.3);color:var(--green);}
+.alert-danger{background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.3);color:var(--red);}
+
+/* FORM GRID */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+.fg-full{grid-column:1/-1;}
+.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
+.empty{text-align:center;padding:45px 20px;color:var(--muted);}
+.empty i{font-size:2.5rem;margin-bottom:10px;opacity:.3;display:block;}
+
+/* PLATFORM ROW */
+.prow{display:grid;grid-template-columns:44px 1fr auto auto auto;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--card);margin-bottom:9px;transition:.2s;}
+.prow:hover{background:var(--card2);}
+.pavatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:#000;background:linear-gradient(135deg,var(--gold),var(--gold2));flex-shrink:0;}
+.pname{font-weight:700;font-size:14px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
+.pmeta{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* EXPIRY PILLS */
+.epill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.epill-ok{background:rgba(0,229,155,.1);color:var(--green);border:1px solid rgba(0,229,155,.2);}
+.epill-warn{background:rgba(232,184,0,.1);color:var(--gold);border:1px solid rgba(232,184,0,.2);}
+.epill-danger{background:rgba(255,59,92,.1);color:var(--red);border:1px solid rgba(255,59,92,.2);}
+.epill-expired{background:rgba(100,100,100,.1);color:var(--muted);border:1px solid rgba(100,100,100,.2);}
+
+/* PLAN CARDS */
+.plan-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0;}
+.plan-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:.2s;}
+.plan-card:hover{border-color:rgba(232,184,0,.4);background:rgba(232,184,0,.05);}
+.plan-card.selected{border-color:var(--gold);background:rgba(232,184,0,.1);}
+.plan-card .picon{font-size:1.8rem;margin-bottom:6px;}
+.plan-card .pnm{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:1px;}
+.plan-card .pdur{font-size:10px;color:var(--muted);margin-top:2px;}
+.plan-card .pprice{font-size:1rem;font-weight:700;color:var(--gold);margin-top:6px;}
+
+/* SEARCH BAR */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0 13px;}
+.search-bar i{color:var(--muted);}
+.search-bar input{background:none;border:none;padding:9px 0;color:var(--text);width:190px;}
+.search-bar input:focus{outline:none;}
+.search-bar input::placeholder{color:var(--muted);}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal.open{display:flex;}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s ease both;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-head h3{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;}
+.modal-close:hover{color:var(--text);}
+.mtabs{display:flex;gap:7px;margin-bottom:18px;}
+.mtab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--muted);transition:.2s;}
+.mtab.active{background:rgba(232,184,0,.15);color:var(--gold);border-color:rgba(232,184,0,.3);}
+
+/* REV BARS */
+.rev-bar{margin:9px 0;}
+.rev-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;}
+.rev-bar-track{height:5px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
+.rev-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 1s ease;}
+
+/* CONFIG PREVIEW */
+.config-pre{background:rgba(0,0,0,.6);border-radius:10px;padding:12px;font-size:12px;font-family:monospace;color:var(--green);white-space:pre-wrap;max-height:200px;overflow-y:auto;margin-top:10px;display:none;}
+
+/* NAME PREVIEW */
+.name-prev{margin-top:14px;display:none;}
+.name-prev-inner{background:linear-gradient(135deg,#0d2151,#061a2e);border-radius:12px;padding:13px 18px;display:inline-flex;align-items:center;gap:12px;}
+.name-prev-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f5c800,#fff8dc);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-family:'Rajdhani',sans-serif;}
+.name-prev-text .nm{font-family:'Rajdhani',sans-serif;font-weight:900;color:#f5c800;letter-spacing:3px;font-size:1rem;}
+.name-prev-text .sl{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;}
+
+@media(max-width:768px){.sidebar{display:none;}.content{padding:14px;}.stats-row{grid-template-columns:1fr 1fr;}.prow{grid-template-columns:44px 1fr auto;}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="mbadge">NIVEAU SUPRÊME</div>
+      <h1>MASTER</h1>
+      <p>GESTIONNAIRE DE PLATEFORMES DE JEU</p>
+    </div>
+    <div class="login-card">
+      <h2>ACCÈS RESTREINT · MASTER UNIQUEMENT</h2>
+      <div class="fg">
+        <label>URL DU SERVEUR</label>
+        <input type="text" id="srv-url" placeholder="https://mon-serveur.onrender.com">
+      </div>
+      <div class="fg">
+        <label>IDENTIFIANT MASTER</label>
+        <input type="text" id="m-user" placeholder="master" autocomplete="off">
+      </div>
+      <div class="fg">
+        <label>MOT DE PASSE</label>
+        <input type="password" id="m-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-master-login" onclick="doLogin()"><i class="fas fa-shield-halved"></i> &nbsp;CONNEXION MASTER</button>
+      <div id="login-err" class="login-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="badge">MASTER</div>
+      <h1>PLATFORM MANAGER</h1>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-admin">Connecté: <span id="master-name-display">Master</span></div>
+      <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <span class="slabel">TABLEAU DE BORD</span>
+      <button class="nav-item active" onclick="showTab('dashboard')" id="nav-dashboard"><i class="fas fa-chart-pie"></i> Vue globale</button>
+      <span class="slabel">PLATEFORMES</span>
+      <button class="nav-item" onclick="showTab('platforms')" id="nav-platforms"><i class="fas fa-gamepad"></i> Toutes les plateformes</button>
+      <button class="nav-item" onclick="showTab('create')" id="nav-create"><i class="fas fa-plus-circle"></i> Nouvelle plateforme</button>
+      <span class="slabel">ABONNEMENTS</span>
+      <button class="nav-item" onclick="showTab('subscriptions')" id="nav-subscriptions"><i class="fas fa-calendar-check"></i> Gérer abonnements</button>
+      <button class="nav-item" onclick="showTab('expiring')" id="nav-expiring"><i class="fas fa-clock"></i> Expirations proches</button>
+      <span class="slabel">FINANCES</span>
+      <button class="nav-item" onclick="showTab('revenue')" id="nav-revenue"><i class="fas fa-coins"></i> Revenus & Frais</button>
+      <button class="nav-item" onclick="showTab('payments')" id="nav-payments"><i class="fas fa-receipt"></i> Paiements</button>
+      <span class="slabel">SYSTÈME</span>
+      <button class="nav-item" onclick="showTab('settings')" id="nav-settings"><i class="fas fa-gear"></i> Paramètres</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div id="tab-dashboard" class="tab-content active">
+        <div class="sec-head">
+          <div class="sec-title"><i class="fas fa-chart-pie"></i> VUE GLOBALE</div>
+          <button class="btn btn-outline btn-sm" onclick="loadDashboard()"><i class="fas fa-sync-alt"></i> Actualiser</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card" style="--accent:var(--gold)"><div class="stat-icon">🎮</div><div class="stat-value" id="st-total">—</div><div class="stat-label">TOTAL PLATEFORMES</div></div>
+          <div class="stat-card" style="--accent:var(--green)"><div class="stat-icon">✅</div><div class="stat-value" id="st-active">—</div><div class="stat-label">ABONNEMENTS VALIDES</div></div>
+          <div class="stat-card" style="--accent:var(--red)"><div class="stat-icon">⚠️</div><div class="stat-value" id="st-expiring">—</div><div class="stat-label">EXPIRENT BIENTÔT</div></div>
+          <div class="stat-card" style="--accent:var(--blue)"><div class="stat-icon">💰</div><div class="stat-value" id="st-revenue">—</div><div class="stat-label">REVENUS TOTAUX</div></div>
+        </div>
+        <div class="card">
+          <div class="sec-title" style="font-size:1rem;margin-bottom:16px;"><i class="fas fa-list"></i> PLATEFORMES RÉCENTES</div>
+          <div id="dash-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
+        </div>
+      </div>
+
+      <!-- PLATEFORMES -->
+      <div id="tab-platforms" class="tab-content">
+        <div class="sec-head">
+          <div class="sec-title"><i class="fas fa-gamepad"></i> TOUTES LES PLATEFORMES</div>
+          <div style="display:flex;gap:10px;">
+            <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="plat-search" placeholder="Rechercher..." oninput="filterPlatforms()"></div>
+            <button class="btn btn-gold btn-sm" onclick="showTab('create')"><i class="fas fa-plus"></i> Nouvelle</button>
+          </div>
+        </div>
+        <div id="plat-alert" class="alert"></div>
+        <div id="plat-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
+      </div>
+
+      <!-- CRÉER -->
+      <div id="tab-create" class="tab-content">
+        <div class="sec-head"><div class="sec-title"><i class="fas fa-plus-circle"></i> NOUVELLE PLATEFORME</div></div>
+        <div id="create-alert" class="alert"></div>
+        <div class="card">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-tag"></i> IDENTITÉ</div>
+          <div class="form-grid">
+            <div class="fg"><label>NOM PLATEFORME *</label><input type="text" id="c-name" placeholder="Ex: Mama Paryaj..." oninput="previewName()"></div>
+            <div class="fg"><label>SLOGAN</label><input type="text" id="c-slogan" placeholder="Jwe ak konfyans !"></div>
+            <div class="fg"><label>EMAIL</label><input type="email" id="c-email" placeholder="info@plateforme.com"></div>
+            <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="c-phone" placeholder="+509 00 00 0000"></div>
+            <div class="fg"><label>ADRESSE</label><input type="text" id="c-address" placeholder="Port-au-Prince, Haïti"></div>
+            <div class="fg"><label>URL SERVEUR BACKEND</label><input type="text" id="c-server" placeholder="https://....onrender.com"></div>
+          </div>
+          <div class="name-prev" id="name-prev">
+            <div class="name-prev-inner">
+              <div class="name-prev-av" id="prev-av">T</div>
+              <div class="name-prev-text"><div class="nm" id="prev-nm">NOM</div><div class="sl" id="prev-sl">Slogan</div></div>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-top:6px;"><i class="fas fa-eye"></i> Aperçu branding</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-user-tie"></i> PROPRIÉTAIRE</div>
+          <div class="form-grid">
+            <div class="fg"><label>NOM COMPLET *</label><input type="text" id="c-owner-name" placeholder="Jean Dupont"></div>
+            <div class="fg"><label>EMAIL *</label><input type="email" id="c-owner-email" placeholder="jean@exemple.com"></div>
+            <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="c-owner-phone" placeholder="+509 00 00 0000"></div>
+            <div class="fg"><label>MOT DE PASSE ADMIN *</label><input type="password" id="c-owner-pwd" placeholder="Minimum 8 caractères"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-calendar-check"></i> ABONNEMENT</div>
+          <div class="plan-cards" id="plan-cards-create">
+            <div class="plan-card selected" data-plan="test" onclick="selectPlan('test')"><div class="picon">🧪</div><div class="pnm">TEST</div><div class="pdur">7 jours</div><div class="pprice" id="pp-test">Gratuit</div></div>
+            <div class="plan-card" data-plan="mensuel" onclick="selectPlan('mensuel')"><div class="picon">📅</div><div class="pnm">MENSUEL</div><div class="pdur">30 jours</div><div class="pprice" id="pp-mensuel">—</div></div>
+            <div class="plan-card" data-plan="semestriel" onclick="selectPlan('semestriel')"><div class="picon">📆</div><div class="pnm">SEMESTRIEL</div><div class="pdur">180 jours</div><div class="pprice" id="pp-semestriel">—</div></div>
+            <div class="plan-card" data-plan="annuel" onclick="selectPlan('annuel')"><div class="picon">🏆</div><div class="pnm">ANNUEL</div><div class="pdur">365 jours</div><div class="pprice" id="pp-annuel">—</div></div>
+          </div>
+          <input type="hidden" id="c-plan" value="test">
+          <div class="form-grid" style="margin-top:10px;">
+            <div class="fg"><label>DATE DÉBUT</label><input type="date" id="c-start"></div>
+            <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="c-fee" placeholder="0" min="0"></div>
+            <div class="fg"><label>NOTES</label><input type="text" id="c-notes" placeholder="Promotion..."></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-key"></i> ACCÈS</div>
+          <div class="form-grid">
+            <div class="fg"><label>CODE STAFF SECRET</label><input type="text" id="c-staff" placeholder="Auto-généré si vide"></div>
+            <div class="fg"><label>CLÉ API FOOTBALL</label><input type="text" id="c-football" placeholder="Laisser vide = par défaut"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:18px;">
+          <button class="btn btn-gold" onclick="createPlatform()"><i class="fas fa-save"></i> Créer la plateforme</button>
+          <button class="btn btn-outline" onclick="resetCreateForm()"><i class="fas fa-times"></i> Réinitialiser</button>
+        </div>
+      </div>
+
+      <!-- ABONNEMENTS -->
+      <div id="tab-subscriptions" class="tab-content">
+        <div class="sec-head"><div class="sec-title"><i class="fas fa-calendar-check"></i> GESTION DES ABONNEMENTS</div></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>PLATEFORME</th><th>PROPRIÉTAIRE</th><th>PLAN</th><th>DÉBUT</th><th>EXPIRATION</th><th>STATUT</th><th>FRAIS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="sub-tbody"><tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- EXPIRATIONS -->
+      <div id="tab-expiring" class="tab-content">
+        <div class="sec-head">
+          <div class="sec-title"><i class="fas fa-clock"></i> EXPIRATIONS PROCHES</div>
+          <button class="btn btn-outline btn-sm" onclick="loadExpiring()"><i class="fas fa-sync-alt"></i></button>
+        </div>
+        <div id="expiring-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
+      </div>
+
+      <!-- REVENUS -->
+      <div id="tab-revenue" class="tab-content">
+        <div class="sec-head"><div class="sec-title"><i class="fas fa-coins"></i> REVENUS & FRAIS</div></div>
+        <div class="stats-row">
+          <div class="stat-card" style="--accent:var(--green)"><div class="stat-icon">💵</div><div class="stat-value" id="rev-total">—</div><div class="stat-label">REVENUS TOTAUX</div></div>
+          <div class="stat-card" style="--accent:var(--gold)"><div class="stat-icon">⏳</div><div class="stat-value" id="rev-pending">—</div><div class="stat-label">EN ATTENTE</div></div>
+        </div>
+        <div class="card">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-chart-bar"></i> PAR TYPE DE PLAN</div>
+          <div id="rev-bars"></div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-list"></i> PAR PLATEFORME</div>
+          <div class="table-wrap"><table><thead><tr><th>PLATEFORME</th><th>PLAN</th><th>FRAIS</th><th>PAIEMENT</th><th>ACTION</th></tr></thead><tbody id="rev-tbody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- PAIEMENTS -->
+      <div id="tab-payments" class="tab-content">
+        <div class="sec-head"><div class="sec-title"><i class="fas fa-receipt"></i> HISTORIQUE PAIEMENTS</div></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>DATE</th><th>PLATEFORME</th><th>PLAN</th><th>MONTANT</th><th>MODE</th><th>STATUT</th><th>ACTION</th></tr></thead>
+          <tbody id="pay-tbody"><tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- PARAMÈTRES -->
+      <div id="tab-settings" class="tab-content">
+        <div class="sec-head">
+          <div class="sec-title"><i class="fas fa-gear"></i> PARAMÈTRES MASTER</div>
+          <button class="btn btn-gold btn-sm" onclick="saveSettings()"><i class="fas fa-save"></i> Enregistrer</button>
+        </div>
+        <div id="set-alert" class="alert"></div>
+        <div class="card">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-lock"></i> SÉCURITÉ</div>
+          <div class="form-grid">
+            <div class="fg"><label>NOUVEL IDENTIFIANT</label><input type="text" id="s-user" placeholder="Laisser vide = inchangé"></div>
+            <div class="fg"><label>NOUVEAU MOT DE PASSE</label><input type="password" id="s-pwd" placeholder="Laisser vide = inchangé"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-dollar-sign"></i> TARIFS ABONNEMENTS (HTG)</div>
+          <div class="form-grid">
+            <div class="fg"><label>PLAN TEST (7j)</label><input type="number" id="s-price-test" min="0"></div>
+            <div class="fg"><label>PLAN MENSUEL (30j)</label><input type="number" id="s-price-mensuel" min="0"></div>
+            <div class="fg"><label>PLAN SEMESTRIEL (180j)</label><input type="number" id="s-price-semestriel" min="0"></div>
+            <div class="fg"><label>PLAN ANNUEL (365j)</label><input type="number" id="s-price-annuel" min="0"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-globe"></i> CONFIGURATION GLOBALE</div>
+          <div class="form-grid">
+            <div class="fg"><label>CLÉ API FOOTBALL PAR DÉFAUT</label><input type="text" id="s-football" placeholder="votre_clé_api"></div>
+            <div class="fg"><label>SERVEUR PAR DÉFAUT</label><input type="text" id="s-server" placeholder="https://...onrender.com"></div>
+            <div class="fg"><label>ALERTER AVANT (jours)</label><input type="number" id="s-alert-days" value="7" min="1" max="30"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
+</div><!-- /app -->
+
+<!-- ══ MODAL PLATEFORME ══ -->
+<div class="modal" id="modal-platform">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="mp-title">PLATEFORME</h3>
+      <button class="modal-close" onclick="closeModal('modal-platform')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="mp-alert" class="alert"></div>
+    <div class="mtabs">
+      <button class="mtab active" id="mt-info" onclick="switchMTab('info')">Infos</button>
+      <button class="mtab" id="mt-sub" onclick="switchMTab('sub')">Abonnement</button>
+      <button class="mtab" id="mt-config" onclick="switchMTab('config')">Configuration</button>
+    </div>
+    <div id="mtp-info">
+      <div class="form-grid">
+        <div class="fg"><label>NOM PLATEFORME</label><input type="text" id="mp-name"></div>
+        <div class="fg"><label>SLOGAN</label><input type="text" id="mp-slogan"></div>
+        <div class="fg"><label>EMAIL</label><input type="email" id="mp-email"></div>
+        <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="mp-phone"></div>
+        <div class="fg fg-full"><label>ADRESSE</label><input type="text" id="mp-address"></div>
+        <div class="fg fg-full"><label>URL SERVEUR</label><input type="text" id="mp-server"></div>
+      </div>
+    </div>
+    <div id="mtp-sub" style="display:none;">
+      <div class="form-grid">
+        <div class="fg"><label>PLAN</label>
+          <select id="mp-plan" onchange="updateEndDate()">
+            <option value="test">TEST (7j)</option><option value="mensuel">MENSUEL (30j)</option>
+            <option value="semestriel">SEMESTRIEL (180j)</option><option value="annuel">ANNUEL (365j)</option>
+          </select>
+        </div>
+        <div class="fg"><label>DATE DÉBUT</label><input type="date" id="mp-start" onchange="updateEndDate()"></div>
+        <div class="fg"><label>DATE EXPIRATION</label><input type="date" id="mp-end"></div>
+        <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="mp-fee" min="0"></div>
+        <div class="fg"><label>STATUT PAIEMENT</label>
+          <select id="mp-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
+        </div>
+        <div class="fg fg-full"><label>NOTES</label><input type="text" id="mp-notes"></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-success btn-sm" onclick="openRenewModal()"><i class="fas fa-redo"></i> Renouveler</button>
+        <button class="btn btn-danger btn-sm" onclick="togglePlatform()"><i class="fas fa-ban"></i> Suspendre / Réactiver</button>
+      </div>
+    </div>
+    <div id="mtp-config" style="display:none;">
+      <div class="form-grid">
+        <div class="fg"><label>NOM PROPRIÉTAIRE</label><input type="text" id="mp-owner-name"></div>
+        <div class="fg"><label>EMAIL PROPRIÉTAIRE</label><input type="email" id="mp-owner-email"></div>
+        <div class="fg"><label>TÉLÉPHONE PROPRIÉTAIRE</label><input type="text" id="mp-owner-phone"></div>
+        <div class="fg"><label>MOT DE PASSE (vide = inchangé)</label><input type="password" id="mp-owner-pwd" placeholder="••••••••"></div>
+        <div class="fg"><label>CODE STAFF</label><input type="text" id="mp-staff"></div>
+        <div class="fg"><label>CLÉ API FOOTBALL</label><input type="text" id="mp-football"></div>
+      </div>
+      <hr class="divider">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-gold btn-sm" onclick="generateConfig()"><i class="fas fa-download"></i> Générer config.js</button>
+        <button class="btn btn-outline btn-sm" onclick="copyConfig()"><i class="fas fa-copy"></i> Copier</button>
+      </div>
+      <div id="config-pre" class="config-pre"></div>
+    </div>
+    <hr class="divider">
+    <input type="hidden" id="mp-id">
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-danger btn-sm" onclick="deletePlatform()"><i class="fas fa-trash"></i> Supprimer</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-platform')">Annuler</button>
+      <button class="btn btn-gold btn-sm" onclick="savePlatform()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL RENOUVELLEMENT ══ -->
+<div class="modal" id="modal-renew">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-head">
+      <h3>RENOUVELER ABONNEMENT</h3>
+      <button class="modal-close" onclick="closeModal('modal-renew')"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="color:var(--muted);margin-bottom:18px;font-size:13px;">Plateforme: <strong id="renew-name" style="color:var(--gold)"></strong></p>
+    <div class="fg"><label>NOUVEAU PLAN</label>
+      <select id="renew-plan">
+        <option value="mensuel">MENSUEL (30j)</option><option value="semestriel">SEMESTRIEL (180j)</option>
+        <option value="annuel">ANNUEL (365j)</option><option value="test">TEST (7j)</option>
+      </select>
+    </div>
+    <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="renew-fee" min="0"></div>
+    <div class="fg"><label>STATUT PAIEMENT</label>
+      <select id="renew-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px;">
+      <button class="btn btn-outline" onclick="closeModal('modal-renew')">Annuler</button>
+      <button class="btn btn-gold" onclick="confirmRenew()"><i class="fas fa-check"></i> Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  CONSTANTES
+// ══════════════════════════════════════════════════════
+const PLAN_DAYS   = { test:7, mensuel:30, semestriel:180, annuel:365 };
+const PLAN_LABELS = { test:'TEST', mensuel:'MENSUEL', semestriel:'SEMESTRIEL', annuel:'ANNUEL' };
+
+// ══════════════════════════════════════════════════════
+//  ÉTAT GLOBAL
+// ══════════════════════════════════════════════════════
+let API_BASE       = localStorage.getItem('master_server') || '';
+let MASTER_TOKEN   = localStorage.getItem('master_token')  || '';
+let masterUsername = localStorage.getItem('master_username') || 'Master';
+let CFG = {};
+let allPlatforms = [];
+let currentPlatformId = null;
+
+// ══════════════════════════════════════════════════════
+//  API HELPER
+// ══════════════════════════════════════════════════════
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type':'application/json', 'X-Master-Token': MASTER_TOKEN } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API_BASE + path, opts);
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+  return data;
+}
+
+// ══════════════════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ══════════════════════════════════════════════════════
+async function doLogin() {
+  const serverUrl = document.getElementById('srv-url').value.trim().replace(/\/$/,'');
+  const username  = document.getElementById('m-user').value.trim();
+  const password  = document.getElementById('m-pass').value;
+  const errEl = document.getElementById('login-err');
+  if (!serverUrl) { errEl.style.display='block'; errEl.textContent='❌ URL du serveur obligatoire'; return; }
+  if (!username || !password) { errEl.style.display='block'; errEl.textContent='❌ Identifiants obligatoires'; return; }
+  try {
+    API_BASE = serverUrl;
+    const r = await fetch(API_BASE + '/master/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ username, password })
+    });
+    const res = await r.json();
+    if (!r.ok) { errEl.style.display='block'; errEl.textContent='❌ ' + (res.error||'Erreur'); return; }
+    MASTER_TOKEN   = res.token;
+    masterUsername = res.username;
+    localStorage.setItem('master_token', MASTER_TOKEN);
+    localStorage.setItem('master_server', API_BASE);
+    localStorage.setItem('master_username', masterUsername);
+    startApp();
+  } catch(e) {
+    errEl.style.display='block';
+    errEl.textContent='❌ Impossible de joindre le serveur: ' + e.message;
+  }
+}
+
+async function doLogout() {
+  try { await api('POST', '/master/logout'); } catch(e) {}
+  localStorage.removeItem('master_token');
+  MASTER_TOKEN = '';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+async function startApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('master-name-display').textContent = masterUsername;
+  if (API_BASE) document.getElementById('srv-url').value = API_BASE;
+  await loadConfig();
+  loadDashboard();
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('c-start').value = new Date().toISOString().split('T')[0];
+  if (API_BASE) document.getElementById('srv-url').value = API_BASE;
+  if (MASTER_TOKEN && API_BASE) {
+    try {
+      const r = await fetch(API_BASE + '/master/me', { headers:{'X-Master-Token': MASTER_TOKEN} });
+      if (r.ok) { const d = await r.json(); masterUsername = d.username; startApp(); return; }
+    } catch(e) {}
+    localStorage.removeItem('master_token'); MASTER_TOKEN = '';
+  }
+  document.querySelectorAll('.modal').forEach(m => { m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }); });
+});
+
+// ══════════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════════
+async function loadConfig() {
+  try {
+    const data = await api('GET', '/master/config');
+    CFG = data.config;
+    updatePriceDisplay();
+    document.getElementById('s-price-test').value       = CFG.price_test || 0;
+    document.getElementById('s-price-mensuel').value    = CFG.price_mensuel || 2000;
+    document.getElementById('s-price-semestriel').value = CFG.price_semestriel || 10000;
+    document.getElementById('s-price-annuel').value     = CFG.price_annuel || 18000;
+    document.getElementById('s-football').value         = CFG.football_api_key || '';
+    document.getElementById('s-server').value           = CFG.default_server || '';
+    document.getElementById('s-alert-days').value       = CFG.alert_days || 7;
+  } catch(e) { console.warn('Config:', e.message); }
+}
+
+function updatePriceDisplay() {
+  const fmt = v => v == 0 ? 'Gratuit' : parseInt(v).toLocaleString() + ' HTG';
+  document.getElementById('pp-test').textContent       = fmt(CFG.price_test || 0);
+  document.getElementById('pp-mensuel').textContent    = fmt(CFG.price_mensuel || 2000);
+  document.getElementById('pp-semestriel').textContent = fmt(CFG.price_semestriel || 10000);
+  document.getElementById('pp-annuel').textContent     = fmt(CFG.price_annuel || 18000);
+}
+
+async function saveSettings() {
+  const alertEl = document.getElementById('set-alert');
+  try {
+    await api('PUT', '/master/config', { config: {
+      price_test:       document.getElementById('s-price-test').value,
+      price_mensuel:    document.getElementById('s-price-mensuel').value,
+      price_semestriel: document.getElementById('s-price-semestriel').value,
+      price_annuel:     document.getElementById('s-price-annuel').value,
+      football_api_key: document.getElementById('s-football').value,
+      default_server:   document.getElementById('s-server').value,
+      alert_days:       document.getElementById('s-alert-days').value,
+    }});
+    const newUser = document.getElementById('s-user').value.trim();
+    const newPwd  = document.getElementById('s-pwd').value;
+    if (newUser || newPwd) {
+      await api('PUT', '/master/password', { newUsername: newUser||undefined, newPassword: newPwd||undefined });
+      if (newUser) { masterUsername = newUser; localStorage.setItem('master_username', newUser); document.getElementById('master-name-display').textContent = newUser; }
+    }
+    await loadConfig();
+    showAlert(alertEl, '✅ Paramètres enregistrés', true);
+  } catch(e) { showAlert(alertEl, '❌ ' + e.message, false); }
+}
+
+// ══════════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════════
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  const nav = document.getElementById('nav-' + name);
+  if (nav) nav.classList.add('active');
+  if (name === 'platforms')     loadPlatforms();
+  if (name === 'subscriptions') loadSubscriptions();
+  if (name === 'expiring')      loadExpiring();
+  if (name === 'revenue')       loadRevenue();
+  if (name === 'payments')      loadPayments();
+  if (name === 'create') { document.getElementById('c-start').value = new Date().toISOString().split('T')[0]; updatePriceDisplay(); }
+}
+
+// ══════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════
+async function loadDashboard() {
+  try {
+    const [stats, plats] = await Promise.all([api('GET','/master/stats'), api('GET','/master/platforms')]);
+    allPlatforms = plats.platforms;
+    document.getElementById('st-total').textContent    = stats.total;
+    document.getElementById('st-active').textContent   = stats.active;
+    document.getElementById('st-expiring').textContent = stats.expiring;
+    document.getElementById('st-revenue').textContent  = parseInt(stats.revenue).toLocaleString() + ' HTG';
+    const el = document.getElementById('dash-list');
+    if (!allPlatforms.length) { el.innerHTML = '<div class="empty"><i class="fas fa-gamepad"></i>Aucune plateforme créée</div>'; return; }
+    el.innerHTML = allPlatforms.slice(0,6).map(p => prowHtml(p)).join('');
+  } catch(e) { document.getElementById('dash-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
+}
+
+// ══════════════════════════════════════════════════════
+//  PLATEFORMES
+// ══════════════════════════════════════════════════════
+async function loadPlatforms() {
+  try {
+    const data = await api('GET', '/master/platforms');
+    allPlatforms = data.platforms;
+    renderPlatforms(allPlatforms);
+  } catch(e) { document.getElementById('plat-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
+}
+
+function renderPlatforms(list) {
+  const el = document.getElementById('plat-list');
+  if (!list.length) { el.innerHTML = '<div class="empty"><i class="fas fa-gamepad"></i>Aucune plateforme</div>'; return; }
+  el.innerHTML = list.map(p => prowHtml(p)).join('');
+}
+
+function filterPlatforms() {
+  const q = document.getElementById('plat-search').value.toLowerCase();
+  renderPlatforms(allPlatforms.filter(p =>
+    p.name.toLowerCase().includes(q) || (p.owner_name||'').toLowerCase().includes(q) || (p.owner_email||'').toLowerCase().includes(q)
+  ));
+}
+
+function prowHtml(p) {
+  const initials = (p.name||'?').substring(0,2).toUpperCase();
+  return `<div class="prow">
+    <div class="pavatar">${initials}</div>
+    <div><div class="pname">${esc(p.name)}</div><div class="pmeta">${esc(p.owner_name)} · ${esc(p.owner_email)}</div></div>
+    <div>${planBadge(p.plan)}</div>
+    <div>${expiryPill(p)}</div>
+    <div style="display:flex;gap:6px;">
+      <button class="btn btn-outline btn-xs" onclick="openPlatformModal(${p.id})"><i class="fas fa-edit"></i></button>
+      <button class="btn btn-success btn-xs" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
+    </div>
+  </div>`;
+}
+
+function expiryPill(p) {
+  const d = p.jours_restants;
+  if (!p.active) return '<span class="epill epill-expired"><i class="fas fa-ban"></i> Suspendu</span>';
+  if (d < 0)     return '<span class="epill epill-expired"><i class="fas fa-times"></i> Expiré</span>';
+  if (d <= 3)    return `<span class="epill epill-danger"><i class="fas fa-fire"></i> J-${d}</span>`;
+  if (d <= 7)    return `<span class="epill epill-warn"><i class="fas fa-clock"></i> J-${d}</span>`;
+  return `<span class="epill epill-ok"><i class="fas fa-check"></i> ${d}j</span>`;
+}
+
+function planBadge(plan) {
+  const map = { test:'blue', mensuel:'green', semestriel:'purple', annuel:'gold' };
+  return `<span class="badge badge-${map[plan]||'blue'}">${PLAN_LABELS[plan]||plan}</span>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  CRÉER PLATEFORME
+// ══════════════════════════════════════════════════════
+let selectedPlan = 'test';
+
+function selectPlan(plan) {
+  selectedPlan = plan;
+  document.getElementById('c-plan').value = plan;
+  document.querySelectorAll('#plan-cards-create .plan-card').forEach(c => c.classList.toggle('selected', c.dataset.plan === plan));
+  document.getElementById('c-fee').value = CFG['price_' + plan] || 0;
+}
+
+function previewName() {
+  const name   = document.getElementById('c-name').value.trim();
+  const slogan = document.getElementById('c-slogan').value.trim();
+  const prev = document.getElementById('name-prev');
+  if (!name) { prev.style.display='none'; return; }
+  prev.style.display = 'block';
+  document.getElementById('prev-nm').textContent = name.toUpperCase();
+  document.getElementById('prev-av').textContent = name.substring(0,2).toUpperCase();
+  document.getElementById('prev-sl').textContent = slogan || 'Paryaj ak konfyans';
+}
+
+async function createPlatform() {
+  const alertEl = document.getElementById('create-alert');
+  const name       = document.getElementById('c-name').value.trim();
+  const ownerName  = document.getElementById('c-owner-name').value.trim();
+  const ownerEmail = document.getElementById('c-owner-email').value.trim();
+  const ownerPwd   = document.getElementById('c-owner-pwd').value;
+  if (!name)                        return showAlert(alertEl, '❌ Le nom de la plateforme est obligatoire', false);
+  if (!ownerName||!ownerEmail||!ownerPwd) return showAlert(alertEl, '❌ Nom, email et mot de passe du propriétaire sont obligatoires', false);
+  try {
+    await api('POST', '/master/platforms', {
+      name, slogan: document.getElementById('c-slogan').value,
+      email: document.getElementById('c-email').value,
+      phone: document.getElementById('c-phone').value,
+      address: document.getElementById('c-address').value,
+      server_url: document.getElementById('c-server').value,
+      owner_name: ownerName, owner_email: ownerEmail,
+      owner_phone: document.getElementById('c-owner-phone').value,
+      owner_pwd: ownerPwd,
+      staff_code: document.getElementById('c-staff').value,
+      football_api: document.getElementById('c-football').value,
+      plan: selectedPlan,
+      start_date: document.getElementById('c-start').value,
+      fee: document.getElementById('c-fee').value,
+      notes: document.getElementById('c-notes').value,
+    });
+    showAlert(alertEl, `✅ Plateforme "${name}" créée avec succès !`, true);
+    resetCreateForm();
+    const data = await api('GET', '/master/platforms');
+    allPlatforms = data.platforms;
+    setTimeout(() => showTab('platforms'), 1800);
+  } catch(e) { showAlert(alertEl, '❌ ' + e.message, false); }
+}
+
+function resetCreateForm() {
+  ['c-name','c-slogan','c-email','c-phone','c-address','c-server',
+   'c-owner-name','c-owner-email','c-owner-phone','c-owner-pwd',
+   'c-staff','c-football','c-fee','c-notes'].forEach(id => { document.getElementById(id).value = ''; });
+  selectPlan('test');
+  document.getElementById('c-start').value = new Date().toISOString().split('T')[0];
+  document.getElementById('name-prev').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════════════
+//  ABONNEMENTS
+// ══════════════════════════════════════════════════════
+async function loadSubscriptions() {
+  try {
+    const data = await api('GET', '/master/platforms');
+    allPlatforms = data.platforms;
+    const tbody = document.getElementById('sub-tbody');
+    if (!allPlatforms.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Aucune plateforme</td></tr>'; return; }
+    tbody.innerHTML = allPlatforms.map(p => {
+      const st = p.statut==='actif' ? '<span class="badge badge-green">ACTIF</span>'
+               : p.statut==='expire' ? '<span class="badge badge-red">EXPIRÉ</span>'
+               : '<span class="badge badge-red">SUSPENDU</span>';
+      return `<tr>
+        <td><strong>${esc(p.name)}</strong></td>
+        <td>${esc(p.owner_name)}<br><small style="color:var(--muted)">${esc(p.owner_email)}</small></td>
+        <td>${planBadge(p.plan)}</td>
+        <td>${p.start_date ? p.start_date.split('T')[0] : '-'}</td>
+        <td>${p.expires_at ? p.expires_at.split('T')[0] : '-'}</td>
+        <td>${st}</td>
+        <td>${(p.fee||0).toLocaleString()} HTG</td>
+        <td>
+          <button class="btn btn-outline btn-xs" onclick="openPlatformModal(${p.id})"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-success btn-xs" style="margin-left:4px;" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(e) { document.getElementById('sub-tbody').innerHTML = `<tr><td colspan="8" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
+}
+
+// ══════════════════════════════════════════════════════
+//  EXPIRATIONS
+// ══════════════════════════════════════════════════════
+async function loadExpiring() {
+  try {
+    const data = await api('GET', '/master/platforms');
+    allPlatforms = data.platforms;
+    const alertDays = parseInt(CFG.alert_days) || 7;
+    const urgent = allPlatforms.filter(p => p.active && p.jours_restants >= -30 && p.jours_restants <= alertDays)
+                                .sort((a,b) => a.jours_restants - b.jours_restants);
+    const el = document.getElementById('expiring-list');
+    if (!urgent.length) { el.innerHTML = `<div class="empty"><i class="fas fa-check-circle" style="color:var(--green);opacity:1"></i>Aucune expiration dans les ${alertDays} prochains jours</div>`; return; }
+    el.innerHTML = urgent.map(p => {
+      const d = p.jours_restants;
+      const color = d <= 3 ? 'var(--red)' : 'var(--gold)';
+      return `<div class="prow" style="border-left:3px solid ${color};">
+        <div class="pavatar">${(p.name||'?').substring(0,2).toUpperCase()}</div>
+        <div><div class="pname">${esc(p.name)}</div><div class="pmeta">${esc(p.owner_name)} · ${esc(p.owner_email)}</div></div>
+        <div style="text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:${color};">${d < 0 ? 'Expiré' : 'J-'+d}</div><div style="font-size:11px;color:var(--muted);">${p.expires_at ? p.expires_at.split('T')[0] : '-'}</div></div>
+        <div>${planBadge(p.plan)}</div>
+        <div><button class="btn btn-gold btn-xs" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i> Renouveler</button></div>
+      </div>`;
+    }).join('');
+  } catch(e) { document.getElementById('expiring-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
+}
+
+// ══════════════════════════════════════════════════════
+//  REVENUS
+// ══════════════════════════════════════════════════════
+async function loadRevenue() {
+  try {
+    const [plats, pays] = await Promise.all([api('GET','/master/platforms'), api('GET','/master/payments')]);
+    allPlatforms = plats.platforms;
+    const payments = pays.payments;
+    const total   = payments.filter(p=>p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
+    const pending = payments.filter(p=>!p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
+    document.getElementById('rev-total').textContent   = total.toLocaleString() + ' HTG';
+    document.getElementById('rev-pending').textContent = pending.toLocaleString() + ' HTG';
+    const totByPlan = { test:0, mensuel:0, semestriel:0, annuel:0 };
+    payments.filter(p=>p.paid).forEach(p => { totByPlan[p.plan] = (totByPlan[p.plan]||0) + parseFloat(p.amount||0); });
+    const maxVal = Math.max(...Object.values(totByPlan), 1);
+    document.getElementById('rev-bars').innerHTML = Object.entries(totByPlan).map(([plan,val]) => `
+      <div class="rev-bar"><div class="rev-bar-label"><span>${PLAN_LABELS[plan]}</span><span>${val.toLocaleString()} HTG</span></div>
+      <div class="rev-bar-track"><div class="rev-bar-fill" style="width:${(val/maxVal*100).toFixed(1)}%"></div></div></div>`).join('');
+    const tbody = document.getElementById('rev-tbody');
+    tbody.innerHTML = allPlatforms.map(p => {
+      const hasPending = payments.some(x => x.platform_id==p.id && !x.paid);
+      return `<tr>
+        <td><strong>${esc(p.name)}</strong></td>
+        <td>${planBadge(p.plan)}</td>
+        <td>${(p.fee||0).toLocaleString()} HTG</td>
+        <td>${hasPending ? '<span class="badge badge-gold">En attente</span>' : '<span class="badge badge-green">Payé</span>'}</td>
+        <td><button class="btn btn-outline btn-xs" onclick="openPlatformModal(${p.id})"><i class="fas fa-edit"></i></button></td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">Aucune donnée</td></tr>';
+  } catch(e) { console.error(e.message); }
+}
+
+// ══════════════════════════════════════════════════════
+//  PAIEMENTS
+// ══════════════════════════════════════════════════════
+async function loadPayments() {
+  try {
+    const data = await api('GET', '/master/payments');
+    const tbody = document.getElementById('pay-tbody');
+    if (!data.payments.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Aucun paiement</td></tr>'; return; }
+    tbody.innerHTML = data.payments.map(p => `<tr>
+      <td>${p.created_at ? p.created_at.split('T')[0] : '-'}</td>
+      <td>${esc(p.platform_name)}</td>
+      <td>${planBadge(p.plan)}</td>
+      <td>${parseFloat(p.amount||0).toLocaleString()} HTG</td>
+      <td>${esc(p.mode||'manuel')}</td>
+      <td>${p.paid ? '<span class="badge badge-green">Payé</span>' : '<span class="badge badge-gold">En attente</span>'}</td>
+      <td>${!p.paid ? `<button class="btn btn-success btn-xs" onclick="markPaid(${p.id})"><i class="fas fa-check"></i> Marquer payé</button>` : '—'}</td>
+    </tr>`).join('');
+  } catch(e) { document.getElementById('pay-tbody').innerHTML = `<tr><td colspan="7" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
+}
+
+async function markPaid(payId) {
+  try { await api('PUT', `/master/payments/${payId}/paid`); loadPayments(); }
+  catch(e) { alert('Erreur: ' + e.message); }
+}
+
+// ══════════════════════════════════════════════════════
+//  MODAL PLATEFORME
+// ══════════════════════════════════════════════════════
+async function openPlatformModal(id) {
+  currentPlatformId = id;
+  if (!allPlatforms.find(x=>x.id==id)) {
+    const data = await api('GET', '/master/platforms'); allPlatforms = data.platforms;
+  }
+  const p = allPlatforms.find(x => x.id == id);
+  if (!p) return;
+  document.getElementById('mp-id').value         = p.id;
+  document.getElementById('mp-name').value        = p.name||'';
+  document.getElementById('mp-slogan').value      = p.slogan||'';
+  document.getElementById('mp-email').value       = p.email||'';
+  document.getElementById('mp-phone').value       = p.phone||'';
+  document.getElementById('mp-address').value     = p.address||'';
+  document.getElementById('mp-server').value      = p.server_url||'';
+  document.getElementById('mp-plan').value        = p.plan||'test';
+  document.getElementById('mp-start').value       = p.start_date ? p.start_date.split('T')[0] : '';
+  document.getElementById('mp-end').value         = p.expires_at ? p.expires_at.split('T')[0] : '';
+  document.getElementById('mp-fee').value         = p.fee||0;
+  document.getElementById('mp-paid').value        = p.paid||0;
+  document.getElementById('mp-notes').value       = p.notes||'';
+  document.getElementById('mp-owner-name').value  = p.owner_name||'';
+  document.getElementById('mp-owner-email').value = p.owner_email||'';
+  document.getElementById('mp-owner-phone').value = p.owner_phone||'';
+  document.getElementById('mp-staff').value       = p.staff_code||'';
+  document.getElementById('mp-football').value    = p.football_api||'';
+  document.getElementById('mp-owner-pwd').value   = '';
+  document.getElementById('config-pre').style.display = 'none';
+  document.getElementById('mp-title').textContent = p.name.toUpperCase();
+  switchMTab('info');
+  openModal('modal-platform');
+}
+
+function updateEndDate() {
+  const plan  = document.getElementById('mp-plan').value;
+  const start = document.getElementById('mp-start').value;
+  if (!start) return;
+  const exp = new Date(start);
+  exp.setDate(exp.getDate() + PLAN_DAYS[plan]);
+  document.getElementById('mp-end').value = exp.toISOString().split('T')[0];
+}
+
+async function savePlatform() {
+  const alertEl = document.getElementById('mp-alert');
+  const id   = document.getElementById('mp-id').value;
+  const name = document.getElementById('mp-name').value.trim();
+  if (!name) return showAlert(alertEl, '❌ Le nom est obligatoire', false);
+  try {
+    await api('PUT', `/master/platforms/${id}`, {
+      name,
+      slogan:       document.getElementById('mp-slogan').value,
+      email:        document.getElementById('mp-email').value,
+      phone:        document.getElementById('mp-phone').value,
+      address:      document.getElementById('mp-address').value,
+      server_url:   document.getElementById('mp-server').value,
+      plan:         document.getElementById('mp-plan').value,
+      start_date:   document.getElementById('mp-start').value,
+      expires_at:   document.getElementById('mp-end').value,
+      fee:          document.getElementById('mp-fee').value,
+      paid:         document.getElementById('mp-paid').value,
+      notes:        document.getElementById('mp-notes').value,
+      owner_name:   document.getElementById('mp-owner-name').value,
+      owner_email:  document.getElementById('mp-owner-email').value,
+      owner_phone:  document.getElementById('mp-owner-phone').value,
+      owner_pwd:    document.getElementById('mp-owner-pwd').value || undefined,
+      staff_code:   document.getElementById('mp-staff').value,
+      football_api: document.getElementById('mp-football').value,
+    });
+    showAlert(alertEl, '✅ Plateforme mise à jour', true);
+    const data = await api('GET', '/master/platforms');
+    allPlatforms = data.platforms;
+    setTimeout(() => { closeModal('modal-platform'); renderPlatforms(allPlatforms); loadDashboard(); }, 1200);
+  } catch(e) { showAlert(alertEl, '❌ ' + e.message, false); }
+}
+
+async function deletePlatform() {
+  const id   = document.getElementById('mp-id').value;
+  const name = document.getElementById('mp-name').value;
+  if (!confirm(`⚠️ Supprimer définitivement "${name}" ? Action irréversible.`)) return;
+  try {
+    await api('DELETE', `/master/platforms/${id}`);
+    closeModal('modal-platform');
+    const data = await api('GET', '/master/platforms');
+    allPlatforms = data.platforms;
+    renderPlatforms(allPlatforms);
+    loadDashboard();
+  } catch(e) { showAlert(document.getElementById('mp-alert'), '❌ ' + e.message, false); }
+}
+
+async function togglePlatform() {
+  const id = document.getElementById('mp-id').value;
+  try {
+    const data = await api('PUT', `/master/platforms/${id}/toggle`);
+    showAlert(document.getElementById('mp-alert'), data.active ? '✅ Plateforme réactivée' : '⚠️ Plateforme suspendue', data.active);
+    const r = await api('GET', '/master/platforms');
+    allPlatforms = r.platforms;
+  } catch(e) { showAlert(document.getElementById('mp-alert'), '❌ ' + e.message, false); }
+}
+
+// ══════════════════════════════════════════════════════
+//  RENOUVELLEMENT
+// ══════════════════════════════════════════════════════
+function openRenewModal() {
+  const id   = document.getElementById('mp-id').value;
+  const name = document.getElementById('mp-name').value;
+  const plan = document.getElementById('mp-plan').value;
+  document.getElementById('renew-name').textContent = name;
+  document.getElementById('renew-plan').value = plan;
+  document.getElementById('renew-fee').value  = CFG['price_' + plan] || 0;
+  document.getElementById('renew-paid').value = '0';
+  currentPlatformId = id;
+  openModal('modal-renew');
+}
+
+function quickRenew(id) {
+  const p = allPlatforms.find(x => x.id == id);
+  if (!p) return;
+  currentPlatformId = id;
+  document.getElementById('renew-name').textContent = p.name;
+  document.getElementById('renew-plan').value = p.plan || 'mensuel';
+  document.getElementById('renew-fee').value  = CFG['price_' + (p.plan||'mensuel')] || 0;
+  document.getElementById('renew-paid').value = '0';
+  openModal('modal-renew');
+}
+
+async function confirmRenew() {
+  const id   = currentPlatformId;
+  const plan = document.getElementById('renew-plan').value;
+  const fee  = document.getElementById('renew-fee').value;
+  const paid = document.getElementById('renew-paid').value;
+  try {
+    await api('POST', `/master/platforms/${id}/renew`, { plan, fee, paid });
+    closeModal('modal-renew');
+    closeModal('modal-platform');
+    const data = await api('GET', '/master/platforms');
+    allPlatforms = data.platforms;
+    renderPlatforms(allPlatforms);
+    loadDashboard();
+  } catch(e) { alert('Erreur: ' + e.message); }
+}
+
+// ══════════════════════════════════════════════════════
+//  GÉNÉRATION config.js
+// ══════════════════════════════════════════════════════
+function generateConfig() {
+  const id   = document.getElementById('mp-id').value;
+  const p    = allPlatforms.find(x => x.id == id);
+  if (!p) return;
+  const content = `// config.js — ${p.name}
+// Généré par MASTER Platform Manager
+
+const CONFIG = {
+  APP_NAME:          "${p.name}",
+  APP_SLOGAN:        "${p.slogan || 'Paryaj ak konfyans'}",
+  APP_EMAIL:         "${p.email || ''}",
+  APP_PHONE:         "${p.phone || ''}",
+  APP_ADDRESS:       "${p.address || ''}",
+  SERVER_URL:        "${p.server_url || CFG.default_server || ''}",
+  FOOTBALL_API_KEY:  "${p.football_api || CFG.football_api_key || ''}",
+  ADMIN_PASSWORD:    "admin",
+  SECRET_STAFF_CODE: "${p.staff_code || ''}",
+  SESSION_DURATION_DAYS: 7,
+  JACKPOT_PERCENT: 5,
+};
+
+if (typeof module !== 'undefined') module.exports = CONFIG;`;
+  const pre = document.getElementById('config-pre');
+  pre.textContent = content;
+  pre.style.display = 'block';
+  window._configContent = content;
+}
+
+function copyConfig() {
+  generateConfig();
+  if (window._configContent) {
+    navigator.clipboard.writeText(window._configContent)
+      .then(()  => showAlert(document.getElementById('mp-alert'), '✅ config.js copié !', true))
+      .catch(()  => showAlert(document.getElementById('mp-alert'), '❌ Erreur de copie', false));
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════
+function switchMTab(tab) {
+  ['info','sub','config'].forEach(t => {
+    document.getElementById('mtp-' + t).style.display = t === tab ? 'block' : 'none';
+    document.getElementById('mt-' + t).classList.toggle('active', t === tab);
+  });
+}
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function showAlert(el, msg, ok) {
+  el.className = 'alert ' + (ok ? 'alert-success' : 'alert-danger');
+  el.textContent = msg; el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3500);
+}
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+</script>
+</body>
+</html>
