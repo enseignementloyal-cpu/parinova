@@ -180,7 +180,7 @@ const JACKPOT_PCT       = 5; // 5%
     );
   `);
 
-    -- Tables Master & Plateformes
+    -- // Tables Master & Plateformes.....//
     CREATE TABLE IF NOT EXISTS master_users (
       id SERIAL PRIMARY KEY,
       username TEXT UNIQUE NOT NULL,
