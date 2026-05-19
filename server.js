@@ -179,6 +179,105 @@ const JACKPOT_PCT       = 5; // 5%
       UNIQUE(dir_code, game_name)
     );
   `);
+
+    -- Tables Master & Plateformes
+    CREATE TABLE IF NOT EXISTS master_users (
+      id SERIAL PRIMARY KEY,
+      username TEXT UNIQUE NOT NULL,
+      pwd_hash TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS master_sessions (
+      id TEXT PRIMARY KEY,
+      master_id INTEGER REFERENCES master_users(id),
+      expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '24 hours'
+    );
+    CREATE TABLE IF NOT EXISTS platforms (
+      id SERIAL PRIMARY KEY,
+      code TEXT UNIQUE NOT NULL,
+      name TEXT NOT NULL,
+      slogan TEXT DEFAULT '',
+      logo_url TEXT DEFAULT '',
+      email TEXT DEFAULT '',
+      phone TEXT DEFAULT '',
+      address TEXT DEFAULT '',
+      server_url TEXT DEFAULT '',
+      owner_name TEXT NOT NULL,
+      owner_email TEXT UNIQUE NOT NULL,
+      owner_pwd_hash TEXT NOT NULL,
+      staff_code TEXT DEFAULT '',
+      football_api TEXT DEFAULT '',
+      plan TEXT DEFAULT 'test',
+      start_date TIMESTAMP DEFAULT NOW(),
+      expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '7 days',
+      fee REAL DEFAULT 0,
+      paid INTEGER DEFAULT 0,
+      notes TEXT DEFAULT '',
+      active BOOLEAN DEFAULT TRUE,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS platform_payments (
+      id SERIAL PRIMARY KEY,
+      platform_id INTEGER REFERENCES platforms(id) ON DELETE CASCADE,
+      platform_name TEXT,
+      plan TEXT,
+      amount REAL DEFAULT 0,
+      paid BOOLEAN DEFAULT FALSE,
+      mode TEXT DEFAULT 'manuel',
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS master_config (
+      key TEXT PRIMARY KEY,
+      value TEXT,
+      updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Ajouter platform_code aux tables existantes (ignorer si déjà présent)
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='directors' AND column_name='platform_code') THEN
+        ALTER TABLE directors ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='cashiers' AND column_name='platform_code') THEN
+        ALTER TABLE cashiers ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='players' AND column_name='platform_code') THEN
+        ALTER TABLE players ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bets' AND column_name='platform_code') THEN
+        ALTER TABLE bets ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='transactions' AND column_name='platform_code') THEN
+        ALTER TABLE transactions ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='recharges' AND column_name='platform_code') THEN
+        ALTER TABLE recharges ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='retraits' AND column_name='platform_code') THEN
+        ALTER TABLE retraits ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='borlette_results' AND column_name='platform_code') THEN
+        ALTER TABLE borlette_results ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='borlette_blocked' AND column_name='platform_code') THEN
+        ALTER TABLE borlette_blocked ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='borlette_limits' AND column_name='platform_code') THEN
+        ALTER TABLE borlette_limits ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jackpots' AND column_name='platform_code') THEN
+        ALTER TABLE jackpots ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='settings' AND column_name='platform_code') THEN
+        ALTER TABLE settings ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+    END $$;
+    CREATE INDEX IF NOT EXISTS idx_directors_platform ON directors(platform_code);
+    CREATE INDEX IF NOT EXISTS idx_cashiers_platform ON cashiers(platform_code);
+    CREATE INDEX IF NOT EXISTS idx_players_platform ON players(platform_code);
+    CREATE INDEX IF NOT EXISTS idx_bets_platform ON bets(platform_code);
+    CREATE INDEX IF NOT EXISTS idx_trans_platform ON transactions(platform_code);
+
   console.log('✅ Tables vérifiées/créées');
 })();
 
@@ -338,7 +437,8 @@ app.post('/api/auth/admin', async (req, res) => {
 app.post('/api/auth/director', async (req, res) => {
   try {
     const { code, pwd } = req.body;
-    const r = await pool.query("SELECT * FROM directors WHERE code=$1 AND active=TRUE", [code.toUpperCase()]);
+    const pCode2 = await getPlatformCode(req);
+    const r = await pool.query("SELECT * FROM directors WHERE code=$1 AND active=TRUE AND (platform_code=$2 OR platform_code='default')", [code.toUpperCase(), pCode2]);
     const dir = r.rows[0];
     if (!dir) return res.status(401).json({ error: 'Code introuvable' });
     const ok = await bcrypt.compare(pwd, dir.pwd_hash);
@@ -373,7 +473,8 @@ app.post('/api/auth/cashier', async (req, res) => {
 app.post('/api/auth/player', async (req, res) => {
   try {
     const { phone, pwd } = req.body;
-    const r = await pool.query("SELECT * FROM players WHERE phone=$1 AND active=TRUE", [phone]);
+    const pCode3 = await getPlatformCode(req);
+    const r = await pool.query("SELECT * FROM players WHERE phone=$1 AND active=TRUE AND (platform_code=$2 OR platform_code='default')", [phone, pCode3]);
     const player = r.rows[0];
     if (!player) return res.status(401).json({ error: 'Numéro introuvable' });
     const ok = await bcrypt.compare(pwd, player.pwd_hash);
@@ -2418,6 +2519,375 @@ app.get('*', (req, res) => {
 });
 
 // ── DÉMARRAGE ────────────────────────────────────────────
+
+// ── INIT MASTER AUTO ──────────────────────────────────────
+(async () => {
+  try {
+    // Compte Master par défaut
+    const existing = await pool.query("SELECT id FROM master_users WHERE username='master'");
+    if (!existing.rows.length) {
+      const hash = await bcrypt.hash('master2024', 10);
+      await pool.query("INSERT INTO master_users (username, pwd_hash) VALUES ('master', $1)", [hash]);
+      console.log('✅ Compte Master créé: master / master2024');
+    }
+    // Config par défaut
+    const defaults = [
+      ['price_test','0'],['price_mensuel','2000'],
+      ['price_semestriel','10000'],['price_annuel','18000'],
+      ['alert_days','7'],['football_api_key',''],
+      ['default_server','https://parinova-rmkp.onrender.com'],
+    ];
+    for (const [k,v] of defaults) {
+      await pool.query("INSERT INTO master_config (key,value) VALUES ($1,$2) ON CONFLICT (key) DO NOTHING",[k,v]);
+    }
+    console.log('✅ Master initialisé');
+  } catch(e) { console.error('❌ Master init:', e.message); }
+})();
+
+// ── HELPER: Récupérer plateforme depuis X-Platform-Code header ou query ──
+async function getPlatformCode(req) {
+  return (req.headers['x-platform-code'] || req.query.p || 'default').toUpperCase();
+}
+
+async function getPlatform(code) {
+  if (!code || code === 'DEFAULT') return null;
+  const r = await pool.query(
+    "SELECT * FROM platforms WHERE code=$1 AND active=TRUE AND expires_at > NOW()",
+    [code.toUpperCase()]
+  );
+  return r.rows[0] || null;
+}
+
+// ── MASTER AUTH HELPERS ────────────────────────────────────
+async function getMasterSession(req) {
+  const token = req.headers['x-master-token'];
+  if (!token) return null;
+  const r = await pool.query(
+    "SELECT ms.*, mu.username FROM master_sessions ms JOIN master_users mu ON ms.master_id=mu.id WHERE ms.id=$1 AND ms.expires_at > NOW()",
+    [token]
+  );
+  return r.rows[0] || null;
+}
+async function requireMaster(req, res, next) {
+  const sess = await getMasterSession(req);
+  if (!sess) return res.status(401).json({ error: 'Accès Master requis' });
+  req.masterSession = sess;
+  next();
+}
+
+// ════════════════════════════════════════════════════════════
+// ROUTES MASTER
+// ════════════════════════════════════════════════════════════
+
+// ── LOGIN MASTER ──────────────────────────────────────────
+app.post('/master/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const r = await pool.query("SELECT * FROM master_users WHERE username=$1", [username]);
+    const master = r.rows[0];
+    if (!master) return res.status(401).json({ error: 'Identifiant incorrect' });
+    const ok = await bcrypt.compare(password, master.pwd_hash);
+    if (!ok) return res.status(401).json({ error: 'Mot de passe incorrect' });
+    const token = genToken();
+    await pool.query("INSERT INTO master_sessions (id, master_id) VALUES ($1, $2)", [token, master.id]);
+    res.json({ success: true, token, username: master.username });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/master/logout', async (req, res) => {
+  const token = req.headers['x-master-token'];
+  if (token) await pool.query("DELETE FROM master_sessions WHERE id=$1", [token]);
+  res.json({ success: true });
+});
+
+app.get('/master/me', requireMaster, (req, res) => {
+  res.json({ username: req.masterSession.username });
+});
+
+// ── CONFIG MASTER ─────────────────────────────────────────
+app.get('/master/config', requireMaster, async (req, res) => {
+  try {
+    const r = await pool.query("SELECT key, value FROM master_config");
+    const config = {};
+    r.rows.forEach(row => { config[row.key] = row.value; });
+    res.json({ config });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.put('/master/config', requireMaster, async (req, res) => {
+  try {
+    const { config } = req.body;
+    for (const [k, v] of Object.entries(config)) {
+      await pool.query(
+        "INSERT INTO master_config (key,value) VALUES ($1,$2) ON CONFLICT (key) DO UPDATE SET value=$2, updated_at=NOW()",
+        [k, String(v)]
+      );
+    }
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.put('/master/password', requireMaster, async (req, res) => {
+  try {
+    const { newUsername, newPassword } = req.body;
+    const id = req.masterSession.master_id;
+    if (newPassword) {
+      const hash = await bcrypt.hash(newPassword, 10);
+      await pool.query("UPDATE master_users SET pwd_hash=$1 WHERE id=$2", [hash, id]);
+    }
+    if (newUsername) {
+      await pool.query("UPDATE master_users SET username=$1 WHERE id=$2", [newUsername, id]);
+    }
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── LISTE PLATEFORMES ─────────────────────────────────────
+app.get('/master/platforms', requireMaster, async (req, res) => {
+  try {
+    const r = await pool.query(`
+      SELECT p.*,
+        CASE WHEN p.expires_at > NOW() AND p.active THEN 'actif'
+             WHEN NOT p.active THEN 'suspendu' ELSE 'expire' END AS statut,
+        EXTRACT(DAY FROM p.expires_at - NOW())::INTEGER AS jours_restants
+      FROM platforms p ORDER BY p.created_at DESC
+    `);
+    res.json({ platforms: r.rows });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── CRÉER UNE PLATEFORME ──────────────────────────────────
+app.post('/master/platforms', requireMaster, async (req, res) => {
+  try {
+    const {
+      code, name, slogan, logo_url, email, phone, address, server_url,
+      owner_name, owner_email, owner_pwd,
+      staff_code, football_api, plan, start_date, fee, notes
+    } = req.body;
+    if (!code || !name || !owner_name || !owner_email || !owner_pwd)
+      return res.status(400).json({ error: 'Code, nom, email et mot de passe propriétaire obligatoires' });
+    const PLAN_DAYS = { test:7, mensuel:30, semestriel:180, annuel:365 };
+    const days = PLAN_DAYS[plan] || 7;
+    const startDate = start_date ? new Date(start_date) : new Date();
+    const expiresAt = new Date(startDate);
+    expiresAt.setDate(expiresAt.getDate() + days);
+    const platformCode = code.toUpperCase().replace(/\s/g,'');
+    const ownerHash = await bcrypt.hash(owner_pwd, 10);
+    const staffC = staff_code || platformCode + '12';
+    const r = await pool.query(`
+      INSERT INTO platforms
+        (code,name,slogan,logo_url,email,phone,address,server_url,
+         owner_name,owner_email,owner_pwd_hash,staff_code,football_api,
+         plan,start_date,expires_at,fee,notes)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+      RETURNING *
+    `, [platformCode,name,slogan||'',logo_url||'',email||'',phone||'',address||'',server_url||'',
+        owner_name,owner_email,ownerHash,staffC,football_api||'',
+        plan||'test',startDate,expiresAt,fee||0,notes||'']);
+    if (fee && parseFloat(fee) > 0) {
+      await pool.query(
+        "INSERT INTO platform_payments (platform_id,platform_name,plan,amount,paid,mode) VALUES ($1,$2,$3,$4,FALSE,'création')",
+        [r.rows[0].id, name, plan||'test', fee]
+      );
+    }
+    res.json({ success: true, platform: r.rows[0] });
+  } catch(e) {
+    if (e.code === '23505') return res.status(409).json({ error: 'Code ou email déjà utilisé' });
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── MODIFIER UNE PLATEFORME ───────────────────────────────
+app.put('/master/platforms/:id', requireMaster, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const {
+      name, slogan, logo_url, email, phone, address, server_url,
+      owner_name, owner_email, owner_pwd,
+      staff_code, football_api, plan, start_date, expires_at,
+      fee, paid, notes, active
+    } = req.body;
+    const params = [
+      name, slogan||'', logo_url||'', email||'', phone||'', address||'', server_url||'',
+      owner_name, owner_email, staff_code||'', football_api||'', plan||'test',
+      start_date ? new Date(start_date) : new Date(),
+      expires_at ? new Date(expires_at) : new Date(),
+      fee||0, paid||0, notes||'', active !== undefined ? active : true, id
+    ];
+    let q = `UPDATE platforms SET
+      name=$1,slogan=$2,logo_url=$3,email=$4,phone=$5,address=$6,server_url=$7,
+      owner_name=$8,owner_email=$9,staff_code=$10,football_api=$11,plan=$12,
+      start_date=$13,expires_at=$14,fee=$15,paid=$16,notes=$17,active=$18,updated_at=NOW()
+      WHERE id=$19 RETURNING *`;
+    if (owner_pwd) {
+      const hash = await bcrypt.hash(owner_pwd, 10);
+      params.push(hash);
+      q = q.replace('active=$18,updated_at=NOW()', 'active=$18,owner_pwd_hash=$20,updated_at=NOW()');
+    }
+    const r = await pool.query(q, params);
+    res.json({ success: true, platform: r.rows[0] });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── SUPPRIMER ─────────────────────────────────────────────
+app.delete('/master/platforms/:id', requireMaster, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await pool.query("DELETE FROM platform_payments WHERE platform_id=$1", [id]);
+    await pool.query("DELETE FROM platforms WHERE id=$1", [id]);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── TOGGLE ACTIF/SUSPENDU ─────────────────────────────────
+app.put('/master/platforms/:id/toggle', requireMaster, async (req, res) => {
+  try {
+    const r = await pool.query(
+      "UPDATE platforms SET active=NOT active, updated_at=NOW() WHERE id=$1 RETURNING active",
+      [parseInt(req.params.id)]
+    );
+    res.json({ success: true, active: r.rows[0].active });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── RENOUVELER ABONNEMENT ─────────────────────────────────
+app.post('/master/platforms/:id/renew', requireMaster, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { plan, fee, paid } = req.body;
+    const PLAN_DAYS = { test:7, mensuel:30, semestriel:180, annuel:365 };
+    const curr = await pool.query("SELECT expires_at, name FROM platforms WHERE id=$1", [id]);
+    if (!curr.rows.length) return res.status(404).json({ error: 'Plateforme introuvable' });
+    const base = new Date(curr.rows[0].expires_at) > new Date() ? new Date(curr.rows[0].expires_at) : new Date();
+    const newExp = new Date(base);
+    newExp.setDate(newExp.getDate() + (PLAN_DAYS[plan] || 30));
+    await pool.query("UPDATE platforms SET plan=$1, expires_at=$2, active=TRUE, updated_at=NOW() WHERE id=$3", [plan, newExp, id]);
+    await pool.query(
+      "INSERT INTO platform_payments (platform_id,platform_name,plan,amount,paid,mode) VALUES ($1,$2,$3,$4,$5,'renouvellement')",
+      [id, curr.rows[0].name, plan, fee||0, paid==='1'||paid===true]
+    );
+    res.json({ success: true, expires_at: newExp });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── STATS GLOBALES MASTER ─────────────────────────────────
+app.get('/master/stats', requireMaster, async (req, res) => {
+  try {
+    const [total, active, expiring, revenue] = await Promise.all([
+      pool.query("SELECT COUNT(*) as cnt FROM platforms"),
+      pool.query("SELECT COUNT(*) as cnt FROM platforms WHERE active=TRUE AND expires_at > NOW()"),
+      pool.query("SELECT COUNT(*) as cnt FROM platforms WHERE active=TRUE AND expires_at BETWEEN NOW() AND NOW() + INTERVAL '7 days'"),
+      pool.query("SELECT COALESCE(SUM(amount),0) as total FROM platform_payments WHERE paid=TRUE"),
+    ]);
+    res.json({
+      total:    parseInt(total.rows[0].cnt),
+      active:   parseInt(active.rows[0].cnt),
+      expiring: parseInt(expiring.rows[0].cnt),
+      revenue:  parseFloat(revenue.rows[0].total),
+    });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── PAIEMENTS ─────────────────────────────────────────────
+app.get('/master/payments', requireMaster, async (req, res) => {
+  try {
+    const r = await pool.query("SELECT * FROM platform_payments ORDER BY created_at DESC LIMIT 200");
+    res.json({ payments: r.rows });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.put('/master/payments/:id/paid', requireMaster, async (req, res) => {
+  try {
+    await pool.query("UPDATE platform_payments SET paid=TRUE WHERE id=$1", [req.params.id]);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ════════════════════════════════════════════════════════════
+// ROUTE PUBLIQUE: Connexion propriétaire + info plateforme
+// ════════════════════════════════════════════════════════════
+
+// ── CONNEXION PROPRIÉTAIRE ────────────────────────────────
+// Le propriétaire se connecte avec email + mot de passe
+// Le ?p=CODE dans l'URL identifie la plateforme
+app.post('/api/owner/login', async (req, res) => {
+  try {
+    const { email, pwd } = req.body;
+    const pCode = await getPlatformCode(req);
+    let platform;
+    if (pCode && pCode !== 'DEFAULT') {
+      const r = await pool.query("SELECT * FROM platforms WHERE code=$1 AND active=TRUE", [pCode]);
+      platform = r.rows[0];
+    }
+    if (!platform && email) {
+      const r = await pool.query("SELECT * FROM platforms WHERE owner_email=$1 AND active=TRUE", [email]);
+      platform = r.rows[0];
+    }
+    if (!platform) return res.status(404).json({ error: 'Plateforme introuvable ou suspendue' });
+    if (new Date(platform.expires_at) < new Date()) return res.status(403).json({ error: 'Abonnement expiré — contactez le Master' });
+    const ok = await bcrypt.compare(pwd, platform.owner_pwd_hash);
+    if (!ok) return res.status(401).json({ error: 'Mot de passe incorrect' });
+    const token = genToken();
+    await pool.query("INSERT INTO sessions (id, role, user_code) VALUES ($1, 'owner', $2)", [token, platform.code]);
+    res.json({
+      success: true, token, role: 'owner',
+      platform: {
+        code: platform.code, name: platform.name, slogan: platform.slogan,
+        logo_url: platform.logo_url, email: platform.email, phone: platform.phone,
+        address: platform.address, staff_code: platform.staff_code,
+        expires_at: platform.expires_at
+      }
+    });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── INFO PLATEFORME PUBLIQUE (appelée par index.html / app.html au démarrage) ──
+// URL: /master/platform-public?p=MAMAPARYAJ
+app.get('/master/platform-public', async (req, res) => {
+  try {
+    const pCode = (req.query.p || '').toUpperCase();
+    let platform;
+    if (pCode) {
+      const r = await pool.query(
+        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code FROM platforms WHERE code=$1 AND active=TRUE AND expires_at > NOW()",
+        [pCode]
+      );
+      platform = r.rows[0];
+    }
+    // Fallback: première plateforme active
+    if (!platform) {
+      const r = await pool.query(
+        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code FROM platforms WHERE active=TRUE AND expires_at > NOW() ORDER BY created_at ASC LIMIT 1"
+      );
+      platform = r.rows[0];
+    }
+    // Fallback final: Tonton Kondo par défaut
+    if (!platform) {
+      return res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12' } });
+    }
+    res.json({ platform });
+  } catch(e) {
+    res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12' } });
+  }
+});
+
+// ── LIEN UNIQUE PAR PLATEFORME ────────────────────────────
+// Génère un lien personnalisé: https://parinova-rmkp.onrender.com?p=MAMAPARYAJ
+app.get('/master/platforms/:id/link', requireMaster, async (req, res) => {
+  try {
+    const r = await pool.query("SELECT code, server_url FROM platforms WHERE id=$1", [req.params.id]);
+    if (!r.rows.length) return res.status(404).json({ error: 'Plateforme introuvable' });
+    const p = r.rows[0];
+    const base = p.server_url || 'https://parinova-rmkp.onrender.com';
+    res.json({
+      link_joueurs:    `${base}/index.html?p=${p.code}`,
+      link_app:        `${base}/app.html?p=${p.code}`,
+      link_proprietaire: `${base}/app.html?p=${p.code}`,
+    });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+
 app.listen(PORT, () => {
   console.log(`✅ Tonton Kondo API running on port ${PORT}`);
   console.log(`   Database: ${process.env.DATABASE_URL ? '✅ Connected' : '❌ DATABASE_URL missing'}`);

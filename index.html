@@ -640,12 +640,17 @@ window.APP_STAFF_CODE = 'TONTONKONDO12';
 
 async function initPlateforme() {
   try {
-    // SERVER_URL vient de config.js (déjà chargé avant ce script)
     const serverUrl = (typeof CONFIG !== 'undefined' && CONFIG.SERVER_URL)
-      ? CONFIG.SERVER_URL
-      : 'https://parinova-rmkp.onrender.com';
+      ? CONFIG.SERVER_URL : 'https://parinova-rmkp.onrender.com';
 
-    const r = await fetch(serverUrl + '/master/platform-public');
+    // Lire le code plateforme depuis l'URL ?p=CODE
+    const urlParams = new URLSearchParams(window.location.search);
+    const platformCode = urlParams.get('p') || '';
+    const apiUrl = platformCode
+      ? `${serverUrl}/master/platform-public?p=${platformCode}`
+      : `${serverUrl}/master/platform-public`;
+
+    const r = await fetch(apiUrl);
     if (!r.ok) return;
     const data = await r.json();
     const p = data.platform;
@@ -661,6 +666,9 @@ async function initPlateforme() {
 
     // Mettre à jour SECRET_CODE
     SECRET_CODE = window.APP_STAFF_CODE;
+    window.PLATFORM_CODE = p.code || platformCode;
+    // Passer le code à toutes les requêtes API
+    window._platformCode = window.PLATFORM_CODE;
 
     // ── Mettre à jour l'interface ──────────────────────────
 
@@ -704,7 +712,14 @@ async function initPlateforme() {
     const copyEls = document.querySelectorAll('.info-app-copyright');
     copyEls.forEach(el => el.textContent = '© 2024 ' + window.APP_NAME + ' Lotto Paryaj · Tous droits réservés');
 
-    console.log('✅ Plateforme chargée:', window.APP_NAME);
+    // Afficher le logo si une URL est fournie
+    if (p.logo_url) {
+      const logoImgs = document.querySelectorAll('.logo-img, #app-logo-img');
+      logoImgs.forEach(img => { img.src = p.logo_url; img.style.display='block'; });
+      const logoFb = document.getElementById('logo-fb');
+      if (logoFb) logoFb.style.display = 'none';
+    }
+    console.log('✅ Plateforme chargée:', window.APP_NAME, '| Code:', window.PLATFORM_CODE);
   } catch(e) {
     console.warn('⚠️ Platform info non disponible, valeurs par défaut utilisées:', e.message);
   }

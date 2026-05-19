@@ -2365,7 +2365,15 @@ async function initPlateforme() {
     const serverUrl = (typeof CONFIG !== 'undefined' && CONFIG.SERVER_URL)
       ? CONFIG.SERVER_URL : 'https://parinova-rmkp.onrender.com';
 
-    const r = await fetch(serverUrl + '/master/platform-public');
+    // Lire le code plateforme depuis l'URL ?p=CODE
+    const urlParams = new URLSearchParams(window.location.search);
+    const platformCode = urlParams.get('p') || '';
+    window.PLATFORM_CODE = platformCode.toUpperCase();
+    const apiUrl = platformCode
+      ? `${serverUrl}/master/platform-public?p=${platformCode}`
+      : `${serverUrl}/master/platform-public`;
+
+    const r = await fetch(apiUrl);
     if (!r.ok) return;
     const data = await r.json();
     const p = data.platform;
@@ -2382,6 +2390,16 @@ async function initPlateforme() {
 
     // Mettre à jour SECRET_CODE utilisé dans les vérifications staff
     SECRET_CODE = window.APP_STAFF_CODE;
+    window.PLATFORM_CODE = p.code || platformCode;
+
+    // Afficher le logo si disponible
+    if (p.logo_url) {
+      document.querySelectorAll('.logo-img, #logo-img, #app-logo-img').forEach(img => {
+        img.src = p.logo_url; img.style.display='block';
+      });
+      const fb = document.getElementById('logo-fb');
+      if (fb) fb.style.display = 'none';
+    }
 
     // ─── Mettre à jour TOUS les éléments de l'interface ──────
 
@@ -2466,6 +2484,15 @@ document.addEventListener('DOMContentLoaded', initPlateforme);
 // API LAYER — Remplace localStorage (production)
 // ============================================================
 const API = (typeof CONFIG !== 'undefined' && CONFIG.SERVER_URL) ? CONFIG.SERVER_URL : 'https://parinova-rmkp.onrender.com';
+
+// Wrapper fetch qui ajoute automatiquement X-Platform-Code à toutes les requêtes
+const _origFetch = window.fetch.bind(window);
+window.apiFetch = function(url, opts={}) {
+  opts.headers = opts.headers || {};
+  const pCode = window.PLATFORM_CODE || new URLSearchParams(window.location.search).get('p') || '';
+  if (pCode) opts.headers['X-Platform-Code'] = pCode.toUpperCase();
+  return _origFetch(url, opts);
+};
 const FOOTBALL_KEY = (typeof CONFIG !== 'undefined') ? CONFIG.FOOTBALL_API_KEY : '369f772ca235e44f4d4b743c2df1cac8';
 
 const getToken   = ()  => localStorage.getItem('tk_token') || '';
@@ -2475,7 +2502,7 @@ const clearToken = ()  => { localStorage.removeItem('tk_token'); localStorage.re
 async function apiCall(method, path, body) {
   const opts = { method, headers: { 'Content-Type': 'application/json', 'X-Session-Token': getToken() } };
   if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(API + path, opts);
+  const r = await apiFetch(API + path, opts);
   const data = await r.json();
   if (!r.ok) throw new Error(data.error || 'Erreur serveur');
   return data;
