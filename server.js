@@ -178,9 +178,8 @@ const JACKPOT_PCT       = 5; // 5%
       win_probability INTEGER DEFAULT 45,
       UNIQUE(dir_code, game_name)
     );
-  `);
 
-    -- // Tables Master & Plateformes.....//
+    -- Tables Master & Plateformes
     CREATE TABLE IF NOT EXISTS master_users (
       id SERIAL PRIMARY KEY,
       username TEXT UNIQUE NOT NULL,
@@ -277,6 +276,7 @@ const JACKPOT_PCT       = 5; // 5%
     CREATE INDEX IF NOT EXISTS idx_players_platform ON players(platform_code);
     CREATE INDEX IF NOT EXISTS idx_bets_platform ON bets(platform_code);
     CREATE INDEX IF NOT EXISTS idx_trans_platform ON transactions(platform_code);
+  `);
 
   console.log('✅ Tables vérifiées/créées');
 })();
