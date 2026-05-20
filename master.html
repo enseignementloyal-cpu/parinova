@@ -283,7 +283,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="card">
           <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-tag"></i> IDENTITÉ</div>
           <div class="form-grid">
-            <div class="fg"><label>CODE UNIQUE *</label><input type="text" id="c-code" placeholder="Ex: MAMAPARYAJ (sans espaces)" style="text-transform:uppercase"></div>
+            <div class="fg"><label>CODE UNIQUE *</label><input type="text" id="c-code" placeholder="Ex: MAMAPARYAJ (sans espaces)" style="text-transform:uppercase" oninput="previewLink()"></div>
             <div class="fg"><label>NOM PLATEFORME *</label><input type="text" id="c-name" placeholder="Ex: Mama Paryaj..." oninput="previewName()"></div>
             <div class="fg fg-full"><label>URL DU LOGO</label><input type="text" id="c-logo" placeholder="https://imgur.com/monlogo.png"></div>
             <div class="fg"><label>SLOGAN</label><input type="text" id="c-slogan" placeholder="Jwe ak konfyans !"></div>
@@ -334,6 +334,10 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div style="display:flex;gap:12px;margin-top:18px;">
           <button class="btn btn-gold" onclick="createPlatform()"><i class="fas fa-save"></i> Créer la plateforme</button>
           <button class="btn btn-outline" onclick="resetCreateForm()"><i class="fas fa-times"></i> Réinitialiser</button>
+        </div>
+        <div id="link-preview" style="display:none;margin-top:16px;background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.2);border-radius:10px;padding:14px;">
+          <div style="font-size:11px;color:var(--blue);font-weight:700;letter-spacing:1px;margin-bottom:8px;"><i class="fas fa-link"></i> LIEN QUI SERA GÉNÉRÉ</div>
+          <code id="link-preview-url" style="font-size:12px;color:var(--text);word-break:break-all;"></code>
         </div>
       </div>
 
@@ -762,6 +766,15 @@ function selectPlan(plan) {
   document.getElementById('c-fee').value = CFG['price_' + plan] || 0;
 }
 
+function previewLink() {
+  const code = (document.getElementById('c-code').value || '').trim().toUpperCase().replace(/\s+/g,'');
+  const prev = document.getElementById('link-preview');
+  const url  = document.getElementById('link-preview-url');
+  if (!code) { prev.style.display='none'; return; }
+  prev.style.display = 'block';
+  url.textContent = `${API_BASE}/index.html?p=${code}`;
+}
+
 function previewName() {
   const name   = document.getElementById('c-name').value.trim();
   const slogan = document.getElementById('c-slogan').value.trim();
@@ -775,39 +788,79 @@ function previewName() {
 
 async function createPlatform() {
   const alertEl = document.getElementById('create-alert');
-  const name       = document.getElementById('c-name').value.trim();
-  const ownerName  = document.getElementById('c-owner-name').value.trim();
-  const ownerEmail = document.getElementById('c-owner-email').value.trim();
-  const ownerPwd   = document.getElementById('c-owner-pwd').value;
-  if (!name)                        return showAlert(alertEl, '❌ Le nom de la plateforme est obligatoire', false);
-  if (!ownerName||!ownerEmail||!ownerPwd) return showAlert(alertEl, '❌ Nom, email et mot de passe du propriétaire sont obligatoires', false);
+  alertEl.style.display = 'none';
+
+  // ── Lire tous les champs ──────────────────────────────
+  const code       = (document.getElementById('c-code').value || '').trim().toUpperCase().replace(/\s+/g,'');
+  const name       = (document.getElementById('c-name').value || '').trim();
+  const slogan     = (document.getElementById('c-slogan').value || '').trim();
+  const logo_url   = (document.getElementById('c-logo').value || '').trim();
+  const email      = (document.getElementById('c-email').value || '').trim();
+  const phone      = (document.getElementById('c-phone').value || '').trim();
+  const address    = (document.getElementById('c-address').value || '').trim();
+  const server_url = (document.getElementById('c-server').value || '').trim();
+  const ownerName  = (document.getElementById('c-owner-name').value || '').trim();
+  const ownerEmail = (document.getElementById('c-owner-email').value || '').trim();
+  const ownerPhone = (document.getElementById('c-owner-phone').value || '').trim();
+  const ownerPwd   = document.getElementById('c-owner-pwd').value || '';
+  const staffCode  = (document.getElementById('c-staff').value || '').trim();
+  const footballApi= (document.getElementById('c-football').value || '').trim();
+  const plan       = document.getElementById('c-plan').value || 'test';
+  const startDate  = document.getElementById('c-start').value || new Date().toISOString().split('T')[0];
+  const fee        = parseFloat(document.getElementById('c-fee').value) || 0;
+  const notes      = (document.getElementById('c-notes').value || '').trim();
+
+  // ── Validations ───────────────────────────────────────
+  if (!code)       return showAlert(alertEl, '❌ Le CODE UNIQUE est obligatoire (ex: MAMAPARYAJ)', false);
+  if (!name)       return showAlert(alertEl, '❌ Le NOM de la plateforme est obligatoire', false);
+  if (!ownerName)  return showAlert(alertEl, '❌ Le NOM du propriétaire est obligatoire', false);
+  if (!ownerEmail) return showAlert(alertEl, '❌ L\'EMAIL du propriétaire est obligatoire', false);
+  if (!ownerPwd)   return showAlert(alertEl, '❌ Le MOT DE PASSE du propriétaire est obligatoire', false);
+  if (ownerPwd.length < 4) return showAlert(alertEl, '❌ Le mot de passe doit avoir au moins 4 caractères', false);
+
+  // ── Désactiver le bouton pendant l'envoi ──────────────
+  const btn = document.querySelector('[onclick="createPlatform()"]');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Création...'; }
+
   try {
-    const code = document.getElementById('c-code').value.trim().toUpperCase().replace(/\s/g,'');
-    if (!code) return showAlert(alertEl, '❌ Le code unique est obligatoire', false);
-    await api('POST', '/master/platforms', {
-      code,
-      name, slogan: document.getElementById('c-slogan').value,
-      logo_url: document.getElementById('c-logo').value.trim(),
-      email: document.getElementById('c-email').value,
-      phone: document.getElementById('c-phone').value,
-      address: document.getElementById('c-address').value,
-      server_url: document.getElementById('c-server').value,
-      owner_name: ownerName, owner_email: ownerEmail,
-      owner_phone: document.getElementById('c-owner-phone').value,
+    const payload = {
+      code, name, slogan, logo_url, email, phone, address,
+      server_url: server_url || API_BASE,
+      owner_name: ownerName,
+      owner_email: ownerEmail,
+      owner_phone: ownerPhone,
       owner_pwd: ownerPwd,
-      staff_code: document.getElementById('c-staff').value,
-      football_api: document.getElementById('c-football').value,
-      plan: selectedPlan,
-      start_date: document.getElementById('c-start').value,
-      fee: document.getElementById('c-fee').value,
-      notes: document.getElementById('c-notes').value,
-    });
-    showAlert(alertEl, `✅ Plateforme "${name}" créée avec succès !`, true);
+      staff_code: staffCode || code + '12',
+      football_api: footballApi,
+      plan, start_date: startDate, fee, notes
+    };
+
+    console.log('Création plateforme:', payload.code, payload.name);
+    const data = await api('POST', '/master/platforms', payload);
+    
+    const lien = `${API_BASE}/index.html?p=${code}`;
+    showAlert(alertEl,
+      `✅ Plateforme "${name}" créée ! Lien: ${lien}`,
+      true
+    );
+    
+    // Afficher le lien généré
+    document.getElementById('create-alert').innerHTML =
+      `✅ Plateforme <strong>${name}</strong> créée avec succès !<br>
+       🔗 Lien joueurs: <a href="${lien}" target="_blank" style="color:var(--gold)">${lien}</a><br>
+       👤 Propriétaire: ${ownerEmail} / ${ownerPwd}`;
+    document.getElementById('create-alert').style.display = 'block';
+
     resetCreateForm();
-    const data = await api('GET', '/master/platforms');
-    allPlatforms = data.platforms;
-    setTimeout(() => showTab('platforms'), 1800);
-  } catch(e) { showAlert(alertEl, '❌ ' + e.message, false); }
+    const r = await api('GET', '/master/platforms');
+    allPlatforms = r.platforms;
+
+  } catch(e) {
+    console.error('Erreur création:', e);
+    showAlert(alertEl, '❌ Erreur: ' + e.message, false);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Créer la plateforme'; }
+  }
 }
 
 function resetCreateForm() {
