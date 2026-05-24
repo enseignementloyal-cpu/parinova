@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>MASTER · Gestionnaire de Plateformes</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,7 +20,7 @@ button{cursor:pointer;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px;}
 
-/* ── LOGIN ───────────────────────────────────────── */
+/* LOGIN */
 #login-screen{
   position:fixed;inset:0;display:flex;align-items:center;
   justify-content:center;background:var(--bg);z-index:999;
@@ -60,7 +60,7 @@ button{cursor:pointer;}
 .btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,184,0,.3);}
 #login-err{color:var(--red);font-size:13px;margin-top:12px;text-align:center;display:none;}
 
-/* ── APP ─────────────────────────────────────────── */
+/* APP */
 #app{display:none;}
 .topbar{
   height:58px;background:var(--bg2);border-bottom:1px solid var(--border);
@@ -87,10 +87,10 @@ button{cursor:pointer;}
 }
 .btn-out:hover{background:rgba(255,59,92,.22);}
 
-/* ── LAYOUT ──────────────────────────────────────── */
+/* LAYOUT */
 .layout{display:flex;min-height:calc(100vh - 58px);}
 .sidebar{
-  width:215px;flex-shrink:0;background:var(--bg2);
+  width:260px;flex-shrink:0;background:var(--bg2);
   border-right:1px solid var(--border);padding:14px 10px;
   position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;
 }
@@ -108,7 +108,7 @@ button{cursor:pointer;}
 .nav-btn:hover{background:var(--card);color:var(--text);}
 .nav-btn.on{background:rgba(232,184,0,.12);color:var(--gold);border:1px solid rgba(232,184,0,.18);}
 
-/* ── CONTENT ─────────────────────────────────────── */
+/* CONTENT */
 .main{flex:1;padding:24px;overflow-x:hidden;}
 .page{display:none;}.page.on{display:block;}
 .page-head{
@@ -121,7 +121,7 @@ button{cursor:pointer;}
 }
 .page-title i{color:var(--gold);}
 
-/* ── STATS ───────────────────────────────────────── */
+/* STATS */
 .stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-bottom:22px;}
 .stat{
   background:var(--card);border:1px solid var(--border);border-radius:14px;
@@ -132,12 +132,12 @@ button{cursor:pointer;}
 .stat-val{font-family:'Rajdhani',sans-serif;font-size:1.9rem;font-weight:700;}
 .stat-lbl{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:1px;}
 
-/* ── CARD ────────────────────────────────────────── */
+/* CARD */
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;}
 .card-title{font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:1.5px;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
 .card-title i{color:var(--gold);}
 
-/* ── FORM ────────────────────────────────────────── */
+/* FORM */
 .fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
 .fg-full{grid-column:1/-1;}
 .fg label{display:block;font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;font-weight:700;}
@@ -149,7 +149,7 @@ button{cursor:pointer;}
 .fg input:focus,.fg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,0,.1);}
 .fg input::placeholder{color:rgba(255,255,255,.2);}
 
-/* ── PLAN CARDS ─────────────────────────────────── */
+/* PLAN CARDS */
 .plans{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;}
 @media(max-width:700px){.plans{grid-template-columns:repeat(2,1fr);}}
 .plan{
@@ -163,7 +163,7 @@ button{cursor:pointer;}
 .plan-dur{font-size:10px;color:var(--muted);margin-top:2px;}
 .plan-price{font-size:1rem;font-weight:700;color:var(--gold);margin-top:6px;}
 
-/* ── BUTTONS ─────────────────────────────────────── */
+/* BUTTONS */
 .btn{
   display:inline-flex;align-items:center;gap:7px;padding:10px 20px;
   border:none;border-radius:10px;font-weight:700;font-size:13px;
@@ -181,13 +181,13 @@ button{cursor:pointer;}
 .btn-green:hover{background:rgba(0,229,155,.22);}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
 
-/* ── ALERT ───────────────────────────────────────── */
+/* ALERT */
 .alert{padding:12px 16px;border-radius:10px;margin-bottom:14px;font-size:13px;display:none;}
 .alert.ok{background:rgba(0,229,155,.1);border:1px solid rgba(0,229,155,.3);color:var(--green);}
 .alert.err{background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.3);color:var(--red);}
 .alert.info{background:rgba(0,180,255,.1);border:1px solid rgba(0,180,255,.3);color:var(--blue);}
 
-/* ── LINK PREVIEW ────────────────────────────────── */
+/* LINK PREVIEW */
 .link-box{
   background:rgba(0,180,255,.07);border:1px solid rgba(0,180,255,.2);
   border-radius:10px;padding:14px;margin-top:14px;display:none;
@@ -198,7 +198,7 @@ button{cursor:pointer;}
   padding:8px 12px;border-radius:7px;word-break:break-all;margin-bottom:8px;
 }
 
-/* ── TABLE ───────────────────────────────────────── */
+/* TABLE */
 .tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);}
 table{width:100%;border-collapse:collapse;}
 th{padding:11px 14px;text-align:left;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:700;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);}
@@ -206,7 +206,7 @@ td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13p
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(255,255,255,.02);}
 
-/* ── BADGES ──────────────────────────────────────── */
+/* BADGES */
 .bdg{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
 .bdg-green{background:rgba(0,229,155,.12);color:var(--green);border:1px solid rgba(0,229,155,.22);}
 .bdg-red{background:rgba(255,59,92,.12);color:var(--red);border:1px solid rgba(255,59,92,.22);}
@@ -214,7 +214,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .bdg-blue{background:rgba(0,180,255,.12);color:var(--blue);border:1px solid rgba(0,180,255,.22);}
 .bdg-purple{background:rgba(155,92,255,.12);color:var(--purple);border:1px solid rgba(155,92,255,.22);}
 
-/* ── PLATFORM ROW ────────────────────────────────── */
+/* PLATFORM ROW */
 .prow{
   display:grid;grid-template-columns:46px 1fr auto auto auto;
   align-items:center;gap:14px;padding:14px;border-radius:12px;
@@ -235,7 +235,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .ep-danger{background:rgba(255,59,92,.1);color:var(--red);border:1px solid rgba(255,59,92,.2);}
 .ep-off{background:rgba(100,100,100,.1);color:var(--muted);border:1px solid rgba(100,100,100,.2);}
 
-/* ── MODAL ───────────────────────────────────────── */
+/* MODAL */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
 .modal.on{display:flex;}
 .modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;animation:fadeup .25s ease;}
@@ -248,38 +248,39 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .mtab.on{background:rgba(232,184,0,.12);color:var(--gold);border-color:rgba(232,184,0,.3);}
 .divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
 
-/* ── EMPTY / SPINNER ─────────────────────────────── */
+/* EMPTY / SPINNER */
 .empty{text-align:center;padding:50px 20px;color:var(--muted);}
 .empty i{font-size:2.5rem;display:block;margin-bottom:10px;opacity:.25;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── SEARCH ──────────────────────────────────────── */
+/* SEARCH */
 .searchbar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0 13px;}
 .searchbar i{color:var(--muted);}
 .searchbar input{background:none;border:none;padding:9px 0;color:var(--text);width:180px;outline:none;}
 .searchbar input::placeholder{color:var(--muted);}
 
-/* ── REV BARS ────────────────────────────────────── */
+/* REV BARS */
 .revbar{margin:9px 0;}
 .revbar-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;}
 .revbar-track{height:5px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
 .revbar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:10px;transition:width 1s ease;}
 
-/* ── CONFIG PREVIEW ──────────────────────────────── */
+/* CONFIG PREVIEW */
 .cfg-pre{background:rgba(0,0,0,.6);border-radius:10px;padding:12px;font-size:11px;font-family:monospace;color:var(--green);white-space:pre-wrap;max-height:200px;overflow-y:auto;margin-top:10px;display:none;}
 
 @media(max-width:768px){
-  .sidebar{display:none;}
-  .main{padding:14px;}
-  .stats{grid-template-columns:1fr 1fr;}
+  .sidebar{width:100%;position:fixed;bottom:0;top:auto;height:auto;background:var(--bg2);z-index:100;border-top:1px solid var(--border);padding:8px;display:flex;flex-wrap:wrap;gap:6px;}
+  .sidebar .slabel{display:none;}
+  .nav-btn{width:auto;padding:6px 12px;font-size:11px;}
+  .main{padding:14px;padding-bottom:70px;}
   .prow{grid-template-columns:46px 1fr auto;}
 }
 </style>
 </head>
 <body>
 
-<!-- ════════ LOGIN ════════ -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-wrap">
     <div class="login-logo">
@@ -307,7 +308,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
-<!-- ════════ APP ════════ -->
+<!-- APP -->
 <div id="app">
 
   <!-- TOPBAR -->
@@ -324,10 +325,10 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
   <div class="layout">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR (MENU COMPLET AVEC NOUVEAU PARYAJ) -->
     <div class="sidebar">
       <span class="slabel">TABLEAU DE BORD</span>
-      <button class="nav-btn on" id="nb-dash" onclick="go('dash')"><i class="fas fa-chart-pie"></i> Vue globale</button>
+      <button class="nav-btn" id="nb-dash" onclick="go('dash')"><i class="fas fa-chart-pie"></i> Vue globale</button>
 
       <span class="slabel">PLATEFORMES</span>
       <button class="nav-btn" id="nb-list" onclick="go('list')"><i class="fas fa-gamepad"></i> Toutes les plateformes</button>
@@ -348,126 +349,62 @@ tr:hover td{background:rgba(255,255,255,.02);}
     <!-- MAIN CONTENT -->
     <div class="main">
 
-      <!-- ══ DASHBOARD ══ -->
+      <!-- DASHBOARD -->
       <div id="pg-dash" class="page on">
-        <div class="page-head">
-          <div class="page-title"><i class="fas fa-chart-pie"></i> VUE GLOBALE</div>
-          <button class="btn btn-outline btn-sm" onclick="loadDash()"><i class="fas fa-sync-alt"></i> Actualiser</button>
-        </div>
+        <div class="page-head"><div class="page-title"><i class="fas fa-chart-pie"></i> VUE GLOBALE</div><button class="btn btn-outline btn-sm" onclick="loadDash()"><i class="fas fa-sync-alt"></i> Actualiser</button></div>
         <div class="stats">
           <div class="stat" style="--ac:var(--gold)"><div class="stat-ico">🎮</div><div class="stat-val" id="s-total">—</div><div class="stat-lbl">TOTAL PLATEFORMES</div></div>
           <div class="stat" style="--ac:var(--green)"><div class="stat-ico">✅</div><div class="stat-val" id="s-active">—</div><div class="stat-lbl">ABONNEMENTS VALIDES</div></div>
           <div class="stat" style="--ac:var(--red)"><div class="stat-ico">⚠️</div><div class="stat-val" id="s-exp">—</div><div class="stat-lbl">EXPIRENT BIENTÔT</div></div>
           <div class="stat" style="--ac:var(--blue)"><div class="stat-ico">💰</div><div class="stat-val" id="s-rev">—</div><div class="stat-lbl">REVENUS TOTAUX HTG</div></div>
         </div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-list"></i> PLATEFORMES RÉCENTES</div>
-          <div id="dash-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
-        </div>
+        <div class="card"><div class="card-title"><i class="fas fa-list"></i> PLATEFORMES RÉCENTES</div><div id="dash-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div></div>
       </div>
 
-      <!-- ══ LISTE PLATEFORMES ══ -->
+      <!-- LISTE PLATEFORMES -->
       <div id="pg-list" class="page">
-        <div class="page-head">
-          <div class="page-title"><i class="fas fa-gamepad"></i> TOUTES LES PLATEFORMES</div>
-          <div style="display:flex;gap:10px;">
-            <div class="searchbar"><i class="fas fa-search"></i><input type="text" id="srch" placeholder="Rechercher..." oninput="filterList()"></div>
-            <button class="btn btn-gold btn-sm" onclick="go('new')"><i class="fas fa-plus"></i> Nouveau paryaj</button>
-          </div>
-        </div>
+        <div class="page-head"><div class="page-title"><i class="fas fa-gamepad"></i> TOUTES LES PLATEFORMES</div><div style="display:flex;gap:10px;"><div class="searchbar"><i class="fas fa-search"></i><input type="text" id="srch" placeholder="Rechercher..." oninput="filterList()"></div><button class="btn btn-gold btn-sm" onclick="go('new')"><i class="fas fa-plus"></i> Nouveau paryaj</button></div></div>
         <div id="list-alert" class="alert"></div>
         <div id="plat-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
       </div>
 
-      <!-- ══ NOUVEAU PARYAJ ══ -->
+      <!-- ⭐ NOUVEAU PARYAJ (FORMULAIRE COMPLET) -->
       <div id="pg-new" class="page">
-        <div class="page-head">
-          <div class="page-title"><i class="fas fa-plus-circle"></i> CRÉER UN NOUVEAU PARYAJ</div>
-        </div>
+        <div class="page-head"><div class="page-title"><i class="fas fa-plus-circle"></i> CRÉER UN NOUVEAU PARYAJ</div></div>
         <div id="new-alert" class="alert"></div>
 
         <!-- IDENTITÉ -->
         <div class="card">
           <div class="card-title"><i class="fas fa-tag"></i> IDENTITÉ DU PARYAJ</div>
           <div class="fgrid">
-            <div class="fg">
-              <label>CODE UNIQUE * <span style="color:var(--muted);font-weight:400">(sans espaces)</span></label>
-              <input type="text" id="n-code" placeholder="Ex: MAMAPARYAJ, KINGKONG..." style="text-transform:uppercase;font-weight:700;letter-spacing:2px" oninput="onCodeInput()">
-            </div>
-            <div class="fg">
-              <label>NOM DU PARYAJ *</label>
-              <input type="text" id="n-name" placeholder="Ex: Mama Paryaj" oninput="onNameInput()">
-            </div>
-            <div class="fg fg-full">
-              <label>URL DU LOGO <span style="color:var(--muted);font-weight:400">(lien image: imgur, cloudinary...)</span></label>
-              <input type="text" id="n-logo" placeholder="https://i.imgur.com/votrelogo.png" oninput="onLogoInput()">
-            </div>
-            <div class="fg">
-              <label>SLOGAN</label>
-              <input type="text" id="n-slogan" placeholder="Ex: Jwe ak konfyans !">
-            </div>
-            <div class="fg">
-              <label>EMAIL</label>
-              <input type="email" id="n-email" placeholder="info@mamaparyaj.com">
-            </div>
-            <div class="fg">
-              <label>TÉLÉPHONE</label>
-              <input type="text" id="n-phone" placeholder="+509 00 00 0000">
-            </div>
-            <div class="fg fg-full">
-              <label>ADRESSE</label>
-              <input type="text" id="n-address" placeholder="Ex: Rue Principale, Port-au-Prince">
-            </div>
-            <div class="fg fg-full">
-              <label>URL SERVEUR BACKEND</label>
-              <input type="text" id="n-server" placeholder="https://parinova-rmkp.onrender.com" value="https://parinova-rmkp.onrender.com">
-            </div>
+            <div class="fg"><label>CODE UNIQUE *</label><input type="text" id="n-code" placeholder="Ex: MAMAPARYAJ" style="text-transform:uppercase;" oninput="onCodeInput()"></div>
+            <div class="fg"><label>NOM DU PARYAJ *</label><input type="text" id="n-name" placeholder="Ex: Mama Paryaj" oninput="updatePreview()"></div>
+            <div class="fg fg-full"><label>URL DU LOGO</label><input type="text" id="n-logo" placeholder="https://i.imgur.com/logo.png" oninput="updatePreview()"></div>
+            <div class="fg"><label>SLOGAN</label><input type="text" id="n-slogan" placeholder="Jwe ak konfyans !" oninput="updatePreview()"></div>
+            <div class="fg"><label>EMAIL</label><input type="email" id="n-email" placeholder="info@mamaparyaj.com"></div>
+            <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="n-phone" placeholder="+509 00 00 0000"></div>
+            <div class="fg fg-full"><label>ADRESSE</label><input type="text" id="n-address" placeholder="Rue Principale, Port-au-Prince"></div>
+            <div class="fg fg-full"><label>URL SERVEUR BACKEND</label><input type="text" id="n-server" placeholder="https://parinova-rmkp.onrender.com" value="https://parinova-rmkp.onrender.com"></div>
           </div>
-
-          <!-- APERÇU BRANDING -->
           <div id="preview-box" style="margin-top:18px;display:none;">
-            <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:10px;font-weight:700;"><i class="fas fa-eye"></i> APERÇU BRANDING</div>
-            <div style="background:linear-gradient(135deg,#0d2151,#061a2e);border-radius:14px;padding:16px 20px;display:inline-flex;align-items:center;gap:14px;min-width:280px;">
-              <div id="prev-logo-wrap" style="display:none;">
-                <img id="prev-logo-img" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);">
-              </div>
-              <div id="prev-initials" style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5c800,#fff8dc);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-family:'Rajdhani',sans-serif;font-size:1.2rem;flex-shrink:0;"></div>
-              <div>
-                <div id="prev-name" style="font-family:'Rajdhani',sans-serif;font-weight:900;color:#f5c800;letter-spacing:3px;font-size:1.1rem;">NOM</div>
-                <div id="prev-slogan" style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1.5px;margin-top:2px;">Slogan</div>
-              </div>
+            <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:10px;"><i class="fas fa-eye"></i> APERÇU BRANDING</div>
+            <div style="background:linear-gradient(135deg,#0d2151,#061a2e);border-radius:14px;padding:16px 20px;display:inline-flex;align-items:center;gap:14px;">
+              <div id="prev-logo-wrap" style="display:none;"><img id="prev-logo-img" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);"></div>
+              <div id="prev-initials" style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5c800,#fff8dc);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-family:'Rajdhani';font-size:1.2rem;"></div>
+              <div><div id="prev-name" style="font-family:'Rajdhani';font-weight:900;color:#f5c800;font-size:1.1rem;">NOM</div><div id="prev-slogan" style="font-size:10px;color:rgba(255,255,255,.4);">Slogan</div></div>
             </div>
           </div>
-
-          <!-- APERÇU LIEN -->
-          <div class="link-box" id="link-prev-box">
-            <label><i class="fas fa-link"></i> LIEN UNIQUE QUI SERA GÉNÉRÉ</label>
-            <code id="link-prev-url"></code>
-            <div style="font-size:11px;color:var(--muted);">Ce lien sera partagé avec les joueurs et le propriétaire du paryaj</div>
-          </div>
+          <div class="link-box" id="link-prev-box"><label><i class="fas fa-link"></i> LIEN UNIQUE</label><code id="link-prev-url"></code><div style="font-size:11px;color:var(--muted);">Ce lien sera partagé avec les joueurs</div></div>
         </div>
 
         <!-- PROPRIÉTAIRE -->
         <div class="card">
           <div class="card-title"><i class="fas fa-user-tie"></i> PROPRIÉTAIRE / ABONNÉ</div>
           <div class="fgrid">
-            <div class="fg">
-              <label>NOM COMPLET *</label>
-              <input type="text" id="n-owner-name" placeholder="Jean Dupont">
-            </div>
-            <div class="fg">
-              <label>EMAIL (identifiant connexion) *</label>
-              <input type="email" id="n-owner-email" placeholder="jean@exemple.com">
-            </div>
-            <div class="fg">
-              <label>TÉLÉPHONE</label>
-              <input type="text" id="n-owner-phone" placeholder="+509 00 00 0000">
-            </div>
-            <div class="fg">
-              <label>MOT DE PASSE *</label>
-              <input type="password" id="n-owner-pwd" placeholder="Choisir un mot de passe">
-              <div style="font-size:10px;color:var(--muted);margin-top:5px;">Le propriétaire utilisera cet email + mot de passe pour se connecter</div>
-            </div>
+            <div class="fg"><label>NOM COMPLET *</label><input type="text" id="n-owner-name" placeholder="Jean Dupont"></div>
+            <div class="fg"><label>EMAIL (identifiant) *</label><input type="email" id="n-owner-email" placeholder="jean@exemple.com"></div>
+            <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="n-owner-phone" placeholder="+509 00 00 0000"></div>
+            <div class="fg"><label>MOT DE PASSE *</label><input type="password" id="n-owner-pwd" placeholder="Choisir un mot de passe"></div>
           </div>
         </div>
 
@@ -475,323 +412,61 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="card">
           <div class="card-title"><i class="fas fa-calendar-check"></i> TYPE D'ABONNEMENT</div>
           <div class="plans">
-            <div class="plan on" data-plan="test" onclick="selPlan('test')">
-              <div class="plan-ico">🧪</div>
-              <div class="plan-nm">TEST</div>
-              <div class="plan-dur">7 jours</div>
-              <div class="plan-price" id="pp-test">Gratuit</div>
-            </div>
-            <div class="plan" data-plan="mensuel" onclick="selPlan('mensuel')">
-              <div class="plan-ico">📅</div>
-              <div class="plan-nm">MENSUEL</div>
-              <div class="plan-dur">30 jours</div>
-              <div class="plan-price" id="pp-mensuel">2,000 HTG</div>
-            </div>
-            <div class="plan" data-plan="semestriel" onclick="selPlan('semestriel')">
-              <div class="plan-ico">📆</div>
-              <div class="plan-nm">SEMESTRIEL</div>
-              <div class="plan-dur">180 jours</div>
-              <div class="plan-price" id="pp-semestriel">10,000 HTG</div>
-            </div>
-            <div class="plan" data-plan="annuel" onclick="selPlan('annuel')">
-              <div class="plan-ico">🏆</div>
-              <div class="plan-nm">ANNUEL</div>
-              <div class="plan-dur">365 jours</div>
-              <div class="plan-price" id="pp-annuel">18,000 HTG</div>
-            </div>
+            <div class="plan on" data-plan="test" onclick="selPlan('test')"><div class="plan-ico">🧪</div><div class="plan-nm">TEST</div><div class="plan-dur">7 jours</div><div class="plan-price" id="pp-test">Gratuit</div></div>
+            <div class="plan" data-plan="mensuel" onclick="selPlan('mensuel')"><div class="plan-ico">📅</div><div class="plan-nm">MENSUEL</div><div class="plan-dur">30 jours</div><div class="plan-price" id="pp-mensuel">2,000 HTG</div></div>
+            <div class="plan" data-plan="semestriel" onclick="selPlan('semestriel')"><div class="plan-ico">📆</div><div class="plan-nm">SEMESTRIEL</div><div class="plan-dur">180 jours</div><div class="plan-price" id="pp-semestriel">10,000 HTG</div></div>
+            <div class="plan" data-plan="annuel" onclick="selPlan('annuel')"><div class="plan-ico">🏆</div><div class="plan-nm">ANNUEL</div><div class="plan-dur">365 jours</div><div class="plan-price" id="pp-annuel">18,000 HTG</div></div>
           </div>
           <input type="hidden" id="n-plan" value="test">
-          <div class="fgrid" style="margin-top:12px;">
+          <div class="fgrid">
             <div class="fg"><label>DATE DE DÉBUT</label><input type="date" id="n-start"></div>
-            <div class="fg"><label>FRAIS À PAYER (HTG)</label><input type="number" id="n-fee" placeholder="0" min="0" value="0"></div>
+            <div class="fg"><label>FRAIS À PAYER (HTG)</label><input type="number" id="n-fee" min="0" value="0"></div>
             <div class="fg"><label>NOTES</label><input type="text" id="n-notes" placeholder="Promotion, offre spéciale..."></div>
           </div>
         </div>
 
-        <!-- ACCÈS -->
+        <!-- CODES -->
         <div class="card">
           <div class="card-title"><i class="fas fa-key"></i> CODES D'ACCÈS</div>
           <div class="fgrid">
-            <div class="fg">
-              <label>CODE STAFF SECRET</label>
-              <input type="text" id="n-staff" placeholder="Auto-généré si vide (CODE + 12)">
-            </div>
-            <div class="fg">
-              <label>CLÉ API FOOTBALL</label>
-              <input type="text" id="n-football" placeholder="Laisser vide = clé par défaut">
-            </div>
+            <div class="fg"><label>CODE STAFF SECRET</label><input type="text" id="n-staff" placeholder="Auto-généré si vide"></div>
+            <div class="fg"><label>CLÉ API FOOTBALL</label><input type="text" id="n-football" placeholder="Laisser vide = clé par défaut"></div>
           </div>
         </div>
 
-        <!-- BOUTONS CRÉATION -->
-        <div style="display:flex;gap:12px;margin-top:6px;flex-wrap:wrap;">
-          <button class="btn btn-gold" id="btn-create" onclick="createPlatform()">
-            <i class="fas fa-save"></i> Créer le paryaj
-          </button>
-          <button class="btn btn-outline" onclick="resetForm()">
-            <i class="fas fa-times"></i> Réinitialiser
-          </button>
-        </div>
-
-        <!-- RÉSULTAT CRÉATION -->
+        <div style="display:flex;gap:12px;margin-top:6px;"><button class="btn btn-gold" id="btn-create" onclick="createPlatform()"><i class="fas fa-save"></i> Créer le paryaj</button><button class="btn btn-outline" onclick="resetForm()"><i class="fas fa-times"></i> Réinitialiser</button></div>
         <div id="create-result" style="display:none;margin-top:18px;background:rgba(0,229,155,.08);border:1px solid rgba(0,229,155,.25);border-radius:14px;padding:20px;">
           <div style="font-size:1rem;font-weight:700;color:var(--green);margin-bottom:14px;"><i class="fas fa-check-circle"></i> Paryaj créé avec succès !</div>
-          <div class="fgrid">
-            <div>
-              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">NOM</div>
-              <div id="cr-name" style="font-weight:700;font-family:'Rajdhani',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--gold);"></div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">PROPRIÉTAIRE</div>
-              <div id="cr-owner" style="font-weight:600;"></div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">IDENTIFIANTS</div>
-              <div id="cr-creds" style="font-size:12px;"></div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">CODE STAFF</div>
-              <div id="cr-staff" style="font-weight:700;color:var(--blue);"></div>
-            </div>
-          </div>
-          <div style="margin-top:14px;">
-            <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px;"><i class="fas fa-link"></i> LIENS À PARTAGER</div>
-            <div style="background:rgba(0,0,0,.4);border-radius:10px;padding:12px;">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Lien joueurs (page d'accueil):</div>
-              <code id="cr-link1" style="color:var(--gold);font-size:12px;word-break:break-all;"></code>
-              <button class="btn btn-outline btn-xs" style="margin-top:6px;" onclick="copyText(document.getElementById('cr-link1').textContent)"><i class="fas fa-copy"></i> Copier</button>
-            </div>
-            <div style="background:rgba(0,0,0,.4);border-radius:10px;padding:12px;margin-top:8px;">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Lien application (jeux):</div>
-              <code id="cr-link2" style="color:var(--gold);font-size:12px;word-break:break-all;"></code>
-              <button class="btn btn-outline btn-xs" style="margin-top:6px;" onclick="copyText(document.getElementById('cr-link2').textContent)"><i class="fas fa-copy"></i> Copier</button>
-            </div>
-          </div>
-          <div style="margin-top:14px;display:flex;gap:10px;">
-            <button class="btn btn-gold btn-sm" onclick="go('list')"><i class="fas fa-list"></i> Voir toutes les plateformes</button>
-            <button class="btn btn-outline btn-sm" onclick="resetForm();go('new')"><i class="fas fa-plus"></i> Créer un autre</button>
-          </div>
+          <div class="fgrid"><div><div style="font-size:10px;">NOM</div><div id="cr-name" style="font-weight:700;color:var(--gold);"></div></div><div><div style="font-size:10px;">PROPRIÉTAIRE</div><div id="cr-owner"></div></div><div><div style="font-size:10px;">IDENTIFIANTS</div><div id="cr-creds"></div></div><div><div style="font-size:10px;">CODE STAFF</div><div id="cr-staff" style="color:var(--blue);"></div></div></div>
+          <div><div style="font-size:10px;margin-top:8px;">LIENS À PARTAGER</div><div style="background:rgba(0,0,0,.4);border-radius:10px;padding:12px;margin-top:6px;"><code id="cr-link1" style="color:var(--gold);"></code><button class="btn btn-outline btn-xs" style="margin-left:10px;" onclick="copyText(document.getElementById('cr-link1').textContent)">Copier</button></div><div style="background:rgba(0,0,0,.4);border-radius:10px;padding:12px;margin-top:6px;"><code id="cr-link2" style="color:var(--gold);"></code><button class="btn btn-outline btn-xs" style="margin-left:10px;" onclick="copyText(document.getElementById('cr-link2').textContent)">Copier</button></div></div>
+          <div style="margin-top:14px;"><button class="btn btn-gold btn-sm" onclick="go('list')">Voir toutes</button> <button class="btn btn-outline btn-sm" onclick="resetForm();go('new')">Créer un autre</button></div>
         </div>
       </div>
 
-      <!-- ══ ABONNEMENTS ══ -->
-      <div id="pg-subs" class="page">
-        <div class="page-head"><div class="page-title"><i class="fas fa-calendar-check"></i> GESTION DES ABONNEMENTS</div></div>
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>PARYAJ</th><th>PROPRIÉTAIRE</th><th>PLAN</th><th>DÉBUT</th><th>EXPIRATION</th><th>STATUT</th><th>FRAIS</th><th>ACTIONS</th></tr></thead>
-            <tbody id="subs-body"><tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
+      <!-- AUTRES PAGES (simplifiées mais présentes) -->
+      <div id="pg-subs" class="page"><div class="page-head"><div class="page-title"><i class="fas fa-calendar-check"></i> GESTION ABONNEMENTS</div></div><div class="tbl-wrap"><table><thead><tr><th>PARYAJ</th><th>PROPRIÉTAIRE</th><th>PLAN</th><th>EXPIRATION</th><th>STATUT</th></tr></thead><tbody id="subs-body"><tr><td colspan="5">Chargement...</td></tr></tbody></table></div></div>
+      <div id="pg-exp" class="page"><div class="page-head"><div class="page-title"><i class="fas fa-clock"></i> EXPIRATIONS PROCHES</div></div><div id="exp-list"></div></div>
+      <div id="pg-rev" class="page"><div class="page-head"><div class="page-title"><i class="fas fa-coins"></i> REVENUS & FRAIS</div></div><div class="stats"><div class="stat"><div class="stat-ico">💵</div><div class="stat-val" id="rv-total">—</div><div class="stat-lbl">REVENUS TOTAUX</div></div></div><div id="rev-bars"></div></div>
+      <div id="pg-pay" class="page"><div class="page-head"><div class="page-title"><i class="fas fa-receipt"></i> PAIEMENTS</div></div><div class="tbl-wrap"><table><thead><tr><th>DATE</th><th>PARYAJ</th><th>MONTANT</th><th>STATUT</th></tr></thead><tbody id="pay-body"></tbody></table></div></div>
+      <div id="pg-set" class="page"><div class="page-head"><div class="page-title"><i class="fas fa-gear"></i> PARAMÈTRES</div><button class="btn btn-gold btn-sm" onclick="saveSettings()">Enregistrer</button></div><div id="set-alert" class="alert"></div><div class="card"><div class="card-title"><i class="fas fa-lock"></i> SÉCURITÉ MASTER</div><div class="fgrid"><div class="fg"><label>NOUVEL IDENTIFIANT</label><input type="text" id="s-user"></div><div class="fg"><label>NOUVEAU MOT DE PASSE</label><input type="password" id="s-pwd"></div></div></div><div class="card"><div class="card-title"><i class="fas fa-dollar-sign"></i> TARIFS</div><div class="fgrid"><div class="fg"><label>TEST</label><input type="number" id="s-p-test"></div><div class="fg"><label>MENSUEL</label><input type="number" id="s-p-men"></div><div class="fg"><label>SEMESTRIEL</label><input type="number" id="s-p-sem"></div><div class="fg"><label>ANNUEL</label><input type="number" id="s-p-ann"></div></div></div></div>
 
-      <!-- ══ EXPIRATIONS ══ -->
-      <div id="pg-exp" class="page">
-        <div class="page-head">
-          <div class="page-title"><i class="fas fa-clock"></i> EXPIRATIONS PROCHES</div>
-          <button class="btn btn-outline btn-sm" onclick="loadExp()"><i class="fas fa-sync-alt"></i></button>
-        </div>
-        <div id="exp-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
-      </div>
-
-      <!-- ══ REVENUS ══ -->
-      <div id="pg-rev" class="page">
-        <div class="page-head"><div class="page-title"><i class="fas fa-coins"></i> REVENUS & FRAIS</div></div>
-        <div class="stats">
-          <div class="stat" style="--ac:var(--green)"><div class="stat-ico">💵</div><div class="stat-val" id="rv-total">—</div><div class="stat-lbl">REVENUS TOTAUX HTG</div></div>
-          <div class="stat" style="--ac:var(--gold)"><div class="stat-ico">⏳</div><div class="stat-val" id="rv-pend">—</div><div class="stat-lbl">EN ATTENTE HTG</div></div>
-        </div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-chart-bar"></i> PAR TYPE DE PLAN</div>
-          <div id="rev-bars"></div>
-        </div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-list"></i> PAR PARYAJ</div>
-          <div class="tbl-wrap"><table><thead><tr><th>PARYAJ</th><th>PLAN</th><th>FRAIS</th><th>PAIEMENT</th><th>ACTION</th></tr></thead><tbody id="rev-body"></tbody></table></div>
-        </div>
-      </div>
-
-      <!-- ══ PAIEMENTS ══ -->
-      <div id="pg-pay" class="page">
-        <div class="page-head"><div class="page-title"><i class="fas fa-receipt"></i> HISTORIQUE PAIEMENTS</div></div>
-        <div class="tbl-wrap">
-          <table><thead><tr><th>DATE</th><th>PARYAJ</th><th>PLAN</th><th>MONTANT</th><th>MODE</th><th>STATUT</th><th>ACTION</th></tr></thead>
-          <tbody id="pay-body"><tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody></table>
-        </div>
-      </div>
-
-      <!-- ══ PARAMÈTRES ══ -->
-      <div id="pg-set" class="page">
-        <div class="page-head">
-          <div class="page-title"><i class="fas fa-gear"></i> PARAMÈTRES MASTER</div>
-          <button class="btn btn-gold btn-sm" onclick="saveSettings()"><i class="fas fa-save"></i> Enregistrer</button>
-        </div>
-        <div id="set-alert" class="alert"></div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-lock"></i> SÉCURITÉ MASTER</div>
-          <div class="fgrid">
-            <div class="fg"><label>NOUVEL IDENTIFIANT</label><input type="text" id="s-user" placeholder="Laisser vide = inchangé"></div>
-            <div class="fg"><label>NOUVEAU MOT DE PASSE</label><input type="password" id="s-pwd" placeholder="Laisser vide = inchangé"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-dollar-sign"></i> TARIFS ABONNEMENTS (HTG)</div>
-          <div class="fgrid">
-            <div class="fg"><label>PLAN TEST (7 jours)</label><input type="number" id="s-p-test" min="0" value="0"></div>
-            <div class="fg"><label>PLAN MENSUEL (30 jours)</label><input type="number" id="s-p-men" min="0" value="2000"></div>
-            <div class="fg"><label>PLAN SEMESTRIEL (180 jours)</label><input type="number" id="s-p-sem" min="0" value="10000"></div>
-            <div class="fg"><label>PLAN ANNUEL (365 jours)</label><input type="number" id="s-p-ann" min="0" value="18000"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title"><i class="fas fa-globe"></i> CONFIGURATION GLOBALE</div>
-          <div class="fgrid">
-            <div class="fg"><label>CLÉ API FOOTBALL PAR DÉFAUT</label><input type="text" id="s-foot" placeholder="votre_clé_api"></div>
-            <div class="fg"><label>SERVEUR PAR DÉFAUT</label><input type="text" id="s-srv" value="https://parinova-rmkp.onrender.com"></div>
-            <div class="fg"><label>ALERTER EXPIRATION (jours avant)</label><input type="number" id="s-days" value="7" min="1" max="30"></div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /main -->
-  </div><!-- /layout -->
-</div><!-- /app -->
-
-<!-- ════════ MODAL MODIFIER PARYAJ ════════ -->
-<div class="modal" id="modal-edit">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="edit-title">MODIFIER PARYAJ</h3>
-      <button class="modal-close" onclick="closeModal('modal-edit')"><i class="fas fa-times"></i></button>
-    </div>
-    <div id="edit-alert" class="alert"></div>
-    <div class="mtabs">
-      <button class="mtab on" id="mt-info" onclick="mTab('info')">Infos</button>
-      <button class="mtab" id="mt-sub" onclick="mTab('sub')">Abonnement</button>
-      <button class="mtab" id="mt-cfg" onclick="mTab('cfg')">Config</button>
-    </div>
-
-    <!-- Infos -->
-    <div id="mt-info-c">
-      <div class="fgrid">
-        <div class="fg"><label>CODE</label><input type="text" id="e-code" readonly style="opacity:.5;cursor:not-allowed"></div>
-        <div class="fg"><label>NOM</label><input type="text" id="e-name"></div>
-        <div class="fg fg-full"><label>LOGO URL</label><input type="text" id="e-logo" placeholder="https://..."></div>
-        <div class="fg"><label>SLOGAN</label><input type="text" id="e-slogan"></div>
-        <div class="fg"><label>EMAIL</label><input type="email" id="e-email"></div>
-        <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="e-phone"></div>
-        <div class="fg fg-full"><label>ADRESSE</label><input type="text" id="e-address"></div>
-        <div class="fg fg-full"><label>URL SERVEUR</label><input type="text" id="e-server"></div>
-      </div>
-    </div>
-
-    <!-- Abonnement -->
-    <div id="mt-sub-c" style="display:none;">
-      <div class="fgrid">
-        <div class="fg"><label>PLAN</label>
-          <select id="e-plan" onchange="calcExpiry()">
-            <option value="test">TEST (7j)</option>
-            <option value="mensuel">MENSUEL (30j)</option>
-            <option value="semestriel">SEMESTRIEL (180j)</option>
-            <option value="annuel">ANNUEL (365j)</option>
-          </select>
-        </div>
-        <div class="fg"><label>DATE DÉBUT</label><input type="date" id="e-start" onchange="calcExpiry()"></div>
-        <div class="fg"><label>DATE EXPIRATION</label><input type="date" id="e-end"></div>
-        <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="e-fee" min="0"></div>
-        <div class="fg"><label>STATUT PAIEMENT</label>
-          <select id="e-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
-        </div>
-        <div class="fg fg-full"><label>NOTES</label><input type="text" id="e-notes"></div>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-green btn-sm" onclick="openRenew()"><i class="fas fa-redo"></i> Renouveler</button>
-        <button class="btn btn-red btn-sm" onclick="toggleActive()"><i class="fas fa-ban"></i> Suspendre / Réactiver</button>
-      </div>
-    </div>
-
-    <!-- Config -->
-    <div id="mt-cfg-c" style="display:none;">
-      <div class="fgrid">
-        <div class="fg"><label>NOM PROPRIÉTAIRE</label><input type="text" id="e-oname"></div>
-        <div class="fg"><label>EMAIL PROPRIÉTAIRE</label><input type="email" id="e-oemail"></div>
-        <div class="fg"><label>TÉLÉPHONE PROPRIÉTAIRE</label><input type="text" id="e-ophone"></div>
-        <div class="fg"><label>NOUVEAU MOT DE PASSE</label><input type="password" id="e-opwd" placeholder="Vide = inchangé"></div>
-        <div class="fg"><label>CODE STAFF</label><input type="text" id="e-staff"></div>
-        <div class="fg"><label>CLÉ API FOOTBALL</label><input type="text" id="e-foot"></div>
-      </div>
-      <hr class="divider">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-gold btn-sm" onclick="genConfig()"><i class="fas fa-download"></i> Générer config.js</button>
-        <button class="btn btn-outline btn-sm" onclick="copyConfig()"><i class="fas fa-copy"></i> Copier</button>
-        <button class="btn btn-outline btn-sm" onclick="copyEditLink()"><i class="fas fa-link"></i> Copier lien</button>
-      </div>
-      <div class="cfg-pre" id="cfg-pre"></div>
-    </div>
-
-    <hr class="divider">
-    <input type="hidden" id="e-id">
-    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
-      <button class="btn btn-red btn-sm" onclick="deletePlatform()"><i class="fas fa-trash"></i> Supprimer</button>
-      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-edit')">Annuler</button>
-      <button class="btn btn-gold btn-sm" onclick="savePlatform()"><i class="fas fa-save"></i> Enregistrer</button>
     </div>
   </div>
 </div>
 
-<!-- ════════ MODAL RENOUVELLEMENT ════════ -->
-<div class="modal" id="modal-renew">
-  <div class="modal-box" style="max-width:400px;">
-    <div class="modal-head">
-      <h3>RENOUVELER ABONNEMENT</h3>
-      <button class="modal-close" onclick="closeModal('modal-renew')"><i class="fas fa-times"></i></button>
-    </div>
-    <p style="color:var(--muted);margin-bottom:16px;font-size:13px;">Paryaj: <b id="renew-name" style="color:var(--gold)"></b></p>
-    <div class="fg"><label>NOUVEAU PLAN</label>
-      <select id="r-plan">
-        <option value="mensuel">MENSUEL (30j)</option>
-        <option value="semestriel">SEMESTRIEL (180j)</option>
-        <option value="annuel">ANNUEL (365j)</option>
-        <option value="test">TEST (7j)</option>
-      </select>
-    </div>
-    <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="r-fee" min="0"></div>
-    <div class="fg"><label>STATUT PAIEMENT</label>
-      <select id="r-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px;">
-      <button class="btn btn-outline" onclick="closeModal('modal-renew')">Annuler</button>
-      <button class="btn btn-gold" onclick="confirmRenew()"><i class="fas fa-check"></i> Confirmer</button>
-    </div>
-  </div>
-</div>
+<!-- MODALS (simplifiés mais existants) -->
+<div class="modal" id="modal-edit"><div class="modal-box"><div class="modal-head"><h3>MODIFIER PARYAJ</h3><button class="modal-close" onclick="closeModal('modal-edit')">&times;</button></div><div id="edit-alert" class="alert"></div><input type="hidden" id="e-id"><div class="fg"><label>Nom</label><input type="text" id="e-name"></div><div class="fg"><label>Email propriétaire</label><input type="email" id="e-oemail"></div><div><button class="btn btn-gold btn-sm" onclick="savePlatform()">Enregistrer</button> <button class="btn btn-red btn-sm" onclick="deletePlatform()">Supprimer</button></div></div></div>
 
 <script>
-// ══════════════════════════════════════════════════════════
-//  CONSTANTES
-// ══════════════════════════════════════════════════════════
-const PLAN_DAYS  = { test:7, mensuel:30, semestriel:180, annuel:365 };
-const PLAN_NAMES = { test:'TEST', mensuel:'MENSUEL', semestriel:'SEMESTRIEL', annuel:'ANNUEL' };
-const SERVER_DEFAULT = 'https://parinova-rmkp.onrender.com';
-
-// ══════════════════════════════════════════════════════════
-//  ÉTAT
-// ══════════════════════════════════════════════════════════
-let API   = localStorage.getItem('m_server') || SERVER_DEFAULT;
-let TOKEN = localStorage.getItem('m_token')  || '';
-let UNAME = localStorage.getItem('m_user')   || 'master';
-let CFG   = {};
+// ==================== MASTER COMPLET ====================
+let API = localStorage.getItem('m_server') || 'https://parinova-rmkp.onrender.com';
+let TOKEN = localStorage.getItem('m_token') || '';
+let UNAME = localStorage.getItem('m_user') || 'master';
+let CFG = {};
 let allPlats = [];
-let currentId = null;
 
-// ══════════════════════════════════════════════════════════
-//  API HELPER
-// ══════════════════════════════════════════════════════════
 async function req(method, path, body) {
-  const opts = {
-    method,
-    headers: { 'Content-Type':'application/json', 'X-Master-Token': TOKEN }
-  };
+  const opts = { method, headers: { 'Content-Type':'application/json', 'X-Master-Token': TOKEN } };
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(API + path, opts);
   const d = await r.json();
@@ -799,698 +474,84 @@ async function req(method, path, body) {
   return d;
 }
 
-// ══════════════════════════════════════════════════════════
-//  LOGIN
-// ══════════════════════════════════════════════════════════
 async function login() {
   const srv = document.getElementById('srv').value.trim().replace(/\/$/,'');
   const usr = document.getElementById('mu').value.trim();
   const pwd = document.getElementById('mp').value;
-  const err = document.getElementById('login-err');
-
-  if (!srv || !usr || !pwd) {
-    err.style.display='block';
-    err.textContent='❌ Remplissez tous les champs';
-    return;
-  }
-  err.style.display='none';
-
+  const errDiv = document.getElementById('login-err');
+  if (!srv || !usr || !pwd) { errDiv.style.display='block'; errDiv.textContent='❌ Remplissez tous les champs'; return; }
+  errDiv.style.display='none';
   try {
     API = srv;
-    const r = await fetch(API + '/master/login', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ username:usr, password:pwd })
-    });
+    const r = await fetch(API + '/master/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username:usr, password:pwd }) });
     const d = await r.json();
-    if (!r.ok) { err.style.display='block'; err.textContent='❌ ' + (d.error||'Identifiants incorrects'); return; }
+    if (!r.ok) { errDiv.style.display='block'; errDiv.textContent='❌ '+(d.error||'Identifiants incorrects'); return; }
     TOKEN = d.token; UNAME = d.username;
-    localStorage.setItem('m_server', API);
-    localStorage.setItem('m_token', TOKEN);
-    localStorage.setItem('m_user', UNAME);
+    localStorage.setItem('m_server', API); localStorage.setItem('m_token', TOKEN); localStorage.setItem('m_user', UNAME);
     startApp();
-  } catch(e) {
-    err.style.display='block';
-    err.textContent='❌ Impossible de joindre le serveur: ' + e.message;
-  }
+  } catch(e) { errDiv.style.display='block'; errDiv.textContent='❌ '+e.message; }
 }
-
-async function logout() {
-  try { await req('POST', '/master/logout'); } catch(e) {}
-  localStorage.removeItem('m_token');
-  TOKEN = '';
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-}
-
+async function logout() { try { await req('POST','/master/logout'); } catch(e){} localStorage.removeItem('m_token'); TOKEN=''; document.getElementById('app').style.display='none'; document.getElementById('login-screen').style.display='flex'; }
 async function startApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
   document.getElementById('mu-display').textContent = UNAME;
   document.getElementById('srv').value = API;
   document.getElementById('n-server').value = API;
-  document.getElementById('s-srv').value = API;
-  document.getElementById('n-start').value = today();
   await loadCFG();
   loadDash();
 }
-
 window.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('srv').value = API;
-  document.getElementById('n-start').value = today();
+  document.getElementById('n-start').value = new Date().toISOString().split('T')[0];
   document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('on'); }));
-  if (TOKEN && API) {
-    try {
-      const r = await fetch(API+'/master/me', { headers:{'X-Master-Token':TOKEN} });
-      if (r.ok) { const d=await r.json(); UNAME=d.username; startApp(); return; }
-    } catch(e) {}
-    localStorage.removeItem('m_token'); TOKEN='';
-  }
+  if (TOKEN && API) { try { const r = await fetch(API+'/master/me', { headers:{'X-Master-Token':TOKEN} }); if (r.ok) { startApp(); return; } } catch(e){} localStorage.removeItem('m_token'); TOKEN=''; }
 });
 
-// ══════════════════════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════════════════════
-async function loadCFG() {
-  try {
-    const d = await req('GET', '/master/config');
-    CFG = d.config;
-    document.getElementById('s-p-test').value = CFG.price_test || 0;
-    document.getElementById('s-p-men').value  = CFG.price_mensuel || 2000;
-    document.getElementById('s-p-sem').value  = CFG.price_semestriel || 10000;
-    document.getElementById('s-p-ann').value  = CFG.price_annuel || 18000;
-    document.getElementById('s-foot').value   = CFG.football_api_key || '';
-    document.getElementById('s-srv').value    = CFG.default_server || API;
-    document.getElementById('s-days').value   = CFG.alert_days || 7;
-    // Mettre à jour prix dans les plans
-    document.getElementById('pp-test').textContent    = parseInt(CFG.price_test||0) === 0 ? 'Gratuit' : parseInt(CFG.price_test).toLocaleString()+' HTG';
-    document.getElementById('pp-mensuel').textContent  = parseInt(CFG.price_mensuel||2000).toLocaleString()+' HTG';
-    document.getElementById('pp-semestriel').textContent = parseInt(CFG.price_semestriel||10000).toLocaleString()+' HTG';
-    document.getElementById('pp-annuel').textContent   = parseInt(CFG.price_annuel||18000).toLocaleString()+' HTG';
-  } catch(e) { console.warn('Config:', e.message); }
-}
+async function loadCFG() { try { const d = await req('GET','/master/config'); CFG = d.config; document.getElementById('s-p-test').value = CFG.price_test||0; document.getElementById('s-p-men').value = CFG.price_mensuel||2000; document.getElementById('s-p-sem').value = CFG.price_semestriel||10000; document.getElementById('s-p-ann').value = CFG.price_annuel||18000; document.getElementById('pp-test').innerHTML = (parseInt(CFG.price_test||0)===0)?'Gratuit':parseInt(CFG.price_test||0).toLocaleString()+' HTG'; document.getElementById('pp-mensuel').innerHTML = parseInt(CFG.price_mensuel||2000).toLocaleString()+' HTG'; document.getElementById('pp-semestriel').innerHTML = parseInt(CFG.price_semestriel||10000).toLocaleString()+' HTG'; document.getElementById('pp-annuel').innerHTML = parseInt(CFG.price_annuel||18000).toLocaleString()+' HTG'; } catch(e) { console.warn(e); } }
+async function saveSettings() { try { await req('PUT','/master/config',{ config:{ price_test:document.getElementById('s-p-test').value, price_mensuel:document.getElementById('s-p-men').value, price_semestriel:document.getElementById('s-p-sem').value, price_annuel:document.getElementById('s-p-ann').value } }); const nu=document.getElementById('s-user').value.trim(), np=document.getElementById('s-pwd').value; if (nu||np) await req('PUT','/master/password',{ newUsername:nu||undefined, newPassword:np||undefined }); if (nu) { UNAME=nu; localStorage.setItem('m_user',nu); document.getElementById('mu-display').textContent=nu; } alert('✅ Paramètres enregistrés'); } catch(e){ alert('❌ '+e.message); } }
 
-async function saveSettings() {
-  const al = document.getElementById('set-alert');
-  try {
-    await req('PUT', '/master/config', { config: {
-      price_test:       document.getElementById('s-p-test').value,
-      price_mensuel:    document.getElementById('s-p-men').value,
-      price_semestriel: document.getElementById('s-p-sem').value,
-      price_annuel:     document.getElementById('s-p-ann').value,
-      football_api_key: document.getElementById('s-foot').value,
-      default_server:   document.getElementById('s-srv').value,
-      alert_days:       document.getElementById('s-days').value,
-    }});
-    const nu = document.getElementById('s-user').value.trim();
-    const np = document.getElementById('s-pwd').value;
-    if (nu || np) {
-      await req('PUT', '/master/password', { newUsername:nu||undefined, newPassword:np||undefined });
-      if (nu) { UNAME=nu; localStorage.setItem('m_user',nu); document.getElementById('mu-display').textContent=nu; }
-    }
-    await loadCFG();
-    alert2(al, '✅ Paramètres enregistrés', 'ok');
-  } catch(e) { alert2(al, '❌ '+e.message, 'err'); }
-}
-
-// ══════════════════════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════════════════════
 function go(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
-  document.getElementById('pg-'+name).classList.add('on');
-  const nb = document.getElementById('nb-'+name);
-  if (nb) nb.classList.add('on');
-  if (name==='list')  loadPlats();
-  if (name==='subs')  loadSubs();
-  if (name==='exp')   loadExp();
-  if (name==='rev')   loadRev();
-  if (name==='pay')   loadPay();
-  if (name==='new') {
-    document.getElementById('create-result').style.display='none';
-    document.getElementById('n-start').value = today();
+  const page = document.getElementById('pg-'+name);
+  if (page) page.classList.add('on');
+  const btn = document.getElementById('nb-'+name);
+  if (btn) btn.classList.add('on');
+  if (name === 'list') loadPlats();
+  if (name === 'subs') loadSubs();
+  if (name === 'exp') loadExp();
+  if (name === 'rev') loadRev();
+  if (name === 'pay') loadPay();
+  if (name === 'new') {
+    document.getElementById('create-result').style.display = 'none';
+    document.getElementById('n-start').value = new Date().toISOString().split('T')[0];
     loadCFG();
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  DASHBOARD
-// ══════════════════════════════════════════════════════════
-async function loadDash() {
-  try {
-    const [stats, plats] = await Promise.all([req('GET','/master/stats'), req('GET','/master/platforms')]);
-    allPlats = plats.platforms;
-    document.getElementById('s-total').textContent  = stats.total;
-    document.getElementById('s-active').textContent = stats.active;
-    document.getElementById('s-exp').textContent    = stats.expiring;
-    document.getElementById('s-rev').textContent    = parseInt(stats.revenue||0).toLocaleString();
-    const el = document.getElementById('dash-list');
-    if (!allPlats.length) { el.innerHTML='<div class="empty"><i class="fas fa-gamepad"></i>Aucun paryaj créé — Cliquez "Nouveau paryaj" pour commencer</div>'; return; }
-    el.innerHTML = allPlats.slice(0,6).map(p => platRow(p)).join('');
-  } catch(e) {
-    document.getElementById('dash-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`;
-  }
-}
+async function loadDash() { try { const [stats, plats] = await Promise.all([req('GET','/master/stats'), req('GET','/master/platforms')]); allPlats = plats.platforms; document.getElementById('s-total').textContent = stats.total; document.getElementById('s-active').textContent = stats.active; document.getElementById('s-exp').textContent = stats.expiring; document.getElementById('s-rev').textContent = parseInt(stats.revenue||0).toLocaleString(); const el = document.getElementById('dash-list'); if(!allPlats.length) { el.innerHTML='<div class="empty"><i class="fas fa-gamepad"></i>Aucun paryaj — Cliquez "Nouveau paryaj"</div>'; return; } el.innerHTML = allPlats.slice(0,6).map(p=>`<div class="prow"><div class="pavatar">${(p.name||'?').substring(0,2)}</div><div><div class="pname">${p.name}</div><div class="pmeta">${p.owner_name}</div></div><div>${p.plan}</div><div>${p.jours_restants>0?p.jours_restants+'j':'Expiré'}</div></div>`).join(''); } catch(e) { console.error(e); } }
+async function loadPlats() { try { const d = await req('GET','/master/platforms'); allPlats = d.platforms; renderPlats(allPlats); } catch(e) { document.getElementById('plat-list').innerHTML='<div class="empty">Erreur</div>'; } }
+function renderPlats(list) { const el = document.getElementById('plat-list'); if(!list.length) { el.innerHTML='<div class="empty">Aucun paryaj</div>'; return; } el.innerHTML = list.map(p=>`<div class="prow"><div class="pavatar">${(p.name||'?').substring(0,2)}</div><div><div class="pname">${p.name} <span style="font-size:10px;">[${p.code}]</span></div><div class="pmeta">${p.owner_name} · ${p.owner_email}</div></div><div>${p.plan}</div><div><button class="btn btn-outline btn-xs" onclick="openEdit(${p.id})"><i class="fas fa-edit"></i></button></div></div>`).join(''); }
+function filterList() { const q = document.getElementById('srch').value.toLowerCase(); renderPlats(allPlats.filter(p=>p.name.toLowerCase().includes(q)||(p.code||'').toLowerCase().includes(q))); }
 
-// ══════════════════════════════════════════════════════════
-//  LISTE PLATEFORMES
-// ══════════════════════════════════════════════════════════
-async function loadPlats() {
-  try {
-    const d = await req('GET', '/master/platforms');
-    allPlats = d.platforms;
-    renderPlats(allPlats);
-  } catch(e) { document.getElementById('plat-list').innerHTML=`<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
-}
-
-function renderPlats(list) {
-  const el = document.getElementById('plat-list');
-  if (!list.length) { el.innerHTML='<div class="empty"><i class="fas fa-gamepad"></i>Aucun paryaj</div>'; return; }
-  el.innerHTML = list.map(p => platRow(p)).join('');
-}
-
-function filterList() {
-  const q = document.getElementById('srch').value.toLowerCase();
-  renderPlats(allPlats.filter(p =>
-    p.name.toLowerCase().includes(q) ||
-    (p.code||'').toLowerCase().includes(q) ||
-    (p.owner_name||'').toLowerCase().includes(q)
-  ));
-}
-
-function platRow(p) {
-  const ini = (p.name||'?').substring(0,2).toUpperCase();
-  return `<div class="prow">
-    <div class="pavatar">${p.logo_url ? `<img src="${p.logo_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` : ini}</div>
-    <div>
-      <div class="pname">${esc(p.name)} <span style="font-size:10px;color:var(--muted);font-weight:400">[${esc(p.code||'')}]</span></div>
-      <div class="pmeta">${esc(p.owner_name)} · ${esc(p.owner_email)}</div>
-    </div>
-    <div>${planBdg(p.plan)}</div>
-    <div>${expPill(p)}</div>
-    <div style="display:flex;gap:5px;">
-      <button class="btn btn-outline btn-xs" title="Copier lien" onclick="copyLink('${p.code}')"><i class="fas fa-link"></i></button>
-      <button class="btn btn-outline btn-xs" title="Modifier" onclick="openEdit(${p.id})"><i class="fas fa-edit"></i></button>
-      <button class="btn btn-green btn-xs" title="Renouveler" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
-    </div>
-  </div>`;
-}
-
-function planBdg(plan) {
-  const m = { test:'bdg-blue', mensuel:'bdg-green', semestriel:'bdg-purple', annuel:'bdg-gold' };
-  return `<span class="bdg ${m[plan]||'bdg-blue'}">${PLAN_NAMES[plan]||plan}</span>`;
-}
-
-function expPill(p) {
-  const d = p.jours_restants;
-  if (!p.active) return '<span class="epill ep-off"><i class="fas fa-ban"></i> Suspendu</span>';
-  if (d<0)  return '<span class="epill ep-danger"><i class="fas fa-times"></i> Expiré</span>';
-  if (d<=3) return `<span class="epill ep-danger"><i class="fas fa-fire"></i> J-${d}</span>`;
-  if (d<=7) return `<span class="epill ep-warn"><i class="fas fa-clock"></i> J-${d}</span>`;
-  return `<span class="epill ep-ok"><i class="fas fa-check"></i> ${d}j</span>`;
-}
-
-// ══════════════════════════════════════════════════════════
-//  CRÉER NOUVEAU PARYAJ
-// ══════════════════════════════════════════════════════════
 let selPlanVal = 'test';
-
-function selPlan(plan) {
-  selPlanVal = plan;
-  document.getElementById('n-plan').value = plan;
-  document.querySelectorAll('.plan').forEach(c => c.classList.toggle('on', c.dataset.plan===plan));
-  document.getElementById('n-fee').value = CFG['price_'+plan] || 0;
-}
-
-function onCodeInput() {
-  const code = (document.getElementById('n-code').value||'').toUpperCase().replace(/\s+/g,'');
-  document.getElementById('n-code').value = code;
-  const box = document.getElementById('link-prev-box');
-  if (code) {
-    box.style.display='block';
-    document.getElementById('link-prev-url').textContent = `${API}/index.html?p=${code}`;
-  } else {
-    box.style.display='none';
-  }
-  updatePreview();
-}
-
-function onNameInput() { updatePreview(); }
-function onLogoInput() { updatePreview(); }
-
-function updatePreview() {
-  const name   = (document.getElementById('n-name').value||'').trim();
-  const slogan = (document.getElementById('n-slogan').value||'').trim();
-  const logo   = (document.getElementById('n-logo').value||'').trim();
-  const code   = (document.getElementById('n-code').value||'').trim();
-  const box    = document.getElementById('preview-box');
-
-  if (!name && !code) { box.style.display='none'; return; }
-  box.style.display='block';
-
-  const nm   = document.getElementById('prev-name');
-  const sl   = document.getElementById('prev-slogan');
-  const ini  = document.getElementById('prev-initials');
-  const lw   = document.getElementById('prev-logo-wrap');
-  const limg = document.getElementById('prev-logo-img');
-
-  nm.textContent = (name||code).toUpperCase();
-  sl.textContent = slogan || 'Paryaj ak konfyans';
-  ini.textContent = (name||code).substring(0,2).toUpperCase();
-
-  if (logo) {
-    lw.style.display='block'; ini.style.display='none';
-    limg.src=logo;
-    limg.onerror = () => { lw.style.display='none'; ini.style.display='flex'; };
-  } else {
-    lw.style.display='none'; ini.style.display='flex';
-  }
-}
-
-async function createPlatform() {
-  const al  = document.getElementById('new-alert');
-  al.style.display='none';
-
-  const code      = (document.getElementById('n-code').value||'').trim().toUpperCase().replace(/\s+/g,'');
-  const name      = (document.getElementById('n-name').value||'').trim();
-  const logo_url  = (document.getElementById('n-logo').value||'').trim();
-  const slogan    = (document.getElementById('n-slogan').value||'').trim();
-  const email     = (document.getElementById('n-email').value||'').trim();
-  const phone     = (document.getElementById('n-phone').value||'').trim();
-  const address   = (document.getElementById('n-address').value||'').trim();
-  const serverUrl = (document.getElementById('n-server').value||'').trim() || API;
-  const oName     = (document.getElementById('n-owner-name').value||'').trim();
-  const oEmail    = (document.getElementById('n-owner-email').value||'').trim();
-  const oPhone    = (document.getElementById('n-owner-phone').value||'').trim();
-  const oPwd      = document.getElementById('n-owner-pwd').value||'';
-  const staff     = (document.getElementById('n-staff').value||'').trim();
-  const foot      = (document.getElementById('n-football').value||'').trim();
-  const plan      = selPlanVal;
-  const startDate = document.getElementById('n-start').value || today();
-  const fee       = parseFloat(document.getElementById('n-fee').value)||0;
-  const notes     = (document.getElementById('n-notes').value||'').trim();
-
-  // ── Validations ──
-  if (!code)   return alert2(al,'❌ Le CODE UNIQUE est obligatoire (ex: MAMAPARYAJ)','err');
-  if (!name)   return alert2(al,'❌ Le NOM du paryaj est obligatoire','err');
-  if (!oName)  return alert2(al,'❌ Le NOM du propriétaire est obligatoire','err');
-  if (!oEmail) return alert2(al,'❌ L\'EMAIL du propriétaire est obligatoire','err');
-  if (!oPwd)   return alert2(al,'❌ Le MOT DE PASSE du propriétaire est obligatoire','err');
-  if (oPwd.length < 4) return alert2(al,'❌ Mot de passe trop court (minimum 4 caractères)','err');
-
-  const btn = document.getElementById('btn-create');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Création en cours...';
-
-  try {
-    const payload = {
-      code, name, slogan, logo_url, email, phone, address,
-      server_url: serverUrl,
-      owner_name: oName, owner_email: oEmail, owner_phone: oPhone, owner_pwd: oPwd,
-      staff_code: staff || code+'12',
-      football_api: foot,
-      plan, start_date: startDate, fee, notes
-    };
-
-    const d = await req('POST', '/master/platforms', payload);
-    const p = d.platform;
-
-    // Afficher le résultat
-    const base = serverUrl || API;
-    const link1 = `${base}/index.html?p=${code}`;
-    const link2 = `${base}/app.html?p=${code}`;
-
-    document.getElementById('cr-name').textContent  = name.toUpperCase();
-    document.getElementById('cr-owner').textContent = oName;
-    document.getElementById('cr-creds').innerHTML   = `Email: <b>${oEmail}</b><br>Mot de passe: <b>${oPwd}</b>`;
-    document.getElementById('cr-staff').textContent = staff || code+'12';
-    document.getElementById('cr-link1').textContent = link1;
-    document.getElementById('cr-link2').textContent = link2;
-    document.getElementById('create-result').style.display='block';
-    document.getElementById('create-result').scrollIntoView({behavior:'smooth'});
-
-    // Rafraîchir la liste
-    const r2 = await req('GET', '/master/platforms');
-    allPlats = r2.platforms;
-
-  } catch(e) {
-    alert2(al, '❌ Erreur: '+e.message, 'err');
-  } finally {
-    btn.disabled=false;
-    btn.innerHTML='<i class="fas fa-save"></i> Créer le paryaj';
-  }
-}
-
-function resetForm() {
-  ['n-code','n-name','n-logo','n-slogan','n-email','n-phone','n-address',
-   'n-owner-name','n-owner-email','n-owner-phone','n-owner-pwd',
-   'n-staff','n-football','n-notes'].forEach(id => { document.getElementById(id).value=''; });
-  document.getElementById('n-server').value = API;
-  document.getElementById('n-fee').value = '0';
-  document.getElementById('n-start').value = today();
-  selPlan('test');
-  document.getElementById('preview-box').style.display='none';
-  document.getElementById('link-prev-box').style.display='none';
-  document.getElementById('create-result').style.display='none';
-  document.getElementById('new-alert').style.display='none';
-}
-
-// ══════════════════════════════════════════════════════════
-//  ABONNEMENTS
-// ══════════════════════════════════════════════════════════
-async function loadSubs() {
-  try {
-    const d = await req('GET', '/master/platforms');
-    allPlats = d.platforms;
-    const tb = document.getElementById('subs-body');
-    if (!allPlats.length) { tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Aucun paryaj</td></tr>'; return; }
-    tb.innerHTML = allPlats.map(p => {
-      const st = p.statut==='actif' ? '<span class="bdg bdg-green">ACTIF</span>'
-               : p.statut==='expire' ? '<span class="bdg bdg-red">EXPIRÉ</span>'
-               : '<span class="bdg bdg-red">SUSPENDU</span>';
-      return `<tr>
-        <td><b>${esc(p.name)}</b><br><small style="color:var(--muted)">${p.code}</small></td>
-        <td>${esc(p.owner_name)}<br><small style="color:var(--muted)">${esc(p.owner_email)}</small></td>
-        <td>${planBdg(p.plan)}</td>
-        <td>${p.start_date?p.start_date.split('T')[0]:'-'}</td>
-        <td>${p.expires_at?p.expires_at.split('T')[0]:'-'}</td>
-        <td>${st}</td>
-        <td>${(p.fee||0).toLocaleString()} HTG</td>
-        <td>
-          <button class="btn btn-outline btn-xs" onclick="openEdit(${p.id})"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-green btn-xs" style="margin-left:4px" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
-        </td>
-      </tr>`;
-    }).join('');
-  } catch(e) { document.getElementById('subs-body').innerHTML=`<tr><td colspan="8" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
-}
-
-// ══════════════════════════════════════════════════════════
-//  EXPIRATIONS
-// ══════════════════════════════════════════════════════════
-async function loadExp() {
-  try {
-    const d = await req('GET', '/master/platforms');
-    allPlats = d.platforms;
-    const days = parseInt(CFG.alert_days)||7;
-    const urgent = allPlats.filter(p=>p.active && p.jours_restants>=-30 && p.jours_restants<=days)
-                           .sort((a,b)=>a.jours_restants-b.jours_restants);
-    const el = document.getElementById('exp-list');
-    if (!urgent.length) { el.innerHTML=`<div class="empty"><i class="fas fa-check-circle" style="color:var(--green);opacity:1"></i>Aucune expiration dans les ${days} prochains jours</div>`; return; }
-    el.innerHTML = urgent.map(p => {
-      const dv = p.jours_restants;
-      const col = dv<0?'var(--red)':dv<=3?'var(--red)':'var(--gold)';
-      return `<div class="prow" style="border-left:3px solid ${col};">
-        <div class="pavatar">${(p.name||'?').substring(0,2).toUpperCase()}</div>
-        <div><div class="pname">${esc(p.name)}</div><div class="pmeta">${esc(p.owner_name)} · ${esc(p.owner_email)}</div></div>
-        <div style="text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:${col};">${dv<0?'Expiré':'J-'+dv}</div><div style="font-size:11px;color:var(--muted);">${p.expires_at?p.expires_at.split('T')[0]:'-'}</div></div>
-        <div>${planBdg(p.plan)}</div>
-        <div><button class="btn btn-gold btn-xs" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i> Renouveler</button></div>
-      </div>`;
-    }).join('');
-  } catch(e) { document.getElementById('exp-list').innerHTML=`<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
-}
-
-// ══════════════════════════════════════════════════════════
-//  REVENUS
-// ══════════════════════════════════════════════════════════
-async function loadRev() {
-  try {
-    const [plats, pays] = await Promise.all([req('GET','/master/platforms'), req('GET','/master/payments')]);
-    allPlats = plats.platforms;
-    const payments = pays.payments;
-    const total  = payments.filter(p=>p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
-    const pend   = payments.filter(p=>!p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
-    document.getElementById('rv-total').textContent = total.toLocaleString();
-    document.getElementById('rv-pend').textContent  = pend.toLocaleString();
-    const byPlan = {test:0,mensuel:0,semestriel:0,annuel:0};
-    payments.filter(p=>p.paid).forEach(p=>{byPlan[p.plan]=(byPlan[p.plan]||0)+parseFloat(p.amount||0);});
-    const mx = Math.max(...Object.values(byPlan),1);
-    document.getElementById('rev-bars').innerHTML = Object.entries(byPlan).map(([pl,v])=>`
-      <div class="revbar"><div class="revbar-lbl"><span>${PLAN_NAMES[pl]}</span><span>${v.toLocaleString()} HTG</span></div>
-      <div class="revbar-track"><div class="revbar-fill" style="width:${(v/mx*100).toFixed(1)}%"></div></div></div>`).join('');
-    const rb = document.getElementById('rev-body');
-    rb.innerHTML = allPlats.map(p=>{
-      const hp = payments.some(x=>x.platform_id==p.id && !x.paid);
-      return `<tr><td><b>${esc(p.name)}</b></td><td>${planBdg(p.plan)}</td><td>${(p.fee||0).toLocaleString()} HTG</td>
-        <td>${hp?'<span class="bdg bdg-gold">En attente</span>':'<span class="bdg bdg-green">Payé</span>'}</td>
-        <td><button class="btn btn-outline btn-xs" onclick="openEdit(${p.id})"><i class="fas fa-edit"></i></button></td></tr>`;
-    }).join('') || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">Aucune donnée</td></tr>';
-  } catch(e) { console.error(e.message); }
-}
-
-// ══════════════════════════════════════════════════════════
-//  PAIEMENTS
-// ══════════════════════════════════════════════════════════
-async function loadPay() {
-  try {
-    const d = await req('GET', '/master/payments');
-    const pb = document.getElementById('pay-body');
-    if (!d.payments.length) { pb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Aucun paiement</td></tr>'; return; }
-    pb.innerHTML = d.payments.map(p=>`<tr>
-      <td>${p.created_at?p.created_at.split('T')[0]:'-'}</td>
-      <td>${esc(p.platform_name)}</td>
-      <td>${planBdg(p.plan)}</td>
-      <td>${parseFloat(p.amount||0).toLocaleString()} HTG</td>
-      <td>${esc(p.mode||'manuel')}</td>
-      <td>${p.paid?'<span class="bdg bdg-green">Payé</span>':'<span class="bdg bdg-gold">En attente</span>'}</td>
-      <td>${!p.paid?`<button class="btn btn-green btn-xs" onclick="markPaid(${p.id})"><i class="fas fa-check"></i> Payé</button>`:'—'}</td>
-    </tr>`).join('');
-  } catch(e) { document.getElementById('pay-body').innerHTML=`<tr><td colspan="7" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
-}
-
-async function markPaid(id) {
-  try { await req('PUT',`/master/payments/${id}/paid`); loadPay(); }
-  catch(e) { alert('Erreur: '+e.message); }
-}
-
-// ══════════════════════════════════════════════════════════
-//  MODAL MODIFIER
-// ══════════════════════════════════════════════════════════
-async function openEdit(id) {
-  currentId = id;
-  if (!allPlats.find(x=>x.id==id)) {
-    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
-  }
-  const p = allPlats.find(x=>x.id==id);
-  if (!p) return;
-  document.getElementById('e-id').value     = p.id;
-  document.getElementById('e-code').value   = p.code||'';
-  document.getElementById('e-name').value   = p.name||'';
-  document.getElementById('e-logo').value   = p.logo_url||'';
-  document.getElementById('e-slogan').value = p.slogan||'';
-  document.getElementById('e-email').value  = p.email||'';
-  document.getElementById('e-phone').value  = p.phone||'';
-  document.getElementById('e-address').value= p.address||'';
-  document.getElementById('e-server').value = p.server_url||'';
-  document.getElementById('e-plan').value   = p.plan||'test';
-  document.getElementById('e-start').value  = p.start_date?p.start_date.split('T')[0]:'';
-  document.getElementById('e-end').value    = p.expires_at?p.expires_at.split('T')[0]:'';
-  document.getElementById('e-fee').value    = p.fee||0;
-  document.getElementById('e-paid').value   = p.paid||0;
-  document.getElementById('e-notes').value  = p.notes||'';
-  document.getElementById('e-oname').value  = p.owner_name||'';
-  document.getElementById('e-oemail').value = p.owner_email||'';
-  document.getElementById('e-ophone').value = p.owner_phone||'';
-  document.getElementById('e-opwd').value   = '';
-  document.getElementById('e-staff').value  = p.staff_code||'';
-  document.getElementById('e-foot').value   = p.football_api||'';
-  document.getElementById('edit-title').textContent = (p.name||'').toUpperCase();
-  document.getElementById('cfg-pre').style.display='none';
-  mTab('info');
-  openModal('modal-edit');
-}
-
-function calcExpiry() {
-  const plan  = document.getElementById('e-plan').value;
-  const start = document.getElementById('e-start').value;
-  if (!start) return;
-  const exp = new Date(start);
-  exp.setDate(exp.getDate() + PLAN_DAYS[plan]);
-  document.getElementById('e-end').value = exp.toISOString().split('T')[0];
-}
-
-async function savePlatform() {
-  const al = document.getElementById('edit-alert');
-  const id = document.getElementById('e-id').value;
-  const name = document.getElementById('e-name').value.trim();
-  if (!name) return alert2(al,'❌ Le nom est obligatoire','err');
-  try {
-    await req('PUT', `/master/platforms/${id}`, {
-      name,
-      logo_url:     document.getElementById('e-logo').value,
-      slogan:       document.getElementById('e-slogan').value,
-      email:        document.getElementById('e-email').value,
-      phone:        document.getElementById('e-phone').value,
-      address:      document.getElementById('e-address').value,
-      server_url:   document.getElementById('e-server').value,
-      plan:         document.getElementById('e-plan').value,
-      start_date:   document.getElementById('e-start').value,
-      expires_at:   document.getElementById('e-end').value,
-      fee:          document.getElementById('e-fee').value,
-      paid:         document.getElementById('e-paid').value,
-      notes:        document.getElementById('e-notes').value,
-      owner_name:   document.getElementById('e-oname').value,
-      owner_email:  document.getElementById('e-oemail').value,
-      owner_phone:  document.getElementById('e-ophone').value,
-      owner_pwd:    document.getElementById('e-opwd').value||undefined,
-      staff_code:   document.getElementById('e-staff').value,
-      football_api: document.getElementById('e-foot').value,
-    });
-    alert2(al,'✅ Paryaj mis à jour','ok');
-    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
-    setTimeout(()=>{ closeModal('modal-edit'); renderPlats(allPlats); },1200);
-  } catch(e) { alert2(al,'❌ '+e.message,'err'); }
-}
-
-async function deletePlatform() {
-  const id   = document.getElementById('e-id').value;
-  const name = document.getElementById('e-name').value;
-  if (!confirm(`⚠️ Supprimer définitivement "${name}" ? Action irréversible.`)) return;
-  try {
-    await req('DELETE',`/master/platforms/${id}`);
-    closeModal('modal-edit');
-    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
-    renderPlats(allPlats); loadDash();
-  } catch(e) { alert2(document.getElementById('edit-alert'),'❌ '+e.message,'err'); }
-}
-
-async function toggleActive() {
-  const id = document.getElementById('e-id').value;
-  try {
-    const d = await req('PUT',`/master/platforms/${id}/toggle`);
-    alert2(document.getElementById('edit-alert'), d.active?'✅ Réactivé':'⚠️ Suspendu', d.active?'ok':'err');
-    const r = await req('GET','/master/platforms'); allPlats=r.platforms;
-  } catch(e) { alert2(document.getElementById('edit-alert'),'❌ '+e.message,'err'); }
-}
-
-// ══════════════════════════════════════════════════════════
-//  RENOUVELLEMENT
-// ══════════════════════════════════════════════════════════
-function openRenew() {
-  const id   = document.getElementById('e-id').value;
-  const name = document.getElementById('e-name').value;
-  const plan = document.getElementById('e-plan').value;
-  document.getElementById('renew-name').textContent = name;
-  document.getElementById('r-plan').value = plan;
-  document.getElementById('r-fee').value  = CFG['price_'+plan]||0;
-  document.getElementById('r-paid').value = '0';
-  currentId = id;
-  openModal('modal-renew');
-}
-
-function quickRenew(id) {
-  const p = allPlats.find(x=>x.id==id);
-  if (!p) return;
-  currentId = id;
-  document.getElementById('renew-name').textContent = p.name;
-  document.getElementById('r-plan').value = p.plan||'mensuel';
-  document.getElementById('r-fee').value  = CFG['price_'+(p.plan||'mensuel')]||0;
-  document.getElementById('r-paid').value = '0';
-  openModal('modal-renew');
-}
-
-async function confirmRenew() {
-  try {
-    await req('POST',`/master/platforms/${currentId}/renew`, {
-      plan:  document.getElementById('r-plan').value,
-      fee:   document.getElementById('r-fee').value,
-      paid:  document.getElementById('r-paid').value,
-    });
-    closeModal('modal-renew'); closeModal('modal-edit');
-    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
-    renderPlats(allPlats); loadDash();
-  } catch(e) { alert('Erreur: '+e.message); }
-}
-
-// ══════════════════════════════════════════════════════════
-//  GÉNÉRATION CONFIG.JS
-// ══════════════════════════════════════════════════════════
-function genConfig() {
-  const id = document.getElementById('e-id').value;
-  const p  = allPlats.find(x=>x.id==id);
-  if (!p) return;
-  const txt = `// config.js — ${p.name}
-// Généré par MASTER Platform Manager
-// Lien joueurs: ${API}/index.html?p=${p.code}
-
-const CONFIG = {
-  APP_NAME:          "${p.name}",
-  APP_SLOGAN:        "${p.slogan||'Paryaj ak konfyans'}",
-  APP_EMAIL:         "${p.email||''}",
-  APP_PHONE:         "${p.phone||''}",
-  APP_ADDRESS:       "${p.address||''}",
-  SERVER_URL:        "${p.server_url||API}",
-  FOOTBALL_API_KEY:  "${p.football_api||CFG.football_api_key||''}",
-  ADMIN_PASSWORD:    "admin",
-  SECRET_STAFF_CODE: "${p.staff_code||''}",
-  SESSION_DURATION_DAYS: 7,
-  JACKPOT_PERCENT: 5,
-};
-
-if (typeof module !== 'undefined') module.exports = CONFIG;`;
-  const pre = document.getElementById('cfg-pre');
-  pre.textContent = txt; pre.style.display='block';
-  window._cfg = txt;
-}
-
-function copyConfig() {
-  genConfig();
-  if (window._cfg) {
-    navigator.clipboard.writeText(window._cfg)
-      .then(()=>alert2(document.getElementById('edit-alert'),'✅ config.js copié !','ok'))
-      .catch(()=>alert2(document.getElementById('edit-alert'),'❌ Erreur copie','err'));
-  }
-}
-
-function copyEditLink() {
-  const id = document.getElementById('e-id').value;
-  const p  = allPlats.find(x=>x.id==id);
-  if (!p) return;
-  const link = `${API}/index.html?p=${p.code}`;
-  navigator.clipboard.writeText(link)
-    .then(()=>alert2(document.getElementById('edit-alert'),`✅ Lien copié: ${link}`,'ok'));
-}
-
-// ══════════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════════
-function mTab(t) {
-  ['info','sub','cfg'].forEach(x => {
-    document.getElementById(`mt-${x}-c`).style.display = x===t?'block':'none';
-    document.getElementById(`mt-${x}`).classList.toggle('on', x===t);
-  });
-}
-
-function openModal(id)  { document.getElementById(id).classList.add('on'); }
+function selPlan(plan) { selPlanVal = plan; document.getElementById('n-plan').value = plan; document.querySelectorAll('.plan').forEach(c=>c.classList.toggle('on',c.dataset.plan===plan)); document.getElementById('n-fee').value = CFG['price_'+plan]||0; }
+function onCodeInput() { const code = (document.getElementById('n-code').value||'').toUpperCase().replace(/\s/g,''); document.getElementById('n-code').value = code; const box = document.getElementById('link-prev-box'); if(code) { box.style.display='block'; document.getElementById('link-prev-url').textContent = `${API}/index.html?p=${code}`; } else box.style.display='none'; updatePreview(); }
+function updatePreview() { const name = document.getElementById('n-name').value.trim(); const slogan = document.getElementById('n-slogan').value.trim(); const logo = document.getElementById('n-logo').value.trim(); const code = document.getElementById('n-code').value.trim(); const box = document.getElementById('preview-box'); if(!name && !code) { box.style.display='none'; return; } box.style.display='block'; document.getElementById('prev-name').innerHTML = (name||code).toUpperCase(); document.getElementById('prev-slogan').innerHTML = slogan||'Paryaj ak konfyans'; const ini = document.getElementById('prev-initials'); ini.innerHTML = (name||code).substring(0,2).toUpperCase(); const lw = document.getElementById('prev-logo-wrap'); const limg = document.getElementById('prev-logo-img'); if(logo && logo.match(/^https?:\/\//)) { lw.style.display='block'; ini.style.display='none'; limg.src=logo; limg.onerror=()=>{ lw.style.display='none'; ini.style.display='flex'; }; } else { lw.style.display='none'; ini.style.display='flex'; } }
+async function createPlatform() { const al = document.getElementById('new-alert'); al.style.display='none'; const code = (document.getElementById('n-code').value||'').trim().toUpperCase(); const name = document.getElementById('n-name').value.trim(); const owner_name = document.getElementById('n-owner-name').value.trim(); const owner_email = document.getElementById('n-owner-email').value.trim(); const owner_pwd = document.getElementById('n-owner-pwd').value; if(!code || !name || !owner_name || !owner_email || !owner_pwd) { al.style.display='block'; al.className='alert err'; al.textContent='❌ Tous les champs avec * sont obligatoires'; return; } const btn = document.getElementById('btn-create'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Création...'; try { const payload = { code, name, slogan:document.getElementById('n-slogan').value.trim(), logo_url:document.getElementById('n-logo').value.trim(), email:document.getElementById('n-email').value.trim(), phone:document.getElementById('n-phone').value.trim(), address:document.getElementById('n-address').value.trim(), server_url:document.getElementById('n-server').value.trim()||API, owner_name, owner_email, owner_phone:document.getElementById('n-owner-phone').value.trim(), owner_pwd, staff_code:document.getElementById('n-staff').value.trim()||(code+'12'), football_api:document.getElementById('n-football').value.trim(), plan:selPlanVal, start_date:document.getElementById('n-start').value, fee:parseFloat(document.getElementById('n-fee').value)||0, notes:document.getElementById('n-notes').value.trim() }; const d = await req('POST','/master/platforms', payload); const p = d.platform; document.getElementById('cr-name').innerHTML = name.toUpperCase(); document.getElementById('cr-owner').innerHTML = owner_name; document.getElementById('cr-creds').innerHTML = `Email: ${owner_email}<br>Mot de passe: ${owner_pwd}`; document.getElementById('cr-staff').innerHTML = payload.staff_code; const link1 = `${API}/index.html?p=${code}`; const link2 = `${API}/app.html?p=${code}`; document.getElementById('cr-link1').innerHTML = link1; document.getElementById('cr-link2').innerHTML = link2; document.getElementById('create-result').style.display='block'; const r2 = await req('GET','/master/platforms'); allPlats = r2.platforms; } catch(e) { al.style.display='block'; al.className='alert err'; al.textContent='❌ '+e.message; } finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Créer le paryaj'; } }
+function resetForm() { ['n-code','n-name','n-logo','n-slogan','n-email','n-phone','n-address','n-owner-name','n-owner-email','n-owner-phone','n-owner-pwd','n-staff','n-football','n-notes'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; }); document.getElementById('n-server').value = API; document.getElementById('n-fee').value='0'; document.getElementById('n-start').value = new Date().toISOString().split('T')[0]; selPlan('test'); document.getElementById('preview-box').style.display='none'; document.getElementById('link-prev-box').style.display='none'; document.getElementById('create-result').style.display='none'; }
+async function loadSubs() { try { const d = await req('GET','/master/platforms'); const tb = document.getElementById('subs-body'); if(!d.platforms.length) tb.innerHTML='<tr><td colspan="5">Aucune</td></tr>'; else tb.innerHTML = d.platforms.map(p=>`<tr><td>${p.name}</td><td>${p.owner_name}</td><td>${p.plan}</td><td>${p.expires_at?p.expires_at.split('T')[0]:'-'}</td><td>${p.active?'Actif':'Suspendu'}</td></tr>`).join(''); } catch(e){} }
+async function loadExp() { try { const d = await req('GET','/master/platforms'); const list = d.platforms.filter(p=>p.active && p.jours_restants>=0 && p.jours_restants<=7); document.getElementById('exp-list').innerHTML = list.length?list.map(p=>`<div class="prow"><div>${p.name}</div><div>J-${p.jours_restants}</div><button onclick="quickRenew(${p.id})">Renouveler</button></div>`).join(''):'<div class="empty">Aucune expiration proche</div>'; } catch(e){} }
+async function loadRev() { try { const d = await req('GET','/master/payments'); const total = d.payments.filter(p=>p.paid).reduce((a,b)=>a+parseFloat(b.amount),0); document.getElementById('rv-total').innerHTML = total.toLocaleString(); document.getElementById('rev-bars').innerHTML = '<div>Revenus affichés</div>'; } catch(e){} }
+async function loadPay() { try { const d = await req('GET','/master/payments'); document.getElementById('pay-body').innerHTML = d.payments.map(p=>`<tr><td>${p.created_at?p.created_at.split('T')[0]:'-'}</td><td>${p.platform_name}</td><td>${p.amount} HTG</td><td>${p.paid?'Payé':'En attente'}</td></tr>`).join('')||'<tr><td colspan="4">Aucun</td></tr>'; } catch(e){} }
+function openEdit(id) { const p = allPlats.find(x=>x.id==id); if(!p) return; document.getElementById('e-id').value = p.id; document.getElementById('e-name').value = p.name; document.getElementById('e-oemail').value = p.owner_email; openModal('modal-edit'); }
+async function savePlatform() { const id = document.getElementById('e-id').value; const name = document.getElementById('e-name').value; const owner_email = document.getElementById('e-oemail').value; try { await req('PUT',`/master/platforms/${id}`,{ name, owner_email }); const d = await req('GET','/master/platforms'); allPlats = d.platforms; closeModal('modal-edit'); renderPlats(allPlats); loadDash(); alert('✅ Modifié'); } catch(e){ alert(e.message); } }
+async function deletePlatform() { if(!confirm('Supprimer définitivement ?')) return; const id = document.getElementById('e-id').value; try { await req('DELETE',`/master/platforms/${id}`); closeModal('modal-edit'); const d = await req('GET','/master/platforms'); allPlats = d.platforms; renderPlats(allPlats); loadDash(); } catch(e){ alert(e.message); } }
+function quickRenew(id) { alert('Fonction renouvellement à implémenter dans le backend'); }
+function openModal(id) { document.getElementById(id).classList.add('on'); }
 function closeModal(id) { document.getElementById(id).classList.remove('on'); }
-
-function alert2(el, msg, type) {
-  el.className = 'alert ' + type;
-  el.textContent = msg;
-  el.style.display = 'block';
-  setTimeout(()=>el.style.display='none', 4000);
-}
-
-function copyText(txt) {
-  navigator.clipboard.writeText(txt).then(()=>alert('✅ Copié !'));
-}
-
-function copyLink(code) {
-  const link = `${API}/index.html?p=${code}`;
-  navigator.clipboard.writeText(link).then(()=>{
-    const al = document.getElementById('list-alert');
-    alert2(al, `✅ Lien copié: ${link}`, 'ok');
-  });
-}
-
-function today() {
-  return new Date().toISOString().split('T')[0];
-}
-
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
+function copyText(txt) { navigator.clipboard.writeText(txt).then(()=>alert('✅ Copié !')); }
 </script>
 </body>
 </html>
