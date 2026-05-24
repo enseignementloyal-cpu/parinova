@@ -4,521 +4,760 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MASTER · Gestionnaire de Plateformes</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+*{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#05060f;--bg2:#0c0e1e;--border:rgba(255,255,255,0.07);
+  --bg:#05060f;--bg2:#0c0e1e;--border:rgba(255,255,255,.08);
   --gold:#e8b800;--gold2:#ffd84d;--red:#ff3b5c;--green:#00e59b;
   --blue:#00b4ff;--purple:#9b5cff;--text:#e8eaf6;--muted:#6b7194;
-  --card:rgba(255,255,255,0.03);--card2:rgba(255,255,255,0.06);
-  --r:14px;--sh:0 8px 32px rgba(0,0,0,0.4);
+  --card:rgba(255,255,255,.04);--card2:rgba(255,255,255,.07);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;}
-button{cursor:pointer;font-family:inherit;}
-input,select{font-family:inherit;}
-::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(232,184,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(232,184,0,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;}
+button,input,select,textarea{font-family:inherit;}
+button{cursor:pointer;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px;}
 
-/* LOGIN */
-#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg);}
-.login-box{width:100%;max-width:440px;padding:20px;animation:fadeUp .5s ease both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+/* ── LOGIN ───────────────────────────────────────── */
+#login-screen{
+  position:fixed;inset:0;display:flex;align-items:center;
+  justify-content:center;background:var(--bg);z-index:999;
+}
+.login-wrap{width:100%;max-width:420px;padding:20px;}
 .login-logo{text-align:center;margin-bottom:28px;}
-.login-logo .mbadge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:4px;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
-.login-logo h1{font-family:'Rajdhani',sans-serif;font-size:2.8rem;font-weight:700;color:var(--gold);letter-spacing:4px;line-height:1;}
+.login-logo .chip{
+  display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#000;font-weight:800;font-size:10px;letter-spacing:4px;
+  padding:4px 14px;border-radius:20px;margin-bottom:12px;
+  font-family:'Rajdhani',sans-serif;
+}
+.login-logo h1{
+  font-family:'Rajdhani',sans-serif;font-size:3rem;font-weight:700;
+  color:var(--gold);letter-spacing:5px;
+}
 .login-logo p{color:var(--muted);font-size:11px;letter-spacing:2px;margin-top:6px;}
-.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:var(--sh);}
-.login-card h2{font-size:.85rem;margin-bottom:24px;color:var(--muted);font-weight:400;letter-spacing:1px;}
+.login-box{
+  background:var(--bg2);border:1px solid var(--border);border-radius:20px;
+  padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.login-box h2{font-size:.8rem;color:var(--muted);letter-spacing:1.5px;margin-bottom:24px;font-weight:400;}
 .fg{margin-bottom:16px;}
-.fg label{display:block;font-size:11px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;font-weight:600;}
-.fg input,.fg select{width:100%;padding:11px 15px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;transition:.2s;}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,0,.1);}
-.btn-master-login{width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#c99800,var(--gold2));color:#000;font-weight:700;font-size:15px;letter-spacing:1px;font-family:'Rajdhani',sans-serif;transition:.2s;cursor:pointer;}
-.btn-master-login:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,184,0,.3);}
-.login-error{color:var(--red);font-size:13px;margin-top:12px;text-align:center;display:none;}
+.fg label{display:block;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:7px;font-weight:700;}
+.fg input,.fg select{
+  width:100%;padding:12px 15px;background:rgba(0,0,0,.4);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-size:14px;transition:.2s;outline:none;
+}
+.fg input:focus,.fg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,0,.1);}
+.btn-login{
+  width:100%;padding:13px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,#c99800,var(--gold2));color:#000;
+  font-weight:800;font-size:15px;font-family:'Rajdhani',sans-serif;
+  letter-spacing:1px;transition:.2s;cursor:pointer;
+}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,184,0,.3);}
+#login-err{color:var(--red);font-size:13px;margin-top:12px;text-align:center;display:none;}
 
-/* APP LAYOUT */
-#app{display:none;position:relative;z-index:1;}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:60px;position:sticky;top:0;z-index:50;}
-.topbar-brand{display:flex;align-items:center;gap:12px;}
-.topbar-brand .badge{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:700;font-size:10px;letter-spacing:3px;padding:3px 10px;border-radius:20px;font-family:'Rajdhani',sans-serif;}
-.topbar-brand h1{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;color:var(--gold);letter-spacing:3px;}
+/* ── APP ─────────────────────────────────────────── */
+#app{display:none;}
+.topbar{
+  height:58px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;position:sticky;top:0;z-index:50;
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-chip{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;
+  font-weight:800;font-size:9px;letter-spacing:3px;padding:3px 10px;
+  border-radius:20px;font-family:'Rajdhani',sans-serif;
+}
+.topbar-title{
+  font-family:'Rajdhani',sans-serif;font-size:1.5rem;
+  font-weight:700;color:var(--gold);letter-spacing:3px;
+}
 .topbar-right{display:flex;align-items:center;gap:12px;}
-.topbar-admin{font-size:12px;color:var(--muted);}
-.topbar-admin span{color:var(--gold);font-weight:700;}
-.layout{display:flex;min-height:calc(100vh - 60px);}
+.topbar-user{font-size:12px;color:var(--muted);}
+.topbar-user b{color:var(--gold);}
+.btn-out{
+  background:rgba(255,59,92,.12);border:1px solid rgba(255,59,92,.25);
+  color:var(--red);padding:6px 14px;border-radius:8px;font-size:12px;
+  font-weight:600;transition:.2s;cursor:pointer;
+}
+.btn-out:hover{background:rgba(255,59,92,.22);}
 
-/* SIDEBAR */
-.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:16px 10px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
-.slabel{font-size:10px;letter-spacing:2px;color:var(--muted);padding:0 10px;margin:14px 0 5px;font-weight:600;display:block;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;transition:.15s;color:var(--muted);font-size:13px;font-weight:500;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;}
-.nav-item i{width:16px;text-align:center;}
-.nav-item:hover{background:var(--card);color:var(--text);}
-.nav-item.active{background:rgba(232,184,0,.1);color:var(--gold);border:1px solid rgba(232,184,0,.15);}
+/* ── LAYOUT ──────────────────────────────────────── */
+.layout{display:flex;min-height:calc(100vh - 58px);}
+.sidebar{
+  width:215px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--border);padding:14px 10px;
+  position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;
+}
+.slabel{
+  display:block;font-size:9px;letter-spacing:2.5px;color:var(--muted);
+  padding:0 10px;margin:14px 0 5px;font-weight:700;
+}
+.nav-btn{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  border-radius:10px;color:var(--muted);font-size:13px;font-weight:500;
+  margin-bottom:2px;border:none;background:none;width:100%;text-align:left;
+  cursor:pointer;transition:.15s;
+}
+.nav-btn i{width:16px;text-align:center;font-size:13px;}
+.nav-btn:hover{background:var(--card);color:var(--text);}
+.nav-btn.on{background:rgba(232,184,0,.12);color:var(--gold);border:1px solid rgba(232,184,0,.18);}
 
-/* CONTENT */
-.content{flex:1;padding:26px;overflow-x:hidden;}
-.tab-content{display:none;}.tab-content.active{display:block;}
-.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
-.sec-title{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:2px;display:flex;align-items:center;gap:10px;}
-.sec-title i{color:var(--gold);}
+/* ── CONTENT ─────────────────────────────────────── */
+.main{flex:1;padding:24px;overflow-x:hidden;}
+.page{display:none;}.page.on{display:block;}
+.page-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:22px;flex-wrap:wrap;gap:10px;
+}
+.page-title{
+  font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;
+  letter-spacing:2px;display:flex;align-items:center;gap:10px;
+}
+.page-title i{color:var(--gold);}
 
-/* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;position:relative;overflow:hidden;}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,var(--gold));}
-.stat-icon{font-size:1.6rem;margin-bottom:8px;opacity:.7;}
-.stat-value{font-family:'Rajdhani',sans-serif;font-size:1.9rem;font-weight:700;line-height:1;}
-.stat-label{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:1px;}
+/* ── STATS ───────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-bottom:22px;}
+.stat{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:18px;position:relative;overflow:hidden;
+}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac,var(--gold));}
+.stat-ico{font-size:1.6rem;margin-bottom:8px;opacity:.7;}
+.stat-val{font-family:'Rajdhani',sans-serif;font-size:1.9rem;font-weight:700;}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:1px;}
 
-/* CARD */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;}
+/* ── CARD ────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;}
+.card-title{font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:1.5px;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--gold);}
 
-/* BUTTONS */
-.btn{padding:9px 18px;border:none;border-radius:10px;font-weight:600;font-size:13px;transition:.2s;display:inline-flex;align-items:center;gap:7px;cursor:pointer;}
+/* ── FORM ────────────────────────────────────────── */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.fg-full{grid-column:1/-1;}
+.fg label{display:block;font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px;font-weight:700;}
+.fg input,.fg select{
+  width:100%;padding:11px 14px;background:rgba(0,0,0,.35);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-size:13px;transition:.2s;outline:none;
+}
+.fg input:focus,.fg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,0,.1);}
+.fg input::placeholder{color:rgba(255,255,255,.2);}
+
+/* ── PLAN CARDS ─────────────────────────────────── */
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;}
+@media(max-width:700px){.plans{grid-template-columns:repeat(2,1fr);}}
+.plan{
+  background:var(--card);border:2px solid var(--border);border-radius:12px;
+  padding:14px;text-align:center;cursor:pointer;transition:.2s;
+}
+.plan:hover{border-color:rgba(232,184,0,.4);}
+.plan.on{border-color:var(--gold);background:rgba(232,184,0,.08);}
+.plan-ico{font-size:1.6rem;margin-bottom:6px;}
+.plan-nm{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:1px;}
+.plan-dur{font-size:10px;color:var(--muted);margin-top:2px;}
+.plan-price{font-size:1rem;font-weight:700;color:var(--gold);margin-top:6px;}
+
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;padding:10px 20px;
+  border:none;border-radius:10px;font-weight:700;font-size:13px;
+  cursor:pointer;transition:.2s;font-family:'Exo 2',sans-serif;
+}
 .btn-gold{background:linear-gradient(135deg,#c99800,var(--gold2));color:#000;}
-.btn-gold:hover{box-shadow:0 4px 16px rgba(232,184,0,.3);transform:translateY(-1px);}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
-.btn-outline:hover{border-color:rgba(255,255,255,.2);background:var(--card);}
-.btn-danger{background:rgba(255,59,92,.15);border:1px solid rgba(255,59,92,.3);color:var(--red);}
-.btn-danger:hover{background:rgba(255,59,92,.25);}
-.btn-success{background:rgba(0,229,155,.15);border:1px solid rgba(0,229,155,.3);color:var(--green);}
-.btn-success:hover{background:rgba(0,229,155,.25);}
+.btn-gold:hover{box-shadow:0 4px 18px rgba(232,184,0,.35);transform:translateY(-1px);}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{background:var(--card);}
 .btn-sm{padding:6px 13px;font-size:12px;}
-.btn-xs{padding:4px 9px;font-size:11px;}
-.btn-logout{background:rgba(255,59,92,.15);border:1px solid rgba(255,59,92,.3);color:var(--red);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;transition:.2s;cursor:pointer;}
-.btn-logout:hover{background:rgba(255,59,92,.25);}
+.btn-xs{padding:4px 10px;font-size:11px;}
+.btn-red{background:rgba(255,59,92,.12);border:1px solid rgba(255,59,92,.25);color:var(--red);}
+.btn-red:hover{background:rgba(255,59,92,.22);}
+.btn-green{background:rgba(0,229,155,.12);border:1px solid rgba(0,229,155,.25);color:var(--green);}
+.btn-green:hover{background:rgba(0,229,155,.22);}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
 
-/* TABLE */
-.table-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);}
+/* ── ALERT ───────────────────────────────────────── */
+.alert{padding:12px 16px;border-radius:10px;margin-bottom:14px;font-size:13px;display:none;}
+.alert.ok{background:rgba(0,229,155,.1);border:1px solid rgba(0,229,155,.3);color:var(--green);}
+.alert.err{background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.3);color:var(--red);}
+.alert.info{background:rgba(0,180,255,.1);border:1px solid rgba(0,180,255,.3);color:var(--blue);}
+
+/* ── LINK PREVIEW ────────────────────────────────── */
+.link-box{
+  background:rgba(0,180,255,.07);border:1px solid rgba(0,180,255,.2);
+  border-radius:10px;padding:14px;margin-top:14px;display:none;
+}
+.link-box label{font-size:10px;letter-spacing:2px;color:var(--blue);font-weight:700;display:block;margin-bottom:8px;}
+.link-box code{
+  display:block;font-size:12px;color:var(--text);background:rgba(0,0,0,.4);
+  padding:8px 12px;border-radius:7px;word-break:break-all;margin-bottom:8px;
+}
+
+/* ── TABLE ───────────────────────────────────────── */
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);}
 table{width:100%;border-collapse:collapse;}
-th{padding:11px 14px;text-align:left;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:600;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);}
+th{padding:11px 14px;text-align:left;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:700;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);}
 td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(255,255,255,.02);}
 
-/* BADGES */
-.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
-.badge-green{background:rgba(0,229,155,.15);color:var(--green);border:1px solid rgba(0,229,155,.25);}
-.badge-red{background:rgba(255,59,92,.15);color:var(--red);border:1px solid rgba(255,59,92,.25);}
-.badge-gold{background:rgba(232,184,0,.15);color:var(--gold);border:1px solid rgba(232,184,0,.25);}
-.badge-blue{background:rgba(0,180,255,.15);color:var(--blue);border:1px solid rgba(0,180,255,.25);}
-.badge-purple{background:rgba(155,92,255,.15);color:var(--purple);border:1px solid rgba(155,92,255,.25);}
+/* ── BADGES ──────────────────────────────────────── */
+.bdg{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.bdg-green{background:rgba(0,229,155,.12);color:var(--green);border:1px solid rgba(0,229,155,.22);}
+.bdg-red{background:rgba(255,59,92,.12);color:var(--red);border:1px solid rgba(255,59,92,.22);}
+.bdg-gold{background:rgba(232,184,0,.12);color:var(--gold);border:1px solid rgba(232,184,0,.22);}
+.bdg-blue{background:rgba(0,180,255,.12);color:var(--blue);border:1px solid rgba(0,180,255,.22);}
+.bdg-purple{background:rgba(155,92,255,.12);color:var(--purple);border:1px solid rgba(155,92,255,.22);}
 
-/* ALERT */
-.alert{padding:12px 16px;border-radius:10px;margin-bottom:14px;display:none;font-size:13px;}
-.alert-success{background:rgba(0,229,155,.1);border:1px solid rgba(0,229,155,.3);color:var(--green);}
-.alert-danger{background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.3);color:var(--red);}
-
-/* FORM GRID */
-.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
-.fg-full{grid-column:1/-1;}
-.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
-.empty{text-align:center;padding:45px 20px;color:var(--muted);}
-.empty i{font-size:2.5rem;margin-bottom:10px;opacity:.3;display:block;}
-
-/* PLATFORM ROW */
-.prow{display:grid;grid-template-columns:44px 1fr auto auto auto;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--card);margin-bottom:9px;transition:.2s;}
+/* ── PLATFORM ROW ────────────────────────────────── */
+.prow{
+  display:grid;grid-template-columns:46px 1fr auto auto auto;
+  align-items:center;gap:14px;padding:14px;border-radius:12px;
+  border:1px solid var(--border);background:var(--card);margin-bottom:9px;transition:.2s;
+}
 .prow:hover{background:var(--card2);}
-.pavatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:#000;background:linear-gradient(135deg,var(--gold),var(--gold2));flex-shrink:0;}
+.pavatar{
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Rajdhani',sans-serif;font-size:1.2rem;
+  font-weight:700;color:#000;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  flex-shrink:0;
+}
 .pname{font-weight:700;font-size:14px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
 .pmeta{font-size:11px;color:var(--muted);margin-top:2px;}
+.epill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+.ep-ok{background:rgba(0,229,155,.1);color:var(--green);border:1px solid rgba(0,229,155,.2);}
+.ep-warn{background:rgba(232,184,0,.1);color:var(--gold);border:1px solid rgba(232,184,0,.2);}
+.ep-danger{background:rgba(255,59,92,.1);color:var(--red);border:1px solid rgba(255,59,92,.2);}
+.ep-off{background:rgba(100,100,100,.1);color:var(--muted);border:1px solid rgba(100,100,100,.2);}
 
-/* EXPIRY PILLS */
-.epill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
-.epill-ok{background:rgba(0,229,155,.1);color:var(--green);border:1px solid rgba(0,229,155,.2);}
-.epill-warn{background:rgba(232,184,0,.1);color:var(--gold);border:1px solid rgba(232,184,0,.2);}
-.epill-danger{background:rgba(255,59,92,.1);color:var(--red);border:1px solid rgba(255,59,92,.2);}
-.epill-expired{background:rgba(100,100,100,.1);color:var(--muted);border:1px solid rgba(100,100,100,.2);}
-
-/* PLAN CARDS */
-.plan-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0;}
-.plan-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:.2s;}
-.plan-card:hover{border-color:rgba(232,184,0,.4);background:rgba(232,184,0,.05);}
-.plan-card.selected{border-color:var(--gold);background:rgba(232,184,0,.1);}
-.plan-card .picon{font-size:1.8rem;margin-bottom:6px;}
-.plan-card .pnm{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:1px;}
-.plan-card .pdur{font-size:10px;color:var(--muted);margin-top:2px;}
-.plan-card .pprice{font-size:1rem;font-weight:700;color:var(--gold);margin-top:6px;}
-
-/* SEARCH BAR */
-.search-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0 13px;}
-.search-bar i{color:var(--muted);}
-.search-bar input{background:none;border:none;padding:9px 0;color:var(--text);width:190px;}
-.search-bar input:focus{outline:none;}
-.search-bar input::placeholder{color:var(--muted);}
-
-/* MODAL */
+/* ── MODAL ───────────────────────────────────────── */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
-.modal.open{display:flex;}
-.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s ease both;}
+.modal.on{display:flex;}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;animation:fadeup .25s ease;}
+@keyframes fadeup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .modal-head h3{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px;}
 .modal-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;}
-.modal-close:hover{color:var(--text);}
 .mtabs{display:flex;gap:7px;margin-bottom:18px;}
 .mtab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--muted);transition:.2s;}
-.mtab.active{background:rgba(232,184,0,.15);color:var(--gold);border-color:rgba(232,184,0,.3);}
+.mtab.on{background:rgba(232,184,0,.12);color:var(--gold);border-color:rgba(232,184,0,.3);}
+.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
 
-/* REV BARS */
-.rev-bar{margin:9px 0;}
-.rev-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;}
-.rev-bar-track{height:5px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
-.rev-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 1s ease;}
+/* ── EMPTY / SPINNER ─────────────────────────────── */
+.empty{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty i{font-size:2.5rem;display:block;margin-bottom:10px;opacity:.25;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* CONFIG PREVIEW */
-.config-pre{background:rgba(0,0,0,.6);border-radius:10px;padding:12px;font-size:12px;font-family:monospace;color:var(--green);white-space:pre-wrap;max-height:200px;overflow-y:auto;margin-top:10px;display:none;}
+/* ── SEARCH ──────────────────────────────────────── */
+.searchbar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0 13px;}
+.searchbar i{color:var(--muted);}
+.searchbar input{background:none;border:none;padding:9px 0;color:var(--text);width:180px;outline:none;}
+.searchbar input::placeholder{color:var(--muted);}
 
-/* NAME PREVIEW */
-.name-prev{margin-top:14px;display:none;}
-.name-prev-inner{background:linear-gradient(135deg,#0d2151,#061a2e);border-radius:12px;padding:13px 18px;display:inline-flex;align-items:center;gap:12px;}
-.name-prev-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f5c800,#fff8dc);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-family:'Rajdhani',sans-serif;}
-.name-prev-text .nm{font-family:'Rajdhani',sans-serif;font-weight:900;color:#f5c800;letter-spacing:3px;font-size:1rem;}
-.name-prev-text .sl{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;}
+/* ── REV BARS ────────────────────────────────────── */
+.revbar{margin:9px 0;}
+.revbar-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;}
+.revbar-track{height:5px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
+.revbar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:10px;transition:width 1s ease;}
 
-@media(max-width:768px){.sidebar{display:none;}.content{padding:14px;}.stats-row{grid-template-columns:1fr 1fr;}.prow{grid-template-columns:44px 1fr auto;}}
+/* ── CONFIG PREVIEW ──────────────────────────────── */
+.cfg-pre{background:rgba(0,0,0,.6);border-radius:10px;padding:12px;font-size:11px;font-family:monospace;color:var(--green);white-space:pre-wrap;max-height:200px;overflow-y:auto;margin-top:10px;display:none;}
+
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .main{padding:14px;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .prow{grid-template-columns:46px 1fr auto;}
+}
 </style>
 </head>
 <body>
 
-<!-- ══════════════ LOGIN ══════════════ -->
+<!-- ════════ LOGIN ════════ -->
 <div id="login-screen">
-  <div class="login-box">
+  <div class="login-wrap">
     <div class="login-logo">
-      <div class="mbadge">NIVEAU SUPRÊME</div>
+      <div class="chip">NIVEAU SUPRÊME</div>
       <h1>MASTER</h1>
       <p>GESTIONNAIRE DE PLATEFORMES DE JEU</p>
     </div>
-    <div class="login-card">
+    <div class="login-box">
       <h2>ACCÈS RESTREINT · MASTER UNIQUEMENT</h2>
       <div class="fg">
         <label>URL DU SERVEUR</label>
-        <input type="text" id="srv-url" placeholder="https://mon-serveur.onrender.com" value="https://parinova-rmkp.onrender.com">
+        <input type="text" id="srv" placeholder="https://parinova-rmkp.onrender.com" value="https://parinova-rmkp.onrender.com">
       </div>
       <div class="fg">
-        <label>IDENTIFIANT MASTER</label>
-        <input type="text" id="m-user" placeholder="master" autocomplete="off">
+        <label>IDENTIFIANT</label>
+        <input type="text" id="mu" placeholder="master" autocomplete="off">
       </div>
       <div class="fg">
         <label>MOT DE PASSE</label>
-        <input type="password" id="m-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        <input type="password" id="mp" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
       </div>
-      <button class="btn-master-login" onclick="doLogin()"><i class="fas fa-shield-halved"></i> &nbsp;CONNEXION MASTER</button>
-      <div id="login-err" class="login-error"></div>
+      <button class="btn-login" onclick="login()"><i class="fas fa-shield-halved"></i> &nbsp;CONNEXION MASTER</button>
+      <div id="login-err"></div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════ APP ══════════════ -->
+<!-- ════════ APP ════════ -->
 <div id="app">
+
+  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-brand">
-      <div class="badge">MASTER</div>
-      <h1>PLATFORM MANAGER</h1>
+    <div class="topbar-left">
+      <div class="topbar-chip">MASTER</div>
+      <div class="topbar-title">PLATFORM MANAGER</div>
     </div>
     <div class="topbar-right">
-      <div class="topbar-admin">Connecté: <span id="master-name-display">Master</span></div>
-      <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      <div class="topbar-user">Connecté: <b id="mu-display">master</b></div>
+      <button class="btn-out" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
     </div>
   </div>
 
   <div class="layout">
+
     <!-- SIDEBAR -->
     <div class="sidebar">
       <span class="slabel">TABLEAU DE BORD</span>
-      <button class="nav-item active" onclick="showTab('dashboard')" id="nav-dashboard"><i class="fas fa-chart-pie"></i> Vue globale</button>
+      <button class="nav-btn on" id="nb-dash" onclick="go('dash')"><i class="fas fa-chart-pie"></i> Vue globale</button>
+
       <span class="slabel">PLATEFORMES</span>
-      <button class="nav-item" onclick="showTab('platforms')" id="nav-platforms"><i class="fas fa-gamepad"></i> Toutes les plateformes</button>
-      <button class="nav-item" onclick="showTab('create')" id="nav-create"><i class="fas fa-plus-circle"></i> Nouvelle plateforme</button>
+      <button class="nav-btn" id="nb-list" onclick="go('list')"><i class="fas fa-gamepad"></i> Toutes les plateformes</button>
+      <button class="nav-btn" id="nb-new" onclick="go('new')"><i class="fas fa-plus-circle"></i> ➕ Nouveau paryaj</button>
+
       <span class="slabel">ABONNEMENTS</span>
-      <button class="nav-item" onclick="showTab('subscriptions')" id="nav-subscriptions"><i class="fas fa-calendar-check"></i> Gérer abonnements</button>
-      <button class="nav-item" onclick="showTab('expiring')" id="nav-expiring"><i class="fas fa-clock"></i> Expirations proches</button>
+      <button class="nav-btn" id="nb-subs" onclick="go('subs')"><i class="fas fa-calendar-check"></i> Gérer abonnements</button>
+      <button class="nav-btn" id="nb-exp" onclick="go('exp')"><i class="fas fa-clock"></i> Expirations proches</button>
+
       <span class="slabel">FINANCES</span>
-      <button class="nav-item" onclick="showTab('revenue')" id="nav-revenue"><i class="fas fa-coins"></i> Revenus & Frais</button>
-      <button class="nav-item" onclick="showTab('payments')" id="nav-payments"><i class="fas fa-receipt"></i> Paiements</button>
+      <button class="nav-btn" id="nb-rev" onclick="go('rev')"><i class="fas fa-coins"></i> Revenus & Frais</button>
+      <button class="nav-btn" id="nb-pay" onclick="go('pay')"><i class="fas fa-receipt"></i> Paiements</button>
+
       <span class="slabel">SYSTÈME</span>
-      <button class="nav-item" onclick="showTab('settings')" id="nav-settings"><i class="fas fa-gear"></i> Paramètres</button>
+      <button class="nav-btn" id="nb-set" onclick="go('set')"><i class="fas fa-gear"></i> Paramètres</button>
     </div>
 
-    <!-- CONTENT -->
-    <div class="content">
+    <!-- MAIN CONTENT -->
+    <div class="main">
 
-      <!-- DASHBOARD -->
-      <div id="tab-dashboard" class="tab-content active">
-        <div class="sec-head">
-          <div class="sec-title"><i class="fas fa-chart-pie"></i> VUE GLOBALE</div>
-          <button class="btn btn-outline btn-sm" onclick="loadDashboard()"><i class="fas fa-sync-alt"></i> Actualiser</button>
+      <!-- ══ DASHBOARD ══ -->
+      <div id="pg-dash" class="page on">
+        <div class="page-head">
+          <div class="page-title"><i class="fas fa-chart-pie"></i> VUE GLOBALE</div>
+          <button class="btn btn-outline btn-sm" onclick="loadDash()"><i class="fas fa-sync-alt"></i> Actualiser</button>
         </div>
-        <div class="stats-row">
-          <div class="stat-card" style="--accent:var(--gold)"><div class="stat-icon">🎮</div><div class="stat-value" id="st-total">—</div><div class="stat-label">TOTAL PLATEFORMES</div></div>
-          <div class="stat-card" style="--accent:var(--green)"><div class="stat-icon">✅</div><div class="stat-value" id="st-active">—</div><div class="stat-label">ABONNEMENTS VALIDES</div></div>
-          <div class="stat-card" style="--accent:var(--red)"><div class="stat-icon">⚠️</div><div class="stat-value" id="st-expiring">—</div><div class="stat-label">EXPIRENT BIENTÔT</div></div>
-          <div class="stat-card" style="--accent:var(--blue)"><div class="stat-icon">💰</div><div class="stat-value" id="st-revenue">—</div><div class="stat-label">REVENUS TOTAUX</div></div>
+        <div class="stats">
+          <div class="stat" style="--ac:var(--gold)"><div class="stat-ico">🎮</div><div class="stat-val" id="s-total">—</div><div class="stat-lbl">TOTAL PLATEFORMES</div></div>
+          <div class="stat" style="--ac:var(--green)"><div class="stat-ico">✅</div><div class="stat-val" id="s-active">—</div><div class="stat-lbl">ABONNEMENTS VALIDES</div></div>
+          <div class="stat" style="--ac:var(--red)"><div class="stat-ico">⚠️</div><div class="stat-val" id="s-exp">—</div><div class="stat-lbl">EXPIRENT BIENTÔT</div></div>
+          <div class="stat" style="--ac:var(--blue)"><div class="stat-ico">💰</div><div class="stat-val" id="s-rev">—</div><div class="stat-lbl">REVENUS TOTAUX HTG</div></div>
         </div>
         <div class="card">
-          <div class="sec-title" style="font-size:1rem;margin-bottom:16px;"><i class="fas fa-list"></i> PLATEFORMES RÉCENTES</div>
+          <div class="card-title"><i class="fas fa-list"></i> PLATEFORMES RÉCENTES</div>
           <div id="dash-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
         </div>
       </div>
 
-      <!-- PLATEFORMES -->
-      <div id="tab-platforms" class="tab-content">
-        <div class="sec-head">
-          <div class="sec-title"><i class="fas fa-gamepad"></i> TOUTES LES PLATEFORMES</div>
+      <!-- ══ LISTE PLATEFORMES ══ -->
+      <div id="pg-list" class="page">
+        <div class="page-head">
+          <div class="page-title"><i class="fas fa-gamepad"></i> TOUTES LES PLATEFORMES</div>
           <div style="display:flex;gap:10px;">
-            <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="plat-search" placeholder="Rechercher..." oninput="filterPlatforms()"></div>
-            <button class="btn btn-gold btn-sm" onclick="showTab('create')"><i class="fas fa-plus"></i> Nouvelle</button>
+            <div class="searchbar"><i class="fas fa-search"></i><input type="text" id="srch" placeholder="Rechercher..." oninput="filterList()"></div>
+            <button class="btn btn-gold btn-sm" onclick="go('new')"><i class="fas fa-plus"></i> Nouveau paryaj</button>
           </div>
         </div>
-        <div id="plat-alert" class="alert"></div>
+        <div id="list-alert" class="alert"></div>
         <div id="plat-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
       </div>
 
-      <!-- CRÉER -->
-      <div id="tab-create" class="tab-content">
-        <div class="sec-head"><div class="sec-title"><i class="fas fa-plus-circle"></i> NOUVELLE PLATEFORME</div></div>
-        <div id="create-alert" class="alert"></div>
+      <!-- ══ NOUVEAU PARYAJ ══ -->
+      <div id="pg-new" class="page">
+        <div class="page-head">
+          <div class="page-title"><i class="fas fa-plus-circle"></i> CRÉER UN NOUVEAU PARYAJ</div>
+        </div>
+        <div id="new-alert" class="alert"></div>
+
+        <!-- IDENTITÉ -->
         <div class="card">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-tag"></i> IDENTITÉ</div>
-          <div class="form-grid">
-            <div class="fg"><label>CODE UNIQUE *</label><input type="text" id="c-code" placeholder="Ex: MAMAPARYAJ (sans espaces)" style="text-transform:uppercase" oninput="previewLink()"></div>
-            <div class="fg"><label>NOM PLATEFORME *</label><input type="text" id="c-name" placeholder="Ex: Mama Paryaj..." oninput="previewName()"></div>
-            <div class="fg fg-full"><label>URL DU LOGO</label><input type="text" id="c-logo" placeholder="https://imgur.com/monlogo.png"></div>
-            <div class="fg"><label>SLOGAN</label><input type="text" id="c-slogan" placeholder="Jwe ak konfyans !"></div>
-            <div class="fg"><label>EMAIL</label><input type="email" id="c-email" placeholder="info@plateforme.com"></div>
-            <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="c-phone" placeholder="+509 00 00 0000"></div>
-            <div class="fg"><label>ADRESSE</label><input type="text" id="c-address" placeholder="Port-au-Prince, Haïti"></div>
-            <div class="fg"><label>URL SERVEUR BACKEND</label><input type="text" id="c-server" placeholder="https://....onrender.com"></div>
-          </div>
-          <div class="name-prev" id="name-prev">
-            <div class="name-prev-inner">
-              <div class="name-prev-av" id="prev-av">T</div>
-              <div class="name-prev-text"><div class="nm" id="prev-nm">NOM</div><div class="sl" id="prev-sl">Slogan</div></div>
+          <div class="card-title"><i class="fas fa-tag"></i> IDENTITÉ DU PARYAJ</div>
+          <div class="fgrid">
+            <div class="fg">
+              <label>CODE UNIQUE * <span style="color:var(--muted);font-weight:400">(sans espaces)</span></label>
+              <input type="text" id="n-code" placeholder="Ex: MAMAPARYAJ, KINGKONG..." style="text-transform:uppercase;font-weight:700;letter-spacing:2px" oninput="onCodeInput()">
             </div>
-            <p style="font-size:11px;color:var(--muted);margin-top:6px;"><i class="fas fa-eye"></i> Aperçu branding</p>
+            <div class="fg">
+              <label>NOM DU PARYAJ *</label>
+              <input type="text" id="n-name" placeholder="Ex: Mama Paryaj" oninput="onNameInput()">
+            </div>
+            <div class="fg fg-full">
+              <label>URL DU LOGO <span style="color:var(--muted);font-weight:400">(lien image: imgur, cloudinary...)</span></label>
+              <input type="text" id="n-logo" placeholder="https://i.imgur.com/votrelogo.png" oninput="onLogoInput()">
+            </div>
+            <div class="fg">
+              <label>SLOGAN</label>
+              <input type="text" id="n-slogan" placeholder="Ex: Jwe ak konfyans !">
+            </div>
+            <div class="fg">
+              <label>EMAIL</label>
+              <input type="email" id="n-email" placeholder="info@mamaparyaj.com">
+            </div>
+            <div class="fg">
+              <label>TÉLÉPHONE</label>
+              <input type="text" id="n-phone" placeholder="+509 00 00 0000">
+            </div>
+            <div class="fg fg-full">
+              <label>ADRESSE</label>
+              <input type="text" id="n-address" placeholder="Ex: Rue Principale, Port-au-Prince">
+            </div>
+            <div class="fg fg-full">
+              <label>URL SERVEUR BACKEND</label>
+              <input type="text" id="n-server" placeholder="https://parinova-rmkp.onrender.com" value="https://parinova-rmkp.onrender.com">
+            </div>
+          </div>
+
+          <!-- APERÇU BRANDING -->
+          <div id="preview-box" style="margin-top:18px;display:none;">
+            <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:10px;font-weight:700;"><i class="fas fa-eye"></i> APERÇU BRANDING</div>
+            <div style="background:linear-gradient(135deg,#0d2151,#061a2e);border-radius:14px;padding:16px 20px;display:inline-flex;align-items:center;gap:14px;min-width:280px;">
+              <div id="prev-logo-wrap" style="display:none;">
+                <img id="prev-logo-img" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);">
+              </div>
+              <div id="prev-initials" style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5c800,#fff8dc);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-family:'Rajdhani',sans-serif;font-size:1.2rem;flex-shrink:0;"></div>
+              <div>
+                <div id="prev-name" style="font-family:'Rajdhani',sans-serif;font-weight:900;color:#f5c800;letter-spacing:3px;font-size:1.1rem;">NOM</div>
+                <div id="prev-slogan" style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1.5px;margin-top:2px;">Slogan</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- APERÇU LIEN -->
+          <div class="link-box" id="link-prev-box">
+            <label><i class="fas fa-link"></i> LIEN UNIQUE QUI SERA GÉNÉRÉ</label>
+            <code id="link-prev-url"></code>
+            <div style="font-size:11px;color:var(--muted);">Ce lien sera partagé avec les joueurs et le propriétaire du paryaj</div>
           </div>
         </div>
-        <div class="card" style="margin-top:14px;">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-user-tie"></i> PROPRIÉTAIRE</div>
-          <div class="form-grid">
-            <div class="fg"><label>NOM COMPLET *</label><input type="text" id="c-owner-name" placeholder="Jean Dupont"></div>
-            <div class="fg"><label>EMAIL *</label><input type="email" id="c-owner-email" placeholder="jean@exemple.com"></div>
-            <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="c-owner-phone" placeholder="+509 00 00 0000"></div>
-            <div class="fg"><label>MOT DE PASSE ADMIN *</label><input type="password" id="c-owner-pwd" placeholder="Minimum 8 caractères"></div>
+
+        <!-- PROPRIÉTAIRE -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-user-tie"></i> PROPRIÉTAIRE / ABONNÉ</div>
+          <div class="fgrid">
+            <div class="fg">
+              <label>NOM COMPLET *</label>
+              <input type="text" id="n-owner-name" placeholder="Jean Dupont">
+            </div>
+            <div class="fg">
+              <label>EMAIL (identifiant connexion) *</label>
+              <input type="email" id="n-owner-email" placeholder="jean@exemple.com">
+            </div>
+            <div class="fg">
+              <label>TÉLÉPHONE</label>
+              <input type="text" id="n-owner-phone" placeholder="+509 00 00 0000">
+            </div>
+            <div class="fg">
+              <label>MOT DE PASSE *</label>
+              <input type="password" id="n-owner-pwd" placeholder="Choisir un mot de passe">
+              <div style="font-size:10px;color:var(--muted);margin-top:5px;">Le propriétaire utilisera cet email + mot de passe pour se connecter</div>
+            </div>
           </div>
         </div>
-        <div class="card" style="margin-top:14px;">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-calendar-check"></i> ABONNEMENT</div>
-          <div class="plan-cards" id="plan-cards-create">
-            <div class="plan-card selected" data-plan="test" onclick="selectPlan('test')"><div class="picon">🧪</div><div class="pnm">TEST</div><div class="pdur">7 jours</div><div class="pprice" id="pp-test">Gratuit</div></div>
-            <div class="plan-card" data-plan="mensuel" onclick="selectPlan('mensuel')"><div class="picon">📅</div><div class="pnm">MENSUEL</div><div class="pdur">30 jours</div><div class="pprice" id="pp-mensuel">—</div></div>
-            <div class="plan-card" data-plan="semestriel" onclick="selectPlan('semestriel')"><div class="picon">📆</div><div class="pnm">SEMESTRIEL</div><div class="pdur">180 jours</div><div class="pprice" id="pp-semestriel">—</div></div>
-            <div class="plan-card" data-plan="annuel" onclick="selectPlan('annuel')"><div class="picon">🏆</div><div class="pnm">ANNUEL</div><div class="pdur">365 jours</div><div class="pprice" id="pp-annuel">—</div></div>
+
+        <!-- ABONNEMENT -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-calendar-check"></i> TYPE D'ABONNEMENT</div>
+          <div class="plans">
+            <div class="plan on" data-plan="test" onclick="selPlan('test')">
+              <div class="plan-ico">🧪</div>
+              <div class="plan-nm">TEST</div>
+              <div class="plan-dur">7 jours</div>
+              <div class="plan-price" id="pp-test">Gratuit</div>
+            </div>
+            <div class="plan" data-plan="mensuel" onclick="selPlan('mensuel')">
+              <div class="plan-ico">📅</div>
+              <div class="plan-nm">MENSUEL</div>
+              <div class="plan-dur">30 jours</div>
+              <div class="plan-price" id="pp-mensuel">2,000 HTG</div>
+            </div>
+            <div class="plan" data-plan="semestriel" onclick="selPlan('semestriel')">
+              <div class="plan-ico">📆</div>
+              <div class="plan-nm">SEMESTRIEL</div>
+              <div class="plan-dur">180 jours</div>
+              <div class="plan-price" id="pp-semestriel">10,000 HTG</div>
+            </div>
+            <div class="plan" data-plan="annuel" onclick="selPlan('annuel')">
+              <div class="plan-ico">🏆</div>
+              <div class="plan-nm">ANNUEL</div>
+              <div class="plan-dur">365 jours</div>
+              <div class="plan-price" id="pp-annuel">18,000 HTG</div>
+            </div>
           </div>
-          <input type="hidden" id="c-plan" value="test">
-          <div class="form-grid" style="margin-top:10px;">
-            <div class="fg"><label>DATE DÉBUT</label><input type="date" id="c-start"></div>
-            <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="c-fee" placeholder="0" min="0"></div>
-            <div class="fg"><label>NOTES</label><input type="text" id="c-notes" placeholder="Promotion..."></div>
+          <input type="hidden" id="n-plan" value="test">
+          <div class="fgrid" style="margin-top:12px;">
+            <div class="fg"><label>DATE DE DÉBUT</label><input type="date" id="n-start"></div>
+            <div class="fg"><label>FRAIS À PAYER (HTG)</label><input type="number" id="n-fee" placeholder="0" min="0" value="0"></div>
+            <div class="fg"><label>NOTES</label><input type="text" id="n-notes" placeholder="Promotion, offre spéciale..."></div>
           </div>
         </div>
-        <div class="card" style="margin-top:14px;">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-key"></i> ACCÈS</div>
-          <div class="form-grid">
-            <div class="fg"><label>CODE STAFF SECRET</label><input type="text" id="c-staff" placeholder="Auto-généré si vide"></div>
-            <div class="fg"><label>CLÉ API FOOTBALL</label><input type="text" id="c-football" placeholder="Laisser vide = par défaut"></div>
+
+        <!-- ACCÈS -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-key"></i> CODES D'ACCÈS</div>
+          <div class="fgrid">
+            <div class="fg">
+              <label>CODE STAFF SECRET</label>
+              <input type="text" id="n-staff" placeholder="Auto-généré si vide (CODE + 12)">
+            </div>
+            <div class="fg">
+              <label>CLÉ API FOOTBALL</label>
+              <input type="text" id="n-football" placeholder="Laisser vide = clé par défaut">
+            </div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;margin-top:18px;">
-          <button class="btn btn-gold" onclick="createPlatform()"><i class="fas fa-save"></i> Créer la plateforme</button>
-          <button class="btn btn-outline" onclick="resetCreateForm()"><i class="fas fa-times"></i> Réinitialiser</button>
+
+        <!-- BOUTONS CRÉATION -->
+        <div style="display:flex;gap:12px;margin-top:6px;flex-wrap:wrap;">
+          <button class="btn btn-gold" id="btn-create" onclick="createPlatform()">
+            <i class="fas fa-save"></i> Créer le paryaj
+          </button>
+          <button class="btn btn-outline" onclick="resetForm()">
+            <i class="fas fa-times"></i> Réinitialiser
+          </button>
         </div>
-        <div id="link-preview" style="display:none;margin-top:16px;background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.2);border-radius:10px;padding:14px;">
-          <div style="font-size:11px;color:var(--blue);font-weight:700;letter-spacing:1px;margin-bottom:8px;"><i class="fas fa-link"></i> LIEN QUI SERA GÉNÉRÉ</div>
-          <code id="link-preview-url" style="font-size:12px;color:var(--text);word-break:break-all;"></code>
+
+        <!-- RÉSULTAT CRÉATION -->
+        <div id="create-result" style="display:none;margin-top:18px;background:rgba(0,229,155,.08);border:1px solid rgba(0,229,155,.25);border-radius:14px;padding:20px;">
+          <div style="font-size:1rem;font-weight:700;color:var(--green);margin-bottom:14px;"><i class="fas fa-check-circle"></i> Paryaj créé avec succès !</div>
+          <div class="fgrid">
+            <div>
+              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">NOM</div>
+              <div id="cr-name" style="font-weight:700;font-family:'Rajdhani',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--gold);"></div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">PROPRIÉTAIRE</div>
+              <div id="cr-owner" style="font-weight:600;"></div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">IDENTIFIANTS</div>
+              <div id="cr-creds" style="font-size:12px;"></div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:4px;">CODE STAFF</div>
+              <div id="cr-staff" style="font-weight:700;color:var(--blue);"></div>
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <div style="font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px;"><i class="fas fa-link"></i> LIENS À PARTAGER</div>
+            <div style="background:rgba(0,0,0,.4);border-radius:10px;padding:12px;">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Lien joueurs (page d'accueil):</div>
+              <code id="cr-link1" style="color:var(--gold);font-size:12px;word-break:break-all;"></code>
+              <button class="btn btn-outline btn-xs" style="margin-top:6px;" onclick="copyText(document.getElementById('cr-link1').textContent)"><i class="fas fa-copy"></i> Copier</button>
+            </div>
+            <div style="background:rgba(0,0,0,.4);border-radius:10px;padding:12px;margin-top:8px;">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Lien application (jeux):</div>
+              <code id="cr-link2" style="color:var(--gold);font-size:12px;word-break:break-all;"></code>
+              <button class="btn btn-outline btn-xs" style="margin-top:6px;" onclick="copyText(document.getElementById('cr-link2').textContent)"><i class="fas fa-copy"></i> Copier</button>
+            </div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px;">
+            <button class="btn btn-gold btn-sm" onclick="go('list')"><i class="fas fa-list"></i> Voir toutes les plateformes</button>
+            <button class="btn btn-outline btn-sm" onclick="resetForm();go('new')"><i class="fas fa-plus"></i> Créer un autre</button>
+          </div>
         </div>
       </div>
 
-      <!-- ABONNEMENTS -->
-      <div id="tab-subscriptions" class="tab-content">
-        <div class="sec-head"><div class="sec-title"><i class="fas fa-calendar-check"></i> GESTION DES ABONNEMENTS</div></div>
-        <div class="table-wrap">
-          <table><thead><tr><th>PLATEFORME</th><th>PROPRIÉTAIRE</th><th>PLAN</th><th>DÉBUT</th><th>EXPIRATION</th><th>STATUT</th><th>FRAIS</th><th>ACTIONS</th></tr></thead>
-          <tbody id="sub-tbody"><tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody></table>
+      <!-- ══ ABONNEMENTS ══ -->
+      <div id="pg-subs" class="page">
+        <div class="page-head"><div class="page-title"><i class="fas fa-calendar-check"></i> GESTION DES ABONNEMENTS</div></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>PARYAJ</th><th>PROPRIÉTAIRE</th><th>PLAN</th><th>DÉBUT</th><th>EXPIRATION</th><th>STATUT</th><th>FRAIS</th><th>ACTIONS</th></tr></thead>
+            <tbody id="subs-body"><tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- EXPIRATIONS -->
-      <div id="tab-expiring" class="tab-content">
-        <div class="sec-head">
-          <div class="sec-title"><i class="fas fa-clock"></i> EXPIRATIONS PROCHES</div>
-          <button class="btn btn-outline btn-sm" onclick="loadExpiring()"><i class="fas fa-sync-alt"></i></button>
+      <!-- ══ EXPIRATIONS ══ -->
+      <div id="pg-exp" class="page">
+        <div class="page-head">
+          <div class="page-title"><i class="fas fa-clock"></i> EXPIRATIONS PROCHES</div>
+          <button class="btn btn-outline btn-sm" onclick="loadExp()"><i class="fas fa-sync-alt"></i></button>
         </div>
-        <div id="expiring-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
+        <div id="exp-list"><div class="empty"><i class="fas fa-spinner fa-spin"></i>Chargement...</div></div>
       </div>
 
-      <!-- REVENUS -->
-      <div id="tab-revenue" class="tab-content">
-        <div class="sec-head"><div class="sec-title"><i class="fas fa-coins"></i> REVENUS & FRAIS</div></div>
-        <div class="stats-row">
-          <div class="stat-card" style="--accent:var(--green)"><div class="stat-icon">💵</div><div class="stat-value" id="rev-total">—</div><div class="stat-label">REVENUS TOTAUX</div></div>
-          <div class="stat-card" style="--accent:var(--gold)"><div class="stat-icon">⏳</div><div class="stat-value" id="rev-pending">—</div><div class="stat-label">EN ATTENTE</div></div>
+      <!-- ══ REVENUS ══ -->
+      <div id="pg-rev" class="page">
+        <div class="page-head"><div class="page-title"><i class="fas fa-coins"></i> REVENUS & FRAIS</div></div>
+        <div class="stats">
+          <div class="stat" style="--ac:var(--green)"><div class="stat-ico">💵</div><div class="stat-val" id="rv-total">—</div><div class="stat-lbl">REVENUS TOTAUX HTG</div></div>
+          <div class="stat" style="--ac:var(--gold)"><div class="stat-ico">⏳</div><div class="stat-val" id="rv-pend">—</div><div class="stat-lbl">EN ATTENTE HTG</div></div>
         </div>
         <div class="card">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-chart-bar"></i> PAR TYPE DE PLAN</div>
+          <div class="card-title"><i class="fas fa-chart-bar"></i> PAR TYPE DE PLAN</div>
           <div id="rev-bars"></div>
         </div>
-        <div class="card" style="margin-top:14px;">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:14px;"><i class="fas fa-list"></i> PAR PLATEFORME</div>
-          <div class="table-wrap"><table><thead><tr><th>PLATEFORME</th><th>PLAN</th><th>FRAIS</th><th>PAIEMENT</th><th>ACTION</th></tr></thead><tbody id="rev-tbody"></tbody></table></div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-list"></i> PAR PARYAJ</div>
+          <div class="tbl-wrap"><table><thead><tr><th>PARYAJ</th><th>PLAN</th><th>FRAIS</th><th>PAIEMENT</th><th>ACTION</th></tr></thead><tbody id="rev-body"></tbody></table></div>
         </div>
       </div>
 
-      <!-- PAIEMENTS -->
-      <div id="tab-payments" class="tab-content">
-        <div class="sec-head"><div class="sec-title"><i class="fas fa-receipt"></i> HISTORIQUE PAIEMENTS</div></div>
-        <div class="table-wrap">
-          <table><thead><tr><th>DATE</th><th>PLATEFORME</th><th>PLAN</th><th>MONTANT</th><th>MODE</th><th>STATUT</th><th>ACTION</th></tr></thead>
-          <tbody id="pay-tbody"><tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody></table>
+      <!-- ══ PAIEMENTS ══ -->
+      <div id="pg-pay" class="page">
+        <div class="page-head"><div class="page-title"><i class="fas fa-receipt"></i> HISTORIQUE PAIEMENTS</div></div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>DATE</th><th>PARYAJ</th><th>PLAN</th><th>MONTANT</th><th>MODE</th><th>STATUT</th><th>ACTION</th></tr></thead>
+          <tbody id="pay-body"><tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Chargement...</td></tr></tbody></table>
         </div>
       </div>
 
-      <!-- PARAMÈTRES -->
-      <div id="tab-settings" class="tab-content">
-        <div class="sec-head">
-          <div class="sec-title"><i class="fas fa-gear"></i> PARAMÈTRES MASTER</div>
+      <!-- ══ PARAMÈTRES ══ -->
+      <div id="pg-set" class="page">
+        <div class="page-head">
+          <div class="page-title"><i class="fas fa-gear"></i> PARAMÈTRES MASTER</div>
           <button class="btn btn-gold btn-sm" onclick="saveSettings()"><i class="fas fa-save"></i> Enregistrer</button>
         </div>
         <div id="set-alert" class="alert"></div>
         <div class="card">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-lock"></i> SÉCURITÉ</div>
-          <div class="form-grid">
+          <div class="card-title"><i class="fas fa-lock"></i> SÉCURITÉ MASTER</div>
+          <div class="fgrid">
             <div class="fg"><label>NOUVEL IDENTIFIANT</label><input type="text" id="s-user" placeholder="Laisser vide = inchangé"></div>
             <div class="fg"><label>NOUVEAU MOT DE PASSE</label><input type="password" id="s-pwd" placeholder="Laisser vide = inchangé"></div>
           </div>
         </div>
-        <div class="card" style="margin-top:14px;">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-dollar-sign"></i> TARIFS ABONNEMENTS (HTG)</div>
-          <div class="form-grid">
-            <div class="fg"><label>PLAN TEST (7j)</label><input type="number" id="s-price-test" min="0"></div>
-            <div class="fg"><label>PLAN MENSUEL (30j)</label><input type="number" id="s-price-mensuel" min="0"></div>
-            <div class="fg"><label>PLAN SEMESTRIEL (180j)</label><input type="number" id="s-price-semestriel" min="0"></div>
-            <div class="fg"><label>PLAN ANNUEL (365j)</label><input type="number" id="s-price-annuel" min="0"></div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-dollar-sign"></i> TARIFS ABONNEMENTS (HTG)</div>
+          <div class="fgrid">
+            <div class="fg"><label>PLAN TEST (7 jours)</label><input type="number" id="s-p-test" min="0" value="0"></div>
+            <div class="fg"><label>PLAN MENSUEL (30 jours)</label><input type="number" id="s-p-men" min="0" value="2000"></div>
+            <div class="fg"><label>PLAN SEMESTRIEL (180 jours)</label><input type="number" id="s-p-sem" min="0" value="10000"></div>
+            <div class="fg"><label>PLAN ANNUEL (365 jours)</label><input type="number" id="s-p-ann" min="0" value="18000"></div>
           </div>
         </div>
-        <div class="card" style="margin-top:14px;">
-          <div class="sec-title" style="font-size:.9rem;margin-bottom:18px;"><i class="fas fa-globe"></i> CONFIGURATION GLOBALE</div>
-          <div class="form-grid">
-            <div class="fg"><label>CLÉ API FOOTBALL PAR DÉFAUT</label><input type="text" id="s-football" placeholder="votre_clé_api"></div>
-            <div class="fg"><label>SERVEUR PAR DÉFAUT</label><input type="text" id="s-server" placeholder="https://...onrender.com"></div>
-            <div class="fg"><label>ALERTER AVANT (jours)</label><input type="number" id="s-alert-days" value="7" min="1" max="30"></div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-globe"></i> CONFIGURATION GLOBALE</div>
+          <div class="fgrid">
+            <div class="fg"><label>CLÉ API FOOTBALL PAR DÉFAUT</label><input type="text" id="s-foot" placeholder="votre_clé_api"></div>
+            <div class="fg"><label>SERVEUR PAR DÉFAUT</label><input type="text" id="s-srv" value="https://parinova-rmkp.onrender.com"></div>
+            <div class="fg"><label>ALERTER EXPIRATION (jours avant)</label><input type="number" id="s-days" value="7" min="1" max="30"></div>
           </div>
         </div>
       </div>
 
-    </div><!-- /content -->
+    </div><!-- /main -->
   </div><!-- /layout -->
 </div><!-- /app -->
 
-<!-- ══ MODAL PLATEFORME ══ -->
-<div class="modal" id="modal-platform">
+<!-- ════════ MODAL MODIFIER PARYAJ ════════ -->
+<div class="modal" id="modal-edit">
   <div class="modal-box">
     <div class="modal-head">
-      <h3 id="mp-title">PLATEFORME</h3>
-      <button class="modal-close" onclick="closeModal('modal-platform')"><i class="fas fa-times"></i></button>
+      <h3 id="edit-title">MODIFIER PARYAJ</h3>
+      <button class="modal-close" onclick="closeModal('modal-edit')"><i class="fas fa-times"></i></button>
     </div>
-    <div id="mp-alert" class="alert"></div>
+    <div id="edit-alert" class="alert"></div>
     <div class="mtabs">
-      <button class="mtab active" id="mt-info" onclick="switchMTab('info')">Infos</button>
-      <button class="mtab" id="mt-sub" onclick="switchMTab('sub')">Abonnement</button>
-      <button class="mtab" id="mt-config" onclick="switchMTab('config')">Configuration</button>
+      <button class="mtab on" id="mt-info" onclick="mTab('info')">Infos</button>
+      <button class="mtab" id="mt-sub" onclick="mTab('sub')">Abonnement</button>
+      <button class="mtab" id="mt-cfg" onclick="mTab('cfg')">Config</button>
     </div>
-    <div id="mtp-info">
-      <div class="form-grid">
-        <div class="fg"><label>CODE UNIQUE</label><input type="text" id="mp-code" readonly style="opacity:.6;cursor:not-allowed;background:rgba(0,0,0,.5)"></div>
-        <div class="fg"><label>NOM PLATEFORME</label><input type="text" id="mp-name"></div>
-        <div class="fg fg-full"><label>URL DU LOGO</label><input type="text" id="mp-logo" placeholder="https://imgur.com/monlogo.png"></div>
-        <div class="fg"><label>SLOGAN</label><input type="text" id="mp-slogan"></div>
-        <div class="fg"><label>EMAIL</label><input type="email" id="mp-email"></div>
-        <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="mp-phone"></div>
-        <div class="fg fg-full"><label>ADRESSE</label><input type="text" id="mp-address"></div>
-        <div class="fg fg-full"><label>URL SERVEUR</label><input type="text" id="mp-server"></div>
+
+    <!-- Infos -->
+    <div id="mt-info-c">
+      <div class="fgrid">
+        <div class="fg"><label>CODE</label><input type="text" id="e-code" readonly style="opacity:.5;cursor:not-allowed"></div>
+        <div class="fg"><label>NOM</label><input type="text" id="e-name"></div>
+        <div class="fg fg-full"><label>LOGO URL</label><input type="text" id="e-logo" placeholder="https://..."></div>
+        <div class="fg"><label>SLOGAN</label><input type="text" id="e-slogan"></div>
+        <div class="fg"><label>EMAIL</label><input type="email" id="e-email"></div>
+        <div class="fg"><label>TÉLÉPHONE</label><input type="text" id="e-phone"></div>
+        <div class="fg fg-full"><label>ADRESSE</label><input type="text" id="e-address"></div>
+        <div class="fg fg-full"><label>URL SERVEUR</label><input type="text" id="e-server"></div>
       </div>
     </div>
-    <div id="mtp-sub" style="display:none;">
-      <div class="form-grid">
+
+    <!-- Abonnement -->
+    <div id="mt-sub-c" style="display:none;">
+      <div class="fgrid">
         <div class="fg"><label>PLAN</label>
-          <select id="mp-plan" onchange="updateEndDate()">
-            <option value="test">TEST (7j)</option><option value="mensuel">MENSUEL (30j)</option>
-            <option value="semestriel">SEMESTRIEL (180j)</option><option value="annuel">ANNUEL (365j)</option>
+          <select id="e-plan" onchange="calcExpiry()">
+            <option value="test">TEST (7j)</option>
+            <option value="mensuel">MENSUEL (30j)</option>
+            <option value="semestriel">SEMESTRIEL (180j)</option>
+            <option value="annuel">ANNUEL (365j)</option>
           </select>
         </div>
-        <div class="fg"><label>DATE DÉBUT</label><input type="date" id="mp-start" onchange="updateEndDate()"></div>
-        <div class="fg"><label>DATE EXPIRATION</label><input type="date" id="mp-end"></div>
-        <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="mp-fee" min="0"></div>
+        <div class="fg"><label>DATE DÉBUT</label><input type="date" id="e-start" onchange="calcExpiry()"></div>
+        <div class="fg"><label>DATE EXPIRATION</label><input type="date" id="e-end"></div>
+        <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="e-fee" min="0"></div>
         <div class="fg"><label>STATUT PAIEMENT</label>
-          <select id="mp-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
+          <select id="e-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
         </div>
-        <div class="fg fg-full"><label>NOTES</label><input type="text" id="mp-notes"></div>
+        <div class="fg fg-full"><label>NOTES</label><input type="text" id="e-notes"></div>
       </div>
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-success btn-sm" onclick="openRenewModal()"><i class="fas fa-redo"></i> Renouveler</button>
-        <button class="btn btn-danger btn-sm" onclick="togglePlatform()"><i class="fas fa-ban"></i> Suspendre / Réactiver</button>
+        <button class="btn btn-green btn-sm" onclick="openRenew()"><i class="fas fa-redo"></i> Renouveler</button>
+        <button class="btn btn-red btn-sm" onclick="toggleActive()"><i class="fas fa-ban"></i> Suspendre / Réactiver</button>
       </div>
     </div>
-    <div id="mtp-config" style="display:none;">
-      <div class="form-grid">
-        <div class="fg"><label>NOM PROPRIÉTAIRE</label><input type="text" id="mp-owner-name"></div>
-        <div class="fg"><label>EMAIL PROPRIÉTAIRE</label><input type="email" id="mp-owner-email"></div>
-        <div class="fg"><label>TÉLÉPHONE PROPRIÉTAIRE</label><input type="text" id="mp-owner-phone"></div>
-        <div class="fg"><label>MOT DE PASSE (vide = inchangé)</label><input type="password" id="mp-owner-pwd" placeholder="••••••••"></div>
-        <div class="fg"><label>CODE STAFF</label><input type="text" id="mp-staff"></div>
-        <div class="fg"><label>CLÉ API FOOTBALL</label><input type="text" id="mp-football"></div>
+
+    <!-- Config -->
+    <div id="mt-cfg-c" style="display:none;">
+      <div class="fgrid">
+        <div class="fg"><label>NOM PROPRIÉTAIRE</label><input type="text" id="e-oname"></div>
+        <div class="fg"><label>EMAIL PROPRIÉTAIRE</label><input type="email" id="e-oemail"></div>
+        <div class="fg"><label>TÉLÉPHONE PROPRIÉTAIRE</label><input type="text" id="e-ophone"></div>
+        <div class="fg"><label>NOUVEAU MOT DE PASSE</label><input type="password" id="e-opwd" placeholder="Vide = inchangé"></div>
+        <div class="fg"><label>CODE STAFF</label><input type="text" id="e-staff"></div>
+        <div class="fg"><label>CLÉ API FOOTBALL</label><input type="text" id="e-foot"></div>
       </div>
       <hr class="divider">
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-gold btn-sm" onclick="generateConfig()"><i class="fas fa-download"></i> Générer config.js</button>
+        <button class="btn btn-gold btn-sm" onclick="genConfig()"><i class="fas fa-download"></i> Générer config.js</button>
         <button class="btn btn-outline btn-sm" onclick="copyConfig()"><i class="fas fa-copy"></i> Copier</button>
+        <button class="btn btn-outline btn-sm" onclick="copyEditLink()"><i class="fas fa-link"></i> Copier lien</button>
       </div>
-      <div id="config-pre" class="config-pre"></div>
+      <div class="cfg-pre" id="cfg-pre"></div>
     </div>
-    <!-- LIEN UNIQUE -->
-    <div style="background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.2);border-radius:10px;padding:14px;margin-top:4px;">
-      <div style="font-size:11px;color:var(--blue);font-weight:700;letter-spacing:1px;margin-bottom:8px;"><i class="fas fa-link"></i> LIEN UNIQUE DE LA PLATEFORME</div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <code id="mp-link" style="font-size:11px;color:var(--text);background:rgba(0,0,0,.4);padding:6px 10px;border-radius:6px;flex:1;word-break:break-all;"></code>
-        <button class="btn btn-outline btn-xs" onclick="copyPlatformLink()"><i class="fas fa-copy"></i></button>
-      </div>
-    </div>
+
     <hr class="divider">
-    <input type="hidden" id="mp-id">
-    <div style="display:flex;gap:10px;justify-content:flex-end;">
-      <button class="btn btn-danger btn-sm" onclick="deletePlatform()"><i class="fas fa-trash"></i> Supprimer</button>
-      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-platform')">Annuler</button>
+    <input type="hidden" id="e-id">
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn btn-red btn-sm" onclick="deletePlatform()"><i class="fas fa-trash"></i> Supprimer</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-edit')">Annuler</button>
       <button class="btn btn-gold btn-sm" onclick="savePlatform()"><i class="fas fa-save"></i> Enregistrer</button>
     </div>
   </div>
 </div>
 
-<!-- ══ MODAL RENOUVELLEMENT ══ -->
+<!-- ════════ MODAL RENOUVELLEMENT ════════ -->
 <div class="modal" id="modal-renew">
   <div class="modal-box" style="max-width:400px;">
     <div class="modal-head">
       <h3>RENOUVELER ABONNEMENT</h3>
       <button class="modal-close" onclick="closeModal('modal-renew')"><i class="fas fa-times"></i></button>
     </div>
-    <p style="color:var(--muted);margin-bottom:18px;font-size:13px;">Plateforme: <strong id="renew-name" style="color:var(--gold)"></strong></p>
+    <p style="color:var(--muted);margin-bottom:16px;font-size:13px;">Paryaj: <b id="renew-name" style="color:var(--gold)"></b></p>
     <div class="fg"><label>NOUVEAU PLAN</label>
-      <select id="renew-plan">
-        <option value="mensuel">MENSUEL (30j)</option><option value="semestriel">SEMESTRIEL (180j)</option>
-        <option value="annuel">ANNUEL (365j)</option><option value="test">TEST (7j)</option>
+      <select id="r-plan">
+        <option value="mensuel">MENSUEL (30j)</option>
+        <option value="semestriel">SEMESTRIEL (180j)</option>
+        <option value="annuel">ANNUEL (365j)</option>
+        <option value="test">TEST (7j)</option>
       </select>
     </div>
-    <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="renew-fee" min="0"></div>
+    <div class="fg"><label>FRAIS (HTG)</label><input type="number" id="r-fee" min="0"></div>
     <div class="fg"><label>STATUT PAIEMENT</label>
-      <select id="renew-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
+      <select id="r-paid"><option value="0">En attente</option><option value="1">Payé</option><option value="2">Exempté</option></select>
     </div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px;">
       <button class="btn btn-outline" onclick="closeModal('modal-renew')">Annuler</button>
@@ -528,68 +767,77 @@ tr:hover td{background:rgba(255,255,255,.02);}
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  CONSTANTES
-// ══════════════════════════════════════════════════════
-const PLAN_DAYS   = { test:7, mensuel:30, semestriel:180, annuel:365 };
-const PLAN_LABELS = { test:'TEST', mensuel:'MENSUEL', semestriel:'SEMESTRIEL', annuel:'ANNUEL' };
+// ══════════════════════════════════════════════════════════
+const PLAN_DAYS  = { test:7, mensuel:30, semestriel:180, annuel:365 };
+const PLAN_NAMES = { test:'TEST', mensuel:'MENSUEL', semestriel:'SEMESTRIEL', annuel:'ANNUEL' };
+const SERVER_DEFAULT = 'https://parinova-rmkp.onrender.com';
 
-// ══════════════════════════════════════════════════════
-//  ÉTAT GLOBAL
-// ══════════════════════════════════════════════════════
-let API_BASE       = localStorage.getItem('master_server') || '';
-let MASTER_TOKEN   = localStorage.getItem('master_token')  || '';
-let masterUsername = localStorage.getItem('master_username') || 'Master';
-let CFG = {};
-let allPlatforms = [];
-let currentPlatformId = null;
+// ══════════════════════════════════════════════════════════
+//  ÉTAT
+// ══════════════════════════════════════════════════════════
+let API   = localStorage.getItem('m_server') || SERVER_DEFAULT;
+let TOKEN = localStorage.getItem('m_token')  || '';
+let UNAME = localStorage.getItem('m_user')   || 'master';
+let CFG   = {};
+let allPlats = [];
+let currentId = null;
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  API HELPER
-// ══════════════════════════════════════════════════════
-async function api(method, path, body) {
-  const opts = { method, headers: { 'Content-Type':'application/json', 'X-Master-Token': MASTER_TOKEN } };
+// ══════════════════════════════════════════════════════════
+async function req(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type':'application/json', 'X-Master-Token': TOKEN }
+  };
   if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(API_BASE + path, opts);
-  const data = await r.json();
-  if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
-  return data;
+  const r = await fetch(API + path, opts);
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
+  return d;
 }
 
-// ══════════════════════════════════════════════════════
-//  LOGIN / LOGOUT
-// ══════════════════════════════════════════════════════
-async function doLogin() {
-  const serverUrl = document.getElementById('srv-url').value.trim().replace(/\/$/,'');
-  const username  = document.getElementById('m-user').value.trim();
-  const password  = document.getElementById('m-pass').value;
-  const errEl = document.getElementById('login-err');
-  if (!serverUrl) { errEl.style.display='block'; errEl.textContent='❌ URL du serveur obligatoire'; return; }
-  if (!username || !password) { errEl.style.display='block'; errEl.textContent='❌ Identifiants obligatoires'; return; }
+// ══════════════════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════════════════
+async function login() {
+  const srv = document.getElementById('srv').value.trim().replace(/\/$/,'');
+  const usr = document.getElementById('mu').value.trim();
+  const pwd = document.getElementById('mp').value;
+  const err = document.getElementById('login-err');
+
+  if (!srv || !usr || !pwd) {
+    err.style.display='block';
+    err.textContent='❌ Remplissez tous les champs';
+    return;
+  }
+  err.style.display='none';
+
   try {
-    API_BASE = serverUrl;
-    const r = await fetch(API_BASE + '/master/login', {
+    API = srv;
+    const r = await fetch(API + '/master/login', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username:usr, password:pwd })
     });
-    const res = await r.json();
-    if (!r.ok) { errEl.style.display='block'; errEl.textContent='❌ ' + (res.error||'Erreur'); return; }
-    MASTER_TOKEN   = res.token;
-    masterUsername = res.username;
-    localStorage.setItem('master_token', MASTER_TOKEN);
-    localStorage.setItem('master_server', API_BASE);
-    localStorage.setItem('master_username', masterUsername);
+    const d = await r.json();
+    if (!r.ok) { err.style.display='block'; err.textContent='❌ ' + (d.error||'Identifiants incorrects'); return; }
+    TOKEN = d.token; UNAME = d.username;
+    localStorage.setItem('m_server', API);
+    localStorage.setItem('m_token', TOKEN);
+    localStorage.setItem('m_user', UNAME);
     startApp();
   } catch(e) {
-    errEl.style.display='block';
-    errEl.textContent='❌ Impossible de joindre le serveur: ' + e.message;
+    err.style.display='block';
+    err.textContent='❌ Impossible de joindre le serveur: ' + e.message;
   }
 }
 
-async function doLogout() {
-  try { await api('POST', '/master/logout'); } catch(e) {}
-  localStorage.removeItem('master_token');
-  MASTER_TOKEN = '';
+async function logout() {
+  try { await req('POST', '/master/logout'); } catch(e) {}
+  localStorage.removeItem('m_token');
+  TOKEN = '';
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
 }
@@ -597,611 +845,651 @@ async function doLogout() {
 async function startApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('master-name-display').textContent = masterUsername;
-  if (!API_BASE) API_BASE = 'https://parinova-rmkp.onrender.com';
-  document.getElementById('srv-url').value = API_BASE;
-  await loadConfig();
-  loadDashboard();
+  document.getElementById('mu-display').textContent = UNAME;
+  document.getElementById('srv').value = API;
+  document.getElementById('n-server').value = API;
+  document.getElementById('s-srv').value = API;
+  document.getElementById('n-start').value = today();
+  await loadCFG();
+  loadDash();
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-  document.getElementById('c-start').value = new Date().toISOString().split('T')[0];
-  if (!API_BASE) API_BASE = 'https://parinova-rmkp.onrender.com';
-  document.getElementById('srv-url').value = API_BASE;
-  if (MASTER_TOKEN && API_BASE) {
+  document.getElementById('srv').value = API;
+  document.getElementById('n-start').value = today();
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('on'); }));
+  if (TOKEN && API) {
     try {
-      const r = await fetch(API_BASE + '/master/me', { headers:{'X-Master-Token': MASTER_TOKEN} });
-      if (r.ok) { const d = await r.json(); masterUsername = d.username; startApp(); return; }
+      const r = await fetch(API+'/master/me', { headers:{'X-Master-Token':TOKEN} });
+      if (r.ok) { const d=await r.json(); UNAME=d.username; startApp(); return; }
     } catch(e) {}
-    localStorage.removeItem('master_token'); MASTER_TOKEN = '';
+    localStorage.removeItem('m_token'); TOKEN='';
   }
-  document.querySelectorAll('.modal').forEach(m => { m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }); });
 });
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  CONFIG
-// ══════════════════════════════════════════════════════
-async function loadConfig() {
+// ══════════════════════════════════════════════════════════
+async function loadCFG() {
   try {
-    const data = await api('GET', '/master/config');
-    CFG = data.config;
-    updatePriceDisplay();
-    document.getElementById('s-price-test').value       = CFG.price_test || 0;
-    document.getElementById('s-price-mensuel').value    = CFG.price_mensuel || 2000;
-    document.getElementById('s-price-semestriel').value = CFG.price_semestriel || 10000;
-    document.getElementById('s-price-annuel').value     = CFG.price_annuel || 18000;
-    document.getElementById('s-football').value         = CFG.football_api_key || '';
-    document.getElementById('s-server').value           = CFG.default_server || '';
-    document.getElementById('s-alert-days').value       = CFG.alert_days || 7;
+    const d = await req('GET', '/master/config');
+    CFG = d.config;
+    document.getElementById('s-p-test').value = CFG.price_test || 0;
+    document.getElementById('s-p-men').value  = CFG.price_mensuel || 2000;
+    document.getElementById('s-p-sem').value  = CFG.price_semestriel || 10000;
+    document.getElementById('s-p-ann').value  = CFG.price_annuel || 18000;
+    document.getElementById('s-foot').value   = CFG.football_api_key || '';
+    document.getElementById('s-srv').value    = CFG.default_server || API;
+    document.getElementById('s-days').value   = CFG.alert_days || 7;
+    // Mettre à jour prix dans les plans
+    document.getElementById('pp-test').textContent    = parseInt(CFG.price_test||0) === 0 ? 'Gratuit' : parseInt(CFG.price_test).toLocaleString()+' HTG';
+    document.getElementById('pp-mensuel').textContent  = parseInt(CFG.price_mensuel||2000).toLocaleString()+' HTG';
+    document.getElementById('pp-semestriel').textContent = parseInt(CFG.price_semestriel||10000).toLocaleString()+' HTG';
+    document.getElementById('pp-annuel').textContent   = parseInt(CFG.price_annuel||18000).toLocaleString()+' HTG';
   } catch(e) { console.warn('Config:', e.message); }
 }
 
-function updatePriceDisplay() {
-  const fmt = v => v == 0 ? 'Gratuit' : parseInt(v).toLocaleString() + ' HTG';
-  document.getElementById('pp-test').textContent       = fmt(CFG.price_test || 0);
-  document.getElementById('pp-mensuel').textContent    = fmt(CFG.price_mensuel || 2000);
-  document.getElementById('pp-semestriel').textContent = fmt(CFG.price_semestriel || 10000);
-  document.getElementById('pp-annuel').textContent     = fmt(CFG.price_annuel || 18000);
-}
-
 async function saveSettings() {
-  const alertEl = document.getElementById('set-alert');
+  const al = document.getElementById('set-alert');
   try {
-    await api('PUT', '/master/config', { config: {
-      price_test:       document.getElementById('s-price-test').value,
-      price_mensuel:    document.getElementById('s-price-mensuel').value,
-      price_semestriel: document.getElementById('s-price-semestriel').value,
-      price_annuel:     document.getElementById('s-price-annuel').value,
-      football_api_key: document.getElementById('s-football').value,
-      default_server:   document.getElementById('s-server').value,
-      alert_days:       document.getElementById('s-alert-days').value,
+    await req('PUT', '/master/config', { config: {
+      price_test:       document.getElementById('s-p-test').value,
+      price_mensuel:    document.getElementById('s-p-men').value,
+      price_semestriel: document.getElementById('s-p-sem').value,
+      price_annuel:     document.getElementById('s-p-ann').value,
+      football_api_key: document.getElementById('s-foot').value,
+      default_server:   document.getElementById('s-srv').value,
+      alert_days:       document.getElementById('s-days').value,
     }});
-    const newUser = document.getElementById('s-user').value.trim();
-    const newPwd  = document.getElementById('s-pwd').value;
-    if (newUser || newPwd) {
-      await api('PUT', '/master/password', { newUsername: newUser||undefined, newPassword: newPwd||undefined });
-      if (newUser) { masterUsername = newUser; localStorage.setItem('master_username', newUser); document.getElementById('master-name-display').textContent = newUser; }
+    const nu = document.getElementById('s-user').value.trim();
+    const np = document.getElementById('s-pwd').value;
+    if (nu || np) {
+      await req('PUT', '/master/password', { newUsername:nu||undefined, newPassword:np||undefined });
+      if (nu) { UNAME=nu; localStorage.setItem('m_user',nu); document.getElementById('mu-display').textContent=nu; }
     }
-    await loadConfig();
-    showAlert(alertEl, '✅ Paramètres enregistrés', true);
-  } catch(e) { showAlert(alertEl, '❌ ' + e.message, false); }
+    await loadCFG();
+    alert2(al, '✅ Paramètres enregistrés', 'ok');
+  } catch(e) { alert2(al, '❌ '+e.message, 'err'); }
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  NAVIGATION
-// ══════════════════════════════════════════════════════
-function showTab(name) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  const nav = document.getElementById('nav-' + name);
-  if (nav) nav.classList.add('active');
-  if (name === 'platforms')     loadPlatforms();
-  if (name === 'subscriptions') loadSubscriptions();
-  if (name === 'expiring')      loadExpiring();
-  if (name === 'revenue')       loadRevenue();
-  if (name === 'payments')      loadPayments();
-  if (name === 'create') { document.getElementById('c-start').value = new Date().toISOString().split('T')[0]; updatePriceDisplay(); }
+// ══════════════════════════════════════════════════════════
+function go(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  const nb = document.getElementById('nb-'+name);
+  if (nb) nb.classList.add('on');
+  if (name==='list')  loadPlats();
+  if (name==='subs')  loadSubs();
+  if (name==='exp')   loadExp();
+  if (name==='rev')   loadRev();
+  if (name==='pay')   loadPay();
+  if (name==='new') {
+    document.getElementById('create-result').style.display='none';
+    document.getElementById('n-start').value = today();
+    loadCFG();
+  }
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  DASHBOARD
-// ══════════════════════════════════════════════════════
-async function loadDashboard() {
+// ══════════════════════════════════════════════════════════
+async function loadDash() {
   try {
-    const [stats, plats] = await Promise.all([api('GET','/master/stats'), api('GET','/master/platforms')]);
-    allPlatforms = plats.platforms;
-    document.getElementById('st-total').textContent    = stats.total;
-    document.getElementById('st-active').textContent   = stats.active;
-    document.getElementById('st-expiring').textContent = stats.expiring;
-    document.getElementById('st-revenue').textContent  = parseInt(stats.revenue).toLocaleString() + ' HTG';
+    const [stats, plats] = await Promise.all([req('GET','/master/stats'), req('GET','/master/platforms')]);
+    allPlats = plats.platforms;
+    document.getElementById('s-total').textContent  = stats.total;
+    document.getElementById('s-active').textContent = stats.active;
+    document.getElementById('s-exp').textContent    = stats.expiring;
+    document.getElementById('s-rev').textContent    = parseInt(stats.revenue||0).toLocaleString();
     const el = document.getElementById('dash-list');
-    if (!allPlatforms.length) { el.innerHTML = '<div class="empty"><i class="fas fa-gamepad"></i>Aucune plateforme créée</div>'; return; }
-    el.innerHTML = allPlatforms.slice(0,6).map(p => prowHtml(p)).join('');
-  } catch(e) { document.getElementById('dash-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
+    if (!allPlats.length) { el.innerHTML='<div class="empty"><i class="fas fa-gamepad"></i>Aucun paryaj créé — Cliquez "Nouveau paryaj" pour commencer</div>'; return; }
+    el.innerHTML = allPlats.slice(0,6).map(p => platRow(p)).join('');
+  } catch(e) {
+    document.getElementById('dash-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`;
+  }
 }
 
-// ══════════════════════════════════════════════════════
-//  PLATEFORMES
-// ══════════════════════════════════════════════════════
-async function loadPlatforms() {
+// ══════════════════════════════════════════════════════════
+//  LISTE PLATEFORMES
+// ══════════════════════════════════════════════════════════
+async function loadPlats() {
   try {
-    const data = await api('GET', '/master/platforms');
-    allPlatforms = data.platforms;
-    renderPlatforms(allPlatforms);
-  } catch(e) { document.getElementById('plat-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
+    const d = await req('GET', '/master/platforms');
+    allPlats = d.platforms;
+    renderPlats(allPlats);
+  } catch(e) { document.getElementById('plat-list').innerHTML=`<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
 }
 
-function renderPlatforms(list) {
+function renderPlats(list) {
   const el = document.getElementById('plat-list');
-  if (!list.length) { el.innerHTML = '<div class="empty"><i class="fas fa-gamepad"></i>Aucune plateforme</div>'; return; }
-  el.innerHTML = list.map(p => prowHtml(p)).join('');
+  if (!list.length) { el.innerHTML='<div class="empty"><i class="fas fa-gamepad"></i>Aucun paryaj</div>'; return; }
+  el.innerHTML = list.map(p => platRow(p)).join('');
 }
 
-function filterPlatforms() {
-  const q = document.getElementById('plat-search').value.toLowerCase();
-  renderPlatforms(allPlatforms.filter(p =>
-    p.name.toLowerCase().includes(q) || (p.owner_name||'').toLowerCase().includes(q) || (p.owner_email||'').toLowerCase().includes(q)
+function filterList() {
+  const q = document.getElementById('srch').value.toLowerCase();
+  renderPlats(allPlats.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    (p.code||'').toLowerCase().includes(q) ||
+    (p.owner_name||'').toLowerCase().includes(q)
   ));
 }
 
-function prowHtml(p) {
-  const initials = (p.name||'?').substring(0,2).toUpperCase();
+function platRow(p) {
+  const ini = (p.name||'?').substring(0,2).toUpperCase();
   return `<div class="prow">
-    <div class="pavatar">${initials}</div>
-    <div><div class="pname">${esc(p.name)}</div><div class="pmeta">${esc(p.owner_name)} · ${esc(p.owner_email)}</div></div>
-    <div>${planBadge(p.plan)}</div>
-    <div>${expiryPill(p)}</div>
-    <div style="display:flex;gap:6px;">
-      <button class="btn btn-outline btn-xs" onclick="copyLink(${p.id},'${p.code}')"><i class="fas fa-link"></i></button>
-      <button class="btn btn-outline btn-xs" onclick="openPlatformModal(${p.id})"><i class="fas fa-edit"></i></button>
-      <button class="btn btn-success btn-xs" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
+    <div class="pavatar">${p.logo_url ? `<img src="${p.logo_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` : ini}</div>
+    <div>
+      <div class="pname">${esc(p.name)} <span style="font-size:10px;color:var(--muted);font-weight:400">[${esc(p.code||'')}]</span></div>
+      <div class="pmeta">${esc(p.owner_name)} · ${esc(p.owner_email)}</div>
+    </div>
+    <div>${planBdg(p.plan)}</div>
+    <div>${expPill(p)}</div>
+    <div style="display:flex;gap:5px;">
+      <button class="btn btn-outline btn-xs" title="Copier lien" onclick="copyLink('${p.code}')"><i class="fas fa-link"></i></button>
+      <button class="btn btn-outline btn-xs" title="Modifier" onclick="openEdit(${p.id})"><i class="fas fa-edit"></i></button>
+      <button class="btn btn-green btn-xs" title="Renouveler" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
     </div>
   </div>`;
 }
 
-function expiryPill(p) {
+function planBdg(plan) {
+  const m = { test:'bdg-blue', mensuel:'bdg-green', semestriel:'bdg-purple', annuel:'bdg-gold' };
+  return `<span class="bdg ${m[plan]||'bdg-blue'}">${PLAN_NAMES[plan]||plan}</span>`;
+}
+
+function expPill(p) {
   const d = p.jours_restants;
-  if (!p.active) return '<span class="epill epill-expired"><i class="fas fa-ban"></i> Suspendu</span>';
-  if (d < 0)     return '<span class="epill epill-expired"><i class="fas fa-times"></i> Expiré</span>';
-  if (d <= 3)    return `<span class="epill epill-danger"><i class="fas fa-fire"></i> J-${d}</span>`;
-  if (d <= 7)    return `<span class="epill epill-warn"><i class="fas fa-clock"></i> J-${d}</span>`;
-  return `<span class="epill epill-ok"><i class="fas fa-check"></i> ${d}j</span>`;
+  if (!p.active) return '<span class="epill ep-off"><i class="fas fa-ban"></i> Suspendu</span>';
+  if (d<0)  return '<span class="epill ep-danger"><i class="fas fa-times"></i> Expiré</span>';
+  if (d<=3) return `<span class="epill ep-danger"><i class="fas fa-fire"></i> J-${d}</span>`;
+  if (d<=7) return `<span class="epill ep-warn"><i class="fas fa-clock"></i> J-${d}</span>`;
+  return `<span class="epill ep-ok"><i class="fas fa-check"></i> ${d}j</span>`;
 }
 
-function planBadge(plan) {
-  const map = { test:'blue', mensuel:'green', semestriel:'purple', annuel:'gold' };
-  return `<span class="badge badge-${map[plan]||'blue'}">${PLAN_LABELS[plan]||plan}</span>`;
+// ══════════════════════════════════════════════════════════
+//  CRÉER NOUVEAU PARYAJ
+// ══════════════════════════════════════════════════════════
+let selPlanVal = 'test';
+
+function selPlan(plan) {
+  selPlanVal = plan;
+  document.getElementById('n-plan').value = plan;
+  document.querySelectorAll('.plan').forEach(c => c.classList.toggle('on', c.dataset.plan===plan));
+  document.getElementById('n-fee').value = CFG['price_'+plan] || 0;
 }
 
-// ══════════════════════════════════════════════════════
-//  CRÉER PLATEFORME
-// ══════════════════════════════════════════════════════
-let selectedPlan = 'test';
-
-function selectPlan(plan) {
-  selectedPlan = plan;
-  document.getElementById('c-plan').value = plan;
-  document.querySelectorAll('#plan-cards-create .plan-card').forEach(c => c.classList.toggle('selected', c.dataset.plan === plan));
-  document.getElementById('c-fee').value = CFG['price_' + plan] || 0;
+function onCodeInput() {
+  const code = (document.getElementById('n-code').value||'').toUpperCase().replace(/\s+/g,'');
+  document.getElementById('n-code').value = code;
+  const box = document.getElementById('link-prev-box');
+  if (code) {
+    box.style.display='block';
+    document.getElementById('link-prev-url').textContent = `${API}/index.html?p=${code}`;
+  } else {
+    box.style.display='none';
+  }
+  updatePreview();
 }
 
-function previewLink() {
-  const code = (document.getElementById('c-code').value || '').trim().toUpperCase().replace(/\s+/g,'');
-  const prev = document.getElementById('link-preview');
-  const url  = document.getElementById('link-preview-url');
-  if (!code) { prev.style.display='none'; return; }
-  prev.style.display = 'block';
-  url.textContent = `${API_BASE}/index.html?p=${code}`;
-}
+function onNameInput() { updatePreview(); }
+function onLogoInput() { updatePreview(); }
 
-function previewName() {
-  const name   = document.getElementById('c-name').value.trim();
-  const slogan = document.getElementById('c-slogan').value.trim();
-  const prev = document.getElementById('name-prev');
-  if (!name) { prev.style.display='none'; return; }
-  prev.style.display = 'block';
-  document.getElementById('prev-nm').textContent = name.toUpperCase();
-  document.getElementById('prev-av').textContent = name.substring(0,2).toUpperCase();
-  document.getElementById('prev-sl').textContent = slogan || 'Paryaj ak konfyans';
+function updatePreview() {
+  const name   = (document.getElementById('n-name').value||'').trim();
+  const slogan = (document.getElementById('n-slogan').value||'').trim();
+  const logo   = (document.getElementById('n-logo').value||'').trim();
+  const code   = (document.getElementById('n-code').value||'').trim();
+  const box    = document.getElementById('preview-box');
+
+  if (!name && !code) { box.style.display='none'; return; }
+  box.style.display='block';
+
+  const nm   = document.getElementById('prev-name');
+  const sl   = document.getElementById('prev-slogan');
+  const ini  = document.getElementById('prev-initials');
+  const lw   = document.getElementById('prev-logo-wrap');
+  const limg = document.getElementById('prev-logo-img');
+
+  nm.textContent = (name||code).toUpperCase();
+  sl.textContent = slogan || 'Paryaj ak konfyans';
+  ini.textContent = (name||code).substring(0,2).toUpperCase();
+
+  if (logo) {
+    lw.style.display='block'; ini.style.display='none';
+    limg.src=logo;
+    limg.onerror = () => { lw.style.display='none'; ini.style.display='flex'; };
+  } else {
+    lw.style.display='none'; ini.style.display='flex';
+  }
 }
 
 async function createPlatform() {
-  const alertEl = document.getElementById('create-alert');
-  alertEl.style.display = 'none';
+  const al  = document.getElementById('new-alert');
+  al.style.display='none';
 
-  // ── Lire tous les champs ──────────────────────────────
-  const code       = (document.getElementById('c-code').value || '').trim().toUpperCase().replace(/\s+/g,'');
-  const name       = (document.getElementById('c-name').value || '').trim();
-  const slogan     = (document.getElementById('c-slogan').value || '').trim();
-  const logo_url   = (document.getElementById('c-logo').value || '').trim();
-  const email      = (document.getElementById('c-email').value || '').trim();
-  const phone      = (document.getElementById('c-phone').value || '').trim();
-  const address    = (document.getElementById('c-address').value || '').trim();
-  const server_url = (document.getElementById('c-server').value || '').trim();
-  const ownerName  = (document.getElementById('c-owner-name').value || '').trim();
-  const ownerEmail = (document.getElementById('c-owner-email').value || '').trim();
-  const ownerPhone = (document.getElementById('c-owner-phone').value || '').trim();
-  const ownerPwd   = document.getElementById('c-owner-pwd').value || '';
-  const staffCode  = (document.getElementById('c-staff').value || '').trim();
-  const footballApi= (document.getElementById('c-football').value || '').trim();
-  const plan       = document.getElementById('c-plan').value || 'test';
-  const startDate  = document.getElementById('c-start').value || new Date().toISOString().split('T')[0];
-  const fee        = parseFloat(document.getElementById('c-fee').value) || 0;
-  const notes      = (document.getElementById('c-notes').value || '').trim();
+  const code      = (document.getElementById('n-code').value||'').trim().toUpperCase().replace(/\s+/g,'');
+  const name      = (document.getElementById('n-name').value||'').trim();
+  const logo_url  = (document.getElementById('n-logo').value||'').trim();
+  const slogan    = (document.getElementById('n-slogan').value||'').trim();
+  const email     = (document.getElementById('n-email').value||'').trim();
+  const phone     = (document.getElementById('n-phone').value||'').trim();
+  const address   = (document.getElementById('n-address').value||'').trim();
+  const serverUrl = (document.getElementById('n-server').value||'').trim() || API;
+  const oName     = (document.getElementById('n-owner-name').value||'').trim();
+  const oEmail    = (document.getElementById('n-owner-email').value||'').trim();
+  const oPhone    = (document.getElementById('n-owner-phone').value||'').trim();
+  const oPwd      = document.getElementById('n-owner-pwd').value||'';
+  const staff     = (document.getElementById('n-staff').value||'').trim();
+  const foot      = (document.getElementById('n-football').value||'').trim();
+  const plan      = selPlanVal;
+  const startDate = document.getElementById('n-start').value || today();
+  const fee       = parseFloat(document.getElementById('n-fee').value)||0;
+  const notes     = (document.getElementById('n-notes').value||'').trim();
 
-  // ── Validations ───────────────────────────────────────
-  if (!code)       return showAlert(alertEl, '❌ Le CODE UNIQUE est obligatoire (ex: MAMAPARYAJ)', false);
-  if (!name)       return showAlert(alertEl, '❌ Le NOM de la plateforme est obligatoire', false);
-  if (!ownerName)  return showAlert(alertEl, '❌ Le NOM du propriétaire est obligatoire', false);
-  if (!ownerEmail) return showAlert(alertEl, '❌ L\'EMAIL du propriétaire est obligatoire', false);
-  if (!ownerPwd)   return showAlert(alertEl, '❌ Le MOT DE PASSE du propriétaire est obligatoire', false);
-  if (ownerPwd.length < 4) return showAlert(alertEl, '❌ Le mot de passe doit avoir au moins 4 caractères', false);
+  // ── Validations ──
+  if (!code)   return alert2(al,'❌ Le CODE UNIQUE est obligatoire (ex: MAMAPARYAJ)','err');
+  if (!name)   return alert2(al,'❌ Le NOM du paryaj est obligatoire','err');
+  if (!oName)  return alert2(al,'❌ Le NOM du propriétaire est obligatoire','err');
+  if (!oEmail) return alert2(al,'❌ L\'EMAIL du propriétaire est obligatoire','err');
+  if (!oPwd)   return alert2(al,'❌ Le MOT DE PASSE du propriétaire est obligatoire','err');
+  if (oPwd.length < 4) return alert2(al,'❌ Mot de passe trop court (minimum 4 caractères)','err');
 
-  // ── Désactiver le bouton pendant l'envoi ──────────────
-  const btn = document.querySelector('[onclick="createPlatform()"]');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Création...'; }
+  const btn = document.getElementById('btn-create');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Création en cours...';
 
   try {
     const payload = {
       code, name, slogan, logo_url, email, phone, address,
-      server_url: server_url || API_BASE,
-      owner_name: ownerName,
-      owner_email: ownerEmail,
-      owner_phone: ownerPhone,
-      owner_pwd: ownerPwd,
-      staff_code: staffCode || code + '12',
-      football_api: footballApi,
+      server_url: serverUrl,
+      owner_name: oName, owner_email: oEmail, owner_phone: oPhone, owner_pwd: oPwd,
+      staff_code: staff || code+'12',
+      football_api: foot,
       plan, start_date: startDate, fee, notes
     };
 
-    console.log('Création plateforme:', payload.code, payload.name);
-    const data = await api('POST', '/master/platforms', payload);
-    
-    const lien = `${API_BASE}/index.html?p=${code}`;
-    showAlert(alertEl,
-      `✅ Plateforme "${name}" créée ! Lien: ${lien}`,
-      true
-    );
-    
-    // Afficher le lien généré
-    document.getElementById('create-alert').innerHTML =
-      `✅ Plateforme <strong>${name}</strong> créée avec succès !<br>
-       🔗 Lien joueurs: <a href="${lien}" target="_blank" style="color:var(--gold)">${lien}</a><br>
-       👤 Propriétaire: ${ownerEmail} / ${ownerPwd}`;
-    document.getElementById('create-alert').style.display = 'block';
+    const d = await req('POST', '/master/platforms', payload);
+    const p = d.platform;
 
-    resetCreateForm();
-    const r = await api('GET', '/master/platforms');
-    allPlatforms = r.platforms;
+    // Afficher le résultat
+    const base = serverUrl || API;
+    const link1 = `${base}/index.html?p=${code}`;
+    const link2 = `${base}/app.html?p=${code}`;
+
+    document.getElementById('cr-name').textContent  = name.toUpperCase();
+    document.getElementById('cr-owner').textContent = oName;
+    document.getElementById('cr-creds').innerHTML   = `Email: <b>${oEmail}</b><br>Mot de passe: <b>${oPwd}</b>`;
+    document.getElementById('cr-staff').textContent = staff || code+'12';
+    document.getElementById('cr-link1').textContent = link1;
+    document.getElementById('cr-link2').textContent = link2;
+    document.getElementById('create-result').style.display='block';
+    document.getElementById('create-result').scrollIntoView({behavior:'smooth'});
+
+    // Rafraîchir la liste
+    const r2 = await req('GET', '/master/platforms');
+    allPlats = r2.platforms;
 
   } catch(e) {
-    console.error('Erreur création:', e);
-    showAlert(alertEl, '❌ Erreur: ' + e.message, false);
+    alert2(al, '❌ Erreur: '+e.message, 'err');
   } finally {
-    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Créer la plateforme'; }
+    btn.disabled=false;
+    btn.innerHTML='<i class="fas fa-save"></i> Créer le paryaj';
   }
 }
 
-function resetCreateForm() {
-  ['c-code','c-logo','c-name','c-slogan','c-email','c-phone','c-address','c-server',
-   'c-owner-name','c-owner-email','c-owner-phone','c-owner-pwd',
-   'c-staff','c-football','c-fee','c-notes'].forEach(id => { document.getElementById(id).value = ''; });
-  selectPlan('test');
-  document.getElementById('c-start').value = new Date().toISOString().split('T')[0];
-  document.getElementById('name-prev').style.display = 'none';
+function resetForm() {
+  ['n-code','n-name','n-logo','n-slogan','n-email','n-phone','n-address',
+   'n-owner-name','n-owner-email','n-owner-phone','n-owner-pwd',
+   'n-staff','n-football','n-notes'].forEach(id => { document.getElementById(id).value=''; });
+  document.getElementById('n-server').value = API;
+  document.getElementById('n-fee').value = '0';
+  document.getElementById('n-start').value = today();
+  selPlan('test');
+  document.getElementById('preview-box').style.display='none';
+  document.getElementById('link-prev-box').style.display='none';
+  document.getElementById('create-result').style.display='none';
+  document.getElementById('new-alert').style.display='none';
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  ABONNEMENTS
-// ══════════════════════════════════════════════════════
-async function loadSubscriptions() {
+// ══════════════════════════════════════════════════════════
+async function loadSubs() {
   try {
-    const data = await api('GET', '/master/platforms');
-    allPlatforms = data.platforms;
-    const tbody = document.getElementById('sub-tbody');
-    if (!allPlatforms.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Aucune plateforme</td></tr>'; return; }
-    tbody.innerHTML = allPlatforms.map(p => {
-      const st = p.statut==='actif' ? '<span class="badge badge-green">ACTIF</span>'
-               : p.statut==='expire' ? '<span class="badge badge-red">EXPIRÉ</span>'
-               : '<span class="badge badge-red">SUSPENDU</span>';
+    const d = await req('GET', '/master/platforms');
+    allPlats = d.platforms;
+    const tb = document.getElementById('subs-body');
+    if (!allPlats.length) { tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">Aucun paryaj</td></tr>'; return; }
+    tb.innerHTML = allPlats.map(p => {
+      const st = p.statut==='actif' ? '<span class="bdg bdg-green">ACTIF</span>'
+               : p.statut==='expire' ? '<span class="bdg bdg-red">EXPIRÉ</span>'
+               : '<span class="bdg bdg-red">SUSPENDU</span>';
       return `<tr>
-        <td><strong>${esc(p.name)}</strong></td>
+        <td><b>${esc(p.name)}</b><br><small style="color:var(--muted)">${p.code}</small></td>
         <td>${esc(p.owner_name)}<br><small style="color:var(--muted)">${esc(p.owner_email)}</small></td>
-        <td>${planBadge(p.plan)}</td>
-        <td>${p.start_date ? p.start_date.split('T')[0] : '-'}</td>
-        <td>${p.expires_at ? p.expires_at.split('T')[0] : '-'}</td>
+        <td>${planBdg(p.plan)}</td>
+        <td>${p.start_date?p.start_date.split('T')[0]:'-'}</td>
+        <td>${p.expires_at?p.expires_at.split('T')[0]:'-'}</td>
         <td>${st}</td>
         <td>${(p.fee||0).toLocaleString()} HTG</td>
         <td>
-          <button class="btn btn-outline btn-xs" onclick="openPlatformModal(${p.id})"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-success btn-xs" style="margin-left:4px;" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
+          <button class="btn btn-outline btn-xs" onclick="openEdit(${p.id})"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-green btn-xs" style="margin-left:4px" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i></button>
         </td>
       </tr>`;
     }).join('');
-  } catch(e) { document.getElementById('sub-tbody').innerHTML = `<tr><td colspan="8" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
+  } catch(e) { document.getElementById('subs-body').innerHTML=`<tr><td colspan="8" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  EXPIRATIONS
-// ══════════════════════════════════════════════════════
-async function loadExpiring() {
+// ══════════════════════════════════════════════════════════
+async function loadExp() {
   try {
-    const data = await api('GET', '/master/platforms');
-    allPlatforms = data.platforms;
-    const alertDays = parseInt(CFG.alert_days) || 7;
-    const urgent = allPlatforms.filter(p => p.active && p.jours_restants >= -30 && p.jours_restants <= alertDays)
-                                .sort((a,b) => a.jours_restants - b.jours_restants);
-    const el = document.getElementById('expiring-list');
-    if (!urgent.length) { el.innerHTML = `<div class="empty"><i class="fas fa-check-circle" style="color:var(--green);opacity:1"></i>Aucune expiration dans les ${alertDays} prochains jours</div>`; return; }
+    const d = await req('GET', '/master/platforms');
+    allPlats = d.platforms;
+    const days = parseInt(CFG.alert_days)||7;
+    const urgent = allPlats.filter(p=>p.active && p.jours_restants>=-30 && p.jours_restants<=days)
+                           .sort((a,b)=>a.jours_restants-b.jours_restants);
+    const el = document.getElementById('exp-list');
+    if (!urgent.length) { el.innerHTML=`<div class="empty"><i class="fas fa-check-circle" style="color:var(--green);opacity:1"></i>Aucune expiration dans les ${days} prochains jours</div>`; return; }
     el.innerHTML = urgent.map(p => {
-      const d = p.jours_restants;
-      const color = d <= 3 ? 'var(--red)' : 'var(--gold)';
-      return `<div class="prow" style="border-left:3px solid ${color};">
+      const dv = p.jours_restants;
+      const col = dv<0?'var(--red)':dv<=3?'var(--red)':'var(--gold)';
+      return `<div class="prow" style="border-left:3px solid ${col};">
         <div class="pavatar">${(p.name||'?').substring(0,2).toUpperCase()}</div>
         <div><div class="pname">${esc(p.name)}</div><div class="pmeta">${esc(p.owner_name)} · ${esc(p.owner_email)}</div></div>
-        <div style="text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:${color};">${d < 0 ? 'Expiré' : 'J-'+d}</div><div style="font-size:11px;color:var(--muted);">${p.expires_at ? p.expires_at.split('T')[0] : '-'}</div></div>
-        <div>${planBadge(p.plan)}</div>
+        <div style="text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:${col};">${dv<0?'Expiré':'J-'+dv}</div><div style="font-size:11px;color:var(--muted);">${p.expires_at?p.expires_at.split('T')[0]:'-'}</div></div>
+        <div>${planBdg(p.plan)}</div>
         <div><button class="btn btn-gold btn-xs" onclick="quickRenew(${p.id})"><i class="fas fa-redo"></i> Renouveler</button></div>
       </div>`;
     }).join('');
-  } catch(e) { document.getElementById('expiring-list').innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
+  } catch(e) { document.getElementById('exp-list').innerHTML=`<div class="empty"><i class="fas fa-exclamation-triangle"></i>${e.message}</div>`; }
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  REVENUS
-// ══════════════════════════════════════════════════════
-async function loadRevenue() {
+// ══════════════════════════════════════════════════════════
+async function loadRev() {
   try {
-    const [plats, pays] = await Promise.all([api('GET','/master/platforms'), api('GET','/master/payments')]);
-    allPlatforms = plats.platforms;
+    const [plats, pays] = await Promise.all([req('GET','/master/platforms'), req('GET','/master/payments')]);
+    allPlats = plats.platforms;
     const payments = pays.payments;
-    const total   = payments.filter(p=>p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
-    const pending = payments.filter(p=>!p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
-    document.getElementById('rev-total').textContent   = total.toLocaleString() + ' HTG';
-    document.getElementById('rev-pending').textContent = pending.toLocaleString() + ' HTG';
-    const totByPlan = { test:0, mensuel:0, semestriel:0, annuel:0 };
-    payments.filter(p=>p.paid).forEach(p => { totByPlan[p.plan] = (totByPlan[p.plan]||0) + parseFloat(p.amount||0); });
-    const maxVal = Math.max(...Object.values(totByPlan), 1);
-    document.getElementById('rev-bars').innerHTML = Object.entries(totByPlan).map(([plan,val]) => `
-      <div class="rev-bar"><div class="rev-bar-label"><span>${PLAN_LABELS[plan]}</span><span>${val.toLocaleString()} HTG</span></div>
-      <div class="rev-bar-track"><div class="rev-bar-fill" style="width:${(val/maxVal*100).toFixed(1)}%"></div></div></div>`).join('');
-    const tbody = document.getElementById('rev-tbody');
-    tbody.innerHTML = allPlatforms.map(p => {
-      const hasPending = payments.some(x => x.platform_id==p.id && !x.paid);
-      return `<tr>
-        <td><strong>${esc(p.name)}</strong></td>
-        <td>${planBadge(p.plan)}</td>
-        <td>${(p.fee||0).toLocaleString()} HTG</td>
-        <td>${hasPending ? '<span class="badge badge-gold">En attente</span>' : '<span class="badge badge-green">Payé</span>'}</td>
-        <td><button class="btn btn-outline btn-xs" onclick="openPlatformModal(${p.id})"><i class="fas fa-edit"></i></button></td>
-      </tr>`;
+    const total  = payments.filter(p=>p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
+    const pend   = payments.filter(p=>!p.paid).reduce((a,b)=>a+parseFloat(b.amount||0),0);
+    document.getElementById('rv-total').textContent = total.toLocaleString();
+    document.getElementById('rv-pend').textContent  = pend.toLocaleString();
+    const byPlan = {test:0,mensuel:0,semestriel:0,annuel:0};
+    payments.filter(p=>p.paid).forEach(p=>{byPlan[p.plan]=(byPlan[p.plan]||0)+parseFloat(p.amount||0);});
+    const mx = Math.max(...Object.values(byPlan),1);
+    document.getElementById('rev-bars').innerHTML = Object.entries(byPlan).map(([pl,v])=>`
+      <div class="revbar"><div class="revbar-lbl"><span>${PLAN_NAMES[pl]}</span><span>${v.toLocaleString()} HTG</span></div>
+      <div class="revbar-track"><div class="revbar-fill" style="width:${(v/mx*100).toFixed(1)}%"></div></div></div>`).join('');
+    const rb = document.getElementById('rev-body');
+    rb.innerHTML = allPlats.map(p=>{
+      const hp = payments.some(x=>x.platform_id==p.id && !x.paid);
+      return `<tr><td><b>${esc(p.name)}</b></td><td>${planBdg(p.plan)}</td><td>${(p.fee||0).toLocaleString()} HTG</td>
+        <td>${hp?'<span class="bdg bdg-gold">En attente</span>':'<span class="bdg bdg-green">Payé</span>'}</td>
+        <td><button class="btn btn-outline btn-xs" onclick="openEdit(${p.id})"><i class="fas fa-edit"></i></button></td></tr>`;
     }).join('') || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">Aucune donnée</td></tr>';
   } catch(e) { console.error(e.message); }
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  PAIEMENTS
-// ══════════════════════════════════════════════════════
-async function loadPayments() {
+// ══════════════════════════════════════════════════════════
+async function loadPay() {
   try {
-    const data = await api('GET', '/master/payments');
-    const tbody = document.getElementById('pay-tbody');
-    if (!data.payments.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Aucun paiement</td></tr>'; return; }
-    tbody.innerHTML = data.payments.map(p => `<tr>
-      <td>${p.created_at ? p.created_at.split('T')[0] : '-'}</td>
+    const d = await req('GET', '/master/payments');
+    const pb = document.getElementById('pay-body');
+    if (!d.payments.length) { pb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Aucun paiement</td></tr>'; return; }
+    pb.innerHTML = d.payments.map(p=>`<tr>
+      <td>${p.created_at?p.created_at.split('T')[0]:'-'}</td>
       <td>${esc(p.platform_name)}</td>
-      <td>${planBadge(p.plan)}</td>
+      <td>${planBdg(p.plan)}</td>
       <td>${parseFloat(p.amount||0).toLocaleString()} HTG</td>
       <td>${esc(p.mode||'manuel')}</td>
-      <td>${p.paid ? '<span class="badge badge-green">Payé</span>' : '<span class="badge badge-gold">En attente</span>'}</td>
-      <td>${!p.paid ? `<button class="btn btn-success btn-xs" onclick="markPaid(${p.id})"><i class="fas fa-check"></i> Marquer payé</button>` : '—'}</td>
+      <td>${p.paid?'<span class="bdg bdg-green">Payé</span>':'<span class="bdg bdg-gold">En attente</span>'}</td>
+      <td>${!p.paid?`<button class="btn btn-green btn-xs" onclick="markPaid(${p.id})"><i class="fas fa-check"></i> Payé</button>`:'—'}</td>
     </tr>`).join('');
-  } catch(e) { document.getElementById('pay-tbody').innerHTML = `<tr><td colspan="7" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
+  } catch(e) { document.getElementById('pay-body').innerHTML=`<tr><td colspan="7" style="color:var(--red);padding:20px;">${e.message}</td></tr>`; }
 }
 
-async function markPaid(payId) {
-  try { await api('PUT', `/master/payments/${payId}/paid`); loadPayments(); }
-  catch(e) { alert('Erreur: ' + e.message); }
+async function markPaid(id) {
+  try { await req('PUT',`/master/payments/${id}/paid`); loadPay(); }
+  catch(e) { alert('Erreur: '+e.message); }
 }
 
-// ══════════════════════════════════════════════════════
-//  MODAL PLATEFORME
-// ══════════════════════════════════════════════════════
-function copyLink(id, code) {
-  const base = API_BASE || 'https://parinova-rmkp.onrender.com';
-  const link = `${base}/index.html?p=${code}`;
-  navigator.clipboard.writeText(link).then(() => {
-    showAlert(document.getElementById('plat-alert'), `✅ Lien copié: ${link}`, true);
-  });
-}
-function copyPlatformLink() {
-  const link = document.getElementById('mp-link').textContent;
-  navigator.clipboard.writeText(link).then(() => {
-    showAlert(document.getElementById('mp-alert'), '✅ Lien copié !', true);
-  });
-}
-
-async function openPlatformModal(id) {
-  currentPlatformId = id;
-  if (!allPlatforms.find(x=>x.id==id)) {
-    const data = await api('GET', '/master/platforms'); allPlatforms = data.platforms;
+// ══════════════════════════════════════════════════════════
+//  MODAL MODIFIER
+// ══════════════════════════════════════════════════════════
+async function openEdit(id) {
+  currentId = id;
+  if (!allPlats.find(x=>x.id==id)) {
+    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
   }
-  const p = allPlatforms.find(x => x.id == id);
+  const p = allPlats.find(x=>x.id==id);
   if (!p) return;
-  document.getElementById('mp-id').value         = p.id;
-  document.getElementById('mp-name').value        = p.name||'';
-  document.getElementById('mp-slogan').value      = p.slogan||'';
-  document.getElementById('mp-email').value       = p.email||'';
-  document.getElementById('mp-phone').value       = p.phone||'';
-  document.getElementById('mp-address').value     = p.address||'';
-  document.getElementById('mp-server').value      = p.server_url||'';
-  document.getElementById('mp-plan').value        = p.plan||'test';
-  document.getElementById('mp-start').value       = p.start_date ? p.start_date.split('T')[0] : '';
-  document.getElementById('mp-end').value         = p.expires_at ? p.expires_at.split('T')[0] : '';
-  document.getElementById('mp-fee').value         = p.fee||0;
-  document.getElementById('mp-paid').value        = p.paid||0;
-  document.getElementById('mp-notes').value       = p.notes||'';
-  document.getElementById('mp-owner-name').value  = p.owner_name||'';
-  document.getElementById('mp-owner-email').value = p.owner_email||'';
-  document.getElementById('mp-owner-phone').value = p.owner_phone||'';
-  document.getElementById('mp-staff').value       = p.staff_code||'';
-  document.getElementById('mp-football').value    = p.football_api||'';
-  document.getElementById('mp-owner-pwd').value   = '';
-  document.getElementById('config-pre').style.display = 'none';
-  document.getElementById('mp-title').textContent = p.name.toUpperCase();
-  switchMTab('info');
-  openModal('modal-platform');
+  document.getElementById('e-id').value     = p.id;
+  document.getElementById('e-code').value   = p.code||'';
+  document.getElementById('e-name').value   = p.name||'';
+  document.getElementById('e-logo').value   = p.logo_url||'';
+  document.getElementById('e-slogan').value = p.slogan||'';
+  document.getElementById('e-email').value  = p.email||'';
+  document.getElementById('e-phone').value  = p.phone||'';
+  document.getElementById('e-address').value= p.address||'';
+  document.getElementById('e-server').value = p.server_url||'';
+  document.getElementById('e-plan').value   = p.plan||'test';
+  document.getElementById('e-start').value  = p.start_date?p.start_date.split('T')[0]:'';
+  document.getElementById('e-end').value    = p.expires_at?p.expires_at.split('T')[0]:'';
+  document.getElementById('e-fee').value    = p.fee||0;
+  document.getElementById('e-paid').value   = p.paid||0;
+  document.getElementById('e-notes').value  = p.notes||'';
+  document.getElementById('e-oname').value  = p.owner_name||'';
+  document.getElementById('e-oemail').value = p.owner_email||'';
+  document.getElementById('e-ophone').value = p.owner_phone||'';
+  document.getElementById('e-opwd').value   = '';
+  document.getElementById('e-staff').value  = p.staff_code||'';
+  document.getElementById('e-foot').value   = p.football_api||'';
+  document.getElementById('edit-title').textContent = (p.name||'').toUpperCase();
+  document.getElementById('cfg-pre').style.display='none';
+  mTab('info');
+  openModal('modal-edit');
 }
 
-function updateEndDate() {
-  const plan  = document.getElementById('mp-plan').value;
-  const start = document.getElementById('mp-start').value;
+function calcExpiry() {
+  const plan  = document.getElementById('e-plan').value;
+  const start = document.getElementById('e-start').value;
   if (!start) return;
   const exp = new Date(start);
   exp.setDate(exp.getDate() + PLAN_DAYS[plan]);
-  document.getElementById('mp-end').value = exp.toISOString().split('T')[0];
+  document.getElementById('e-end').value = exp.toISOString().split('T')[0];
 }
 
 async function savePlatform() {
-  const alertEl = document.getElementById('mp-alert');
-  const id   = document.getElementById('mp-id').value;
-  const name = document.getElementById('mp-name').value.trim();
-  if (!name) return showAlert(alertEl, '❌ Le nom est obligatoire', false);
+  const al = document.getElementById('edit-alert');
+  const id = document.getElementById('e-id').value;
+  const name = document.getElementById('e-name').value.trim();
+  if (!name) return alert2(al,'❌ Le nom est obligatoire','err');
   try {
-    await api('PUT', `/master/platforms/${id}`, {
+    await req('PUT', `/master/platforms/${id}`, {
       name,
-      logo_url:     document.getElementById('mp-logo').value,
-      slogan:       document.getElementById('mp-slogan').value,
-      email:        document.getElementById('mp-email').value,
-      phone:        document.getElementById('mp-phone').value,
-      address:      document.getElementById('mp-address').value,
-      server_url:   document.getElementById('mp-server').value,
-      plan:         document.getElementById('mp-plan').value,
-      start_date:   document.getElementById('mp-start').value,
-      expires_at:   document.getElementById('mp-end').value,
-      fee:          document.getElementById('mp-fee').value,
-      paid:         document.getElementById('mp-paid').value,
-      notes:        document.getElementById('mp-notes').value,
-      owner_name:   document.getElementById('mp-owner-name').value,
-      owner_email:  document.getElementById('mp-owner-email').value,
-      owner_phone:  document.getElementById('mp-owner-phone').value,
-      owner_pwd:    document.getElementById('mp-owner-pwd').value || undefined,
-      staff_code:   document.getElementById('mp-staff').value,
-      football_api: document.getElementById('mp-football').value,
+      logo_url:     document.getElementById('e-logo').value,
+      slogan:       document.getElementById('e-slogan').value,
+      email:        document.getElementById('e-email').value,
+      phone:        document.getElementById('e-phone').value,
+      address:      document.getElementById('e-address').value,
+      server_url:   document.getElementById('e-server').value,
+      plan:         document.getElementById('e-plan').value,
+      start_date:   document.getElementById('e-start').value,
+      expires_at:   document.getElementById('e-end').value,
+      fee:          document.getElementById('e-fee').value,
+      paid:         document.getElementById('e-paid').value,
+      notes:        document.getElementById('e-notes').value,
+      owner_name:   document.getElementById('e-oname').value,
+      owner_email:  document.getElementById('e-oemail').value,
+      owner_phone:  document.getElementById('e-ophone').value,
+      owner_pwd:    document.getElementById('e-opwd').value||undefined,
+      staff_code:   document.getElementById('e-staff').value,
+      football_api: document.getElementById('e-foot').value,
     });
-    showAlert(alertEl, '✅ Plateforme mise à jour', true);
-    const data = await api('GET', '/master/platforms');
-    allPlatforms = data.platforms;
-    setTimeout(() => { closeModal('modal-platform'); renderPlatforms(allPlatforms); loadDashboard(); }, 1200);
-  } catch(e) { showAlert(alertEl, '❌ ' + e.message, false); }
+    alert2(al,'✅ Paryaj mis à jour','ok');
+    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
+    setTimeout(()=>{ closeModal('modal-edit'); renderPlats(allPlats); },1200);
+  } catch(e) { alert2(al,'❌ '+e.message,'err'); }
 }
 
 async function deletePlatform() {
-  const id   = document.getElementById('mp-id').value;
-  const name = document.getElementById('mp-name').value;
+  const id   = document.getElementById('e-id').value;
+  const name = document.getElementById('e-name').value;
   if (!confirm(`⚠️ Supprimer définitivement "${name}" ? Action irréversible.`)) return;
   try {
-    await api('DELETE', `/master/platforms/${id}`);
-    closeModal('modal-platform');
-    const data = await api('GET', '/master/platforms');
-    allPlatforms = data.platforms;
-    renderPlatforms(allPlatforms);
-    loadDashboard();
-  } catch(e) { showAlert(document.getElementById('mp-alert'), '❌ ' + e.message, false); }
+    await req('DELETE',`/master/platforms/${id}`);
+    closeModal('modal-edit');
+    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
+    renderPlats(allPlats); loadDash();
+  } catch(e) { alert2(document.getElementById('edit-alert'),'❌ '+e.message,'err'); }
 }
 
-async function togglePlatform() {
-  const id = document.getElementById('mp-id').value;
+async function toggleActive() {
+  const id = document.getElementById('e-id').value;
   try {
-    const data = await api('PUT', `/master/platforms/${id}/toggle`);
-    showAlert(document.getElementById('mp-alert'), data.active ? '✅ Plateforme réactivée' : '⚠️ Plateforme suspendue', data.active);
-    const r = await api('GET', '/master/platforms');
-    allPlatforms = r.platforms;
-  } catch(e) { showAlert(document.getElementById('mp-alert'), '❌ ' + e.message, false); }
+    const d = await req('PUT',`/master/platforms/${id}/toggle`);
+    alert2(document.getElementById('edit-alert'), d.active?'✅ Réactivé':'⚠️ Suspendu', d.active?'ok':'err');
+    const r = await req('GET','/master/platforms'); allPlats=r.platforms;
+  } catch(e) { alert2(document.getElementById('edit-alert'),'❌ '+e.message,'err'); }
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  RENOUVELLEMENT
-// ══════════════════════════════════════════════════════
-function openRenewModal() {
-  const id   = document.getElementById('mp-id').value;
-  const name = document.getElementById('mp-name').value;
-  const plan = document.getElementById('mp-plan').value;
+// ══════════════════════════════════════════════════════════
+function openRenew() {
+  const id   = document.getElementById('e-id').value;
+  const name = document.getElementById('e-name').value;
+  const plan = document.getElementById('e-plan').value;
   document.getElementById('renew-name').textContent = name;
-  document.getElementById('renew-plan').value = plan;
-  document.getElementById('renew-fee').value  = CFG['price_' + plan] || 0;
-  document.getElementById('renew-paid').value = '0';
-  currentPlatformId = id;
+  document.getElementById('r-plan').value = plan;
+  document.getElementById('r-fee').value  = CFG['price_'+plan]||0;
+  document.getElementById('r-paid').value = '0';
+  currentId = id;
   openModal('modal-renew');
 }
 
 function quickRenew(id) {
-  const p = allPlatforms.find(x => x.id == id);
+  const p = allPlats.find(x=>x.id==id);
   if (!p) return;
-  currentPlatformId = id;
+  currentId = id;
   document.getElementById('renew-name').textContent = p.name;
-  document.getElementById('renew-plan').value = p.plan || 'mensuel';
-  document.getElementById('renew-fee').value  = CFG['price_' + (p.plan||'mensuel')] || 0;
-  document.getElementById('renew-paid').value = '0';
+  document.getElementById('r-plan').value = p.plan||'mensuel';
+  document.getElementById('r-fee').value  = CFG['price_'+(p.plan||'mensuel')]||0;
+  document.getElementById('r-paid').value = '0';
   openModal('modal-renew');
 }
 
 async function confirmRenew() {
-  const id   = currentPlatformId;
-  const plan = document.getElementById('renew-plan').value;
-  const fee  = document.getElementById('renew-fee').value;
-  const paid = document.getElementById('renew-paid').value;
   try {
-    await api('POST', `/master/platforms/${id}/renew`, { plan, fee, paid });
-    closeModal('modal-renew');
-    closeModal('modal-platform');
-    const data = await api('GET', '/master/platforms');
-    allPlatforms = data.platforms;
-    renderPlatforms(allPlatforms);
-    loadDashboard();
-  } catch(e) { alert('Erreur: ' + e.message); }
+    await req('POST',`/master/platforms/${currentId}/renew`, {
+      plan:  document.getElementById('r-plan').value,
+      fee:   document.getElementById('r-fee').value,
+      paid:  document.getElementById('r-paid').value,
+    });
+    closeModal('modal-renew'); closeModal('modal-edit');
+    const d = await req('GET','/master/platforms'); allPlats=d.platforms;
+    renderPlats(allPlats); loadDash();
+  } catch(e) { alert('Erreur: '+e.message); }
 }
 
-// ══════════════════════════════════════════════════════
-//  GÉNÉRATION config.js
-// ══════════════════════════════════════════════════════
-function generateConfig() {
-  const id   = document.getElementById('mp-id').value;
-  const p    = allPlatforms.find(x => x.id == id);
+// ══════════════════════════════════════════════════════════
+//  GÉNÉRATION CONFIG.JS
+// ══════════════════════════════════════════════════════════
+function genConfig() {
+  const id = document.getElementById('e-id').value;
+  const p  = allPlats.find(x=>x.id==id);
   if (!p) return;
-  const content = `// config.js — ${p.name}
+  const txt = `// config.js — ${p.name}
 // Généré par MASTER Platform Manager
+// Lien joueurs: ${API}/index.html?p=${p.code}
 
 const CONFIG = {
   APP_NAME:          "${p.name}",
-  APP_SLOGAN:        "${p.slogan || 'Paryaj ak konfyans'}",
-  APP_EMAIL:         "${p.email || ''}",
-  APP_PHONE:         "${p.phone || ''}",
-  APP_ADDRESS:       "${p.address || ''}",
-  SERVER_URL:        "${p.server_url || CFG.default_server || ''}",
-  FOOTBALL_API_KEY:  "${p.football_api || CFG.football_api_key || ''}",
+  APP_SLOGAN:        "${p.slogan||'Paryaj ak konfyans'}",
+  APP_EMAIL:         "${p.email||''}",
+  APP_PHONE:         "${p.phone||''}",
+  APP_ADDRESS:       "${p.address||''}",
+  SERVER_URL:        "${p.server_url||API}",
+  FOOTBALL_API_KEY:  "${p.football_api||CFG.football_api_key||''}",
   ADMIN_PASSWORD:    "admin",
-  SECRET_STAFF_CODE: "${p.staff_code || ''}",
+  SECRET_STAFF_CODE: "${p.staff_code||''}",
   SESSION_DURATION_DAYS: 7,
   JACKPOT_PERCENT: 5,
 };
 
 if (typeof module !== 'undefined') module.exports = CONFIG;`;
-  const pre = document.getElementById('config-pre');
-  pre.textContent = content;
-  pre.style.display = 'block';
-  window._configContent = content;
+  const pre = document.getElementById('cfg-pre');
+  pre.textContent = txt; pre.style.display='block';
+  window._cfg = txt;
 }
 
 function copyConfig() {
-  generateConfig();
-  if (window._configContent) {
-    navigator.clipboard.writeText(window._configContent)
-      .then(()  => showAlert(document.getElementById('mp-alert'), '✅ config.js copié !', true))
-      .catch(()  => showAlert(document.getElementById('mp-alert'), '❌ Erreur de copie', false));
+  genConfig();
+  if (window._cfg) {
+    navigator.clipboard.writeText(window._cfg)
+      .then(()=>alert2(document.getElementById('edit-alert'),'✅ config.js copié !','ok'))
+      .catch(()=>alert2(document.getElementById('edit-alert'),'❌ Erreur copie','err'));
   }
 }
 
-// ══════════════════════════════════════════════════════
+function copyEditLink() {
+  const id = document.getElementById('e-id').value;
+  const p  = allPlats.find(x=>x.id==id);
+  if (!p) return;
+  const link = `${API}/index.html?p=${p.code}`;
+  navigator.clipboard.writeText(link)
+    .then(()=>alert2(document.getElementById('edit-alert'),`✅ Lien copié: ${link}`,'ok'));
+}
+
+// ══════════════════════════════════════════════════════════
 //  HELPERS
-// ══════════════════════════════════════════════════════
-function switchMTab(tab) {
-  ['info','sub','config'].forEach(t => {
-    document.getElementById('mtp-' + t).style.display = t === tab ? 'block' : 'none';
-    document.getElementById('mt-' + t).classList.toggle('active', t === tab);
+// ══════════════════════════════════════════════════════════
+function mTab(t) {
+  ['info','sub','cfg'].forEach(x => {
+    document.getElementById(`mt-${x}-c`).style.display = x===t?'block':'none';
+    document.getElementById(`mt-${x}`).classList.toggle('on', x===t);
   });
 }
-function openModal(id)  { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function showAlert(el, msg, ok) {
-  el.className = 'alert ' + (ok ? 'alert-success' : 'alert-danger');
-  el.textContent = msg; el.style.display = 'block';
-  setTimeout(() => el.style.display = 'none', 3500);
+
+function openModal(id)  { document.getElementById(id).classList.add('on'); }
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
+
+function alert2(el, msg, type) {
+  el.className = 'alert ' + type;
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(()=>el.style.display='none', 4000);
 }
-function esc(str) {
-  if (!str) return '';
-  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(()=>alert('✅ Copié !'));
+}
+
+function copyLink(code) {
+  const link = `${API}/index.html?p=${code}`;
+  navigator.clipboard.writeText(link).then(()=>{
+    const al = document.getElementById('list-alert');
+    alert2(al, `✅ Lien copié: ${link}`, 'ok');
+  });
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 </script>
 </body>
