@@ -206,6 +206,19 @@ const JACKPOT_PCT       = 5; // 5%
       owner_pwd_hash TEXT NOT NULL,
       staff_code TEXT DEFAULT '',
       football_api TEXT DEFAULT '',
+      -- Personnalisation visuelle
+      bg_color TEXT DEFAULT '',
+      primary_color TEXT DEFAULT '',
+      text_color TEXT DEFAULT '',
+      login_images TEXT DEFAULT '[]',
+      scroll_messages TEXT DEFAULT '[]',
+      about_text TEXT DEFAULT '',
+      -- API dépôt/retrait propres au paryaj
+      deposit_client_id TEXT DEFAULT '',
+      deposit_secret_key TEXT DEFAULT '',
+      withdraw_client_id TEXT DEFAULT '',
+      withdraw_secret_key TEXT DEFAULT '',
+      plopplop_base TEXT DEFAULT '',
       plan TEXT DEFAULT 'test',
       start_date TIMESTAMP DEFAULT NOW(),
       expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '7 days',
@@ -254,6 +267,40 @@ const JACKPOT_PCT       = 5; // 5%
       END IF;
       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='retraits' AND column_name='platform_code') THEN
         ALTER TABLE retraits ADD COLUMN platform_code TEXT DEFAULT 'default';
+      END IF;
+      -- Nouvelles colonnes personnalisation paryaj
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='bg_color') THEN
+        ALTER TABLE platforms ADD COLUMN bg_color TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='primary_color') THEN
+        ALTER TABLE platforms ADD COLUMN primary_color TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='text_color') THEN
+        ALTER TABLE platforms ADD COLUMN text_color TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='login_images') THEN
+        ALTER TABLE platforms ADD COLUMN login_images TEXT DEFAULT '[]';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='scroll_messages') THEN
+        ALTER TABLE platforms ADD COLUMN scroll_messages TEXT DEFAULT '[]';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='about_text') THEN
+        ALTER TABLE platforms ADD COLUMN about_text TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='deposit_client_id') THEN
+        ALTER TABLE platforms ADD COLUMN deposit_client_id TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='deposit_secret_key') THEN
+        ALTER TABLE platforms ADD COLUMN deposit_secret_key TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='withdraw_client_id') THEN
+        ALTER TABLE platforms ADD COLUMN withdraw_client_id TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='withdraw_secret_key') THEN
+        ALTER TABLE platforms ADD COLUMN withdraw_secret_key TEXT DEFAULT '';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='platforms' AND column_name='plopplop_base') THEN
+        ALTER TABLE platforms ADD COLUMN plopplop_base TEXT DEFAULT '';
       END IF;
       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='borlette_results' AND column_name='platform_code') THEN
         ALTER TABLE borlette_results ADD COLUMN platform_code TEXT DEFAULT 'default';
@@ -353,9 +400,13 @@ function getKenoMultiplier(hits, selectedCount) {
 }
 
 // Fonction générique pour les appels PlopPlop entrants (dépôts)
-async function callPlopPlop(endpoint, body) {
-  const BASE = PLOPPLOP_BASE || 'https://plopplop.solutionip.app';
-  const auth = Buffer.from(`${MERCHANT_CLIENT_ID}:${MERCHANT_SECRET_KEY}`).toString('base64');
+// Supporte des crédentials spécifiques au paryaj si fournis
+async function callPlopPlop(endpoint, body, platformCreds) {
+  const creds = platformCreds || {};
+  const BASE = creds.plopplop_base || PLOPPLOP_BASE || 'https://plopplop.solutionip.app';
+  const clientId = creds.deposit_client_id || MERCHANT_CLIENT_ID;
+  const secretKey = creds.deposit_secret_key || MERCHANT_SECRET_KEY;
+  const auth = Buffer.from(`${clientId}:${secretKey}`).toString('base64');
   const response = await fetch(`${BASE}${endpoint}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${auth}` },
@@ -367,14 +418,18 @@ async function callPlopPlop(endpoint, body) {
 }
 
 // Fonction retrait PlopPlop - flux 3 étapes obligatoires
-async function executerRetraitPlopPlop(montant, methode, recipient, reference) {
-  const BASE = PLOPPLOP_BASE || 'https://plopplop.solutionip.app';
+// Supporte des crédentials spécifiques au paryaj si fournis
+async function executerRetraitPlopPlop(montant, methode, recipient, reference, platformCreds) {
+  const creds = platformCreds || {};
+  const BASE = creds.plopplop_base || PLOPPLOP_BASE || 'https://plopplop.solutionip.app';
+  const clientId = creds.withdraw_client_id || creds.deposit_client_id || MERCHANT_CLIENT_ID;
+  const secretKey = creds.withdraw_secret_key || creds.deposit_secret_key || MERCHANT_SECRET_KEY;
 
   // Étape 1: Authentification → AUTH_TOKEN
   const authResp = await fetch(`${BASE}/api/auth/marchand`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ client_id: MERCHANT_CLIENT_ID, client_secret: MERCHANT_SECRET_KEY })
+    body: JSON.stringify({ client_id: clientId, client_secret: secretKey })
   });
   const authData = await authResp.json();
   if (!authData.token) throw new Error(authData.message || 'Échec authentification PlopPlop');
@@ -773,14 +828,23 @@ app.post('/api/recharges/initiate', requireAuth, async (req, res) => {
     const reference_id = `TK_${phone}_${Date.now()}_${Math.random().toString(36).substr(2,6)}`;
     const callbackUrl = `${req.protocol}://${req.get('host')}/api/recharges/callback`;
     const returnUrl   = `${req.protocol}://${req.get('host')}/?recharge_ref=${reference_id}`;
+    // Charger les crédentials spécifiques au paryaj
+    const platCode = await getPlatformCode(req);
+    const platRow = await getPlatform(platCode);
+    const platCreds = platRow ? {
+      deposit_client_id: platRow.deposit_client_id,
+      deposit_secret_key: platRow.deposit_secret_key,
+      plopplop_base: platRow.plopplop_base
+    } : {};
+    const effectiveClientId = platCreds.deposit_client_id || MERCHANT_CLIENT_ID;
     const plopData = await callPlopPlop('/api/paiement-marchand', {
-      client_id: MERCHANT_CLIENT_ID,
+      client_id: effectiveClientId,
       refference_id: reference_id,
       montant: montant,
       payment_method: methode.toUpperCase(), // MONCASH, NATCASH, KASHPAW
       callback_url: callbackUrl,
       return_url: returnUrl
-    });
+    }, platCreds);
     if (!plopData.status) throw new Error(plopData.message || 'Erreur paiement');
     await pool.query(
       `INSERT INTO recharges (player_phone, montant, methode, reference_id, transaction_id, statut) VALUES ($1, $2, $3, $4, $5, 'pending')`,
@@ -1532,11 +1596,23 @@ app.post('/api/retraits/demande', requireAuth, async (req, res) => {
     let apiMsg = 'En attente de traitement';
 
     // Traitement automatique via API pour Moncash et Natcash
-    if ((methode === 'moncash' || methode === 'natcash') && MERCHANT_CLIENT_ID && MERCHANT_SECRET_KEY && numero_mobile) {
+    // Charger les crédentials spécifiques au paryaj pour retrait
+    const platCodeRet = await getPlatformCode(req);
+    const platRowRet = await getPlatform(platCodeRet);
+    const platCredsRet = platRowRet ? {
+      withdraw_client_id: platRowRet.withdraw_client_id,
+      withdraw_secret_key: platRowRet.withdraw_secret_key,
+      deposit_client_id: platRowRet.deposit_client_id,
+      deposit_secret_key: platRowRet.deposit_secret_key,
+      plopplop_base: platRowRet.plopplop_base
+    } : {};
+    const effWithdrawId = platCredsRet.withdraw_client_id || platCredsRet.deposit_client_id || MERCHANT_CLIENT_ID;
+    const effWithdrawSecret = platCredsRet.withdraw_secret_key || platCredsRet.deposit_secret_key || MERCHANT_SECRET_KEY;
+    if ((methode === 'moncash' || methode === 'natcash') && effWithdrawId && effWithdrawSecret && numero_mobile) {
       try {
         const reference = `TK_${phone.replace(/\D/g,'')}_${Date.now()}`;
         const methodApi = methode === 'moncash' ? 'moncash' : 'natcash';
-        await executerRetraitPlopPlop(montant, methodApi, numero_mobile, reference);
+        await executerRetraitPlopPlop(montant, methodApi, numero_mobile, reference, platCredsRet);
         statut = 'approved';
         apiMsg = `✅ Retrait envoyé via ${methode} au ${numero_mobile}`;
       } catch(apiErr) {
@@ -2289,9 +2365,11 @@ app.get('/master/platforms', requireMaster, async (req, res) => {
 app.post('/master/platforms', requireMaster, async (req, res) => {
   try {
     const {
-      name, slogan, email, phone, address, server_url,
+      code, name, slogan, logo_url, email, phone, address, server_url,
       owner_name, owner_email, owner_phone, owner_pwd,
-      staff_code, football_api, plan, start_date, fee, notes
+      staff_code, football_api, plan, start_date, fee, notes,
+      bg_color, primary_color, text_color, login_images, scroll_messages, about_text,
+      deposit_client_id, deposit_secret_key, withdraw_client_id, withdraw_secret_key, plopplop_base
     } = req.body;
 
     if (!name || !owner_name || !owner_email) {
@@ -2305,19 +2383,25 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
     expiresAt.setDate(expiresAt.getDate() + days);
 
     const generatedStaffCode = staff_code || name.replace(/\s/g, '').toUpperCase().substring(0, 10) + '12';
+    const platformCode = (code || name.replace(/\s/g,'').toUpperCase().substring(0,12)).toUpperCase();
 
     const r = await pool.query(`
       INSERT INTO platforms
-        (name, slogan, email, phone, address, server_url,
+        (code, name, slogan, logo_url, email, phone, address, server_url,
          owner_name, owner_email, owner_phone, owner_pwd,
-         staff_code, football_api, plan, start_date, expires_at, fee, notes)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+         staff_code, football_api, plan, start_date, expires_at, fee, notes,
+         bg_color, primary_color, text_color, login_images, scroll_messages, about_text,
+         deposit_client_id, deposit_secret_key, withdraw_client_id, withdraw_secret_key, plopplop_base)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30)
       RETURNING *
     `, [
-      name, slogan||'', email||'', phone||'', address||'', server_url||'',
+      platformCode, name, slogan||'', logo_url||'', email||'', phone||'', address||'', server_url||'',
       owner_name, owner_email, owner_phone||'', owner_pwd||'',
       generatedStaffCode, football_api||'', plan||'test',
-      startDate, expiresAt, fee||0, notes||''
+      startDate, expiresAt, fee||0, notes||'',
+      bg_color||'', primary_color||'', text_color||'',
+      login_images||'[]', scroll_messages||'[]', about_text||'',
+      deposit_client_id||'', deposit_secret_key||'', withdraw_client_id||'', withdraw_secret_key||'', plopplop_base||''
     ]);
 
     const platform = r.rows[0];
@@ -2339,39 +2423,42 @@ app.put('/master/platforms/:id', requireMaster, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const {
-      name, slogan, email, phone, address, server_url,
+      name, slogan, logo_url, email, phone, address, server_url,
       owner_name, owner_email, owner_phone, owner_pwd,
       staff_code, football_api, plan, start_date, expires_at,
-      fee, paid, notes, active
+      fee, paid, notes, active,
+      bg_color, primary_color, text_color, login_images, scroll_messages, about_text,
+      deposit_client_id, deposit_secret_key, withdraw_client_id, withdraw_secret_key, plopplop_base
     } = req.body;
 
     const params = [
-      name, slogan||'', email||'', phone||'', address||'', server_url||'',
+      name, slogan||'', logo_url||'', email||'', phone||'', address||'', server_url||'',
       owner_name, owner_email, owner_phone||'',
       staff_code||'', football_api||'', plan||'test',
       start_date ? new Date(start_date) : new Date(),
       expires_at ? new Date(expires_at) : new Date(),
       fee||0, paid||0, notes||'', active !== undefined ? active : true,
+      bg_color||'', primary_color||'', text_color||'',
+      login_images||'[]', scroll_messages||'[]', about_text||'',
+      deposit_client_id||'', deposit_secret_key||'', withdraw_client_id||'', withdraw_secret_key||'', plopplop_base||'',
       id
     ];
 
     let q = `UPDATE platforms SET
-      name=$1, slogan=$2, email=$3, phone=$4, address=$5, server_url=$6,
-      owner_name=$7, owner_email=$8, owner_phone=$9,
-      staff_code=$10, football_api=$11, plan=$12,
-      start_date=$13, expires_at=$14, fee=$15, paid=$16,
-      notes=$17, active=$18, updated_at=NOW()
-      WHERE id=$19 RETURNING *`;
+      name=$1, slogan=$2, logo_url=$3, email=$4, phone=$5, address=$6, server_url=$7,
+      owner_name=$8, owner_email=$9, owner_phone=$10,
+      staff_code=$11, football_api=$12, plan=$13,
+      start_date=$14, expires_at=$15, fee=$16, paid=$17,
+      notes=$18, active=$19,
+      bg_color=$20, primary_color=$21, text_color=$22,
+      login_images=$23, scroll_messages=$24, about_text=$25,
+      deposit_client_id=$26, deposit_secret_key=$27, withdraw_client_id=$28, withdraw_secret_key=$29, plopplop_base=$30,
+      updated_at=NOW()
+      WHERE id=$31 RETURNING *`;
 
     if (owner_pwd) {
-      q = `UPDATE platforms SET
-        name=$1, slogan=$2, email=$3, phone=$4, address=$5, server_url=$6,
-        owner_name=$7, owner_email=$8, owner_phone=$9,
-        staff_code=$10, football_api=$11, plan=$12,
-        start_date=$13, expires_at=$14, fee=$15, paid=$16,
-        notes=$17, active=$18, owner_pwd=$20, updated_at=NOW()
-        WHERE id=$19 RETURNING *`;
       params.push(owner_pwd);
+      q = q.replace('updated_at=NOW()', `owner_pwd=$32, updated_at=NOW()`);
     }
 
     const r = await pool.query(q, params);
@@ -2496,17 +2583,27 @@ app.get('/master/platform-info', async (req, res) => {
 // Appelée au démarrage de index.html pour obtenir le nom de la plateforme
 app.get('/master/platform-public', async (req, res) => {
   try {
-    // Retourne la 1ère plateforme active correspondant à ce serveur
-    const host = req.get('host') || '';
-    const r = await pool.query(
-      "SELECT name, slogan, email, phone, address, staff_code FROM platforms WHERE active=TRUE AND expires_at > NOW() ORDER BY created_at ASC LIMIT 1"
-    );
-    if (!r.rows.length) {
-      return res.json({ platform: { name: 'Tonton Kondo', slogan: 'Paryaj ak konfyans', email: '', phone: '', address: '' } });
+    const pCode = (req.query.p || '').toUpperCase();
+    let platform;
+    if (pCode) {
+      const r = await pool.query(
+        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code,bg_color,primary_color,text_color,login_images,scroll_messages,about_text FROM platforms WHERE code=$1 AND active=TRUE AND expires_at > NOW()",
+        [pCode]
+      );
+      platform = r.rows[0];
     }
-    res.json({ platform: r.rows[0] });
+    if (!platform) {
+      const r = await pool.query(
+        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code,bg_color,primary_color,text_color,login_images,scroll_messages,about_text FROM platforms WHERE active=TRUE AND expires_at > NOW() ORDER BY created_at ASC LIMIT 1"
+      );
+      platform = r.rows[0];
+    }
+    if (!platform) {
+      return res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12', bg_color:'', primary_color:'', text_color:'', login_images:'[]', scroll_messages:'[]', about_text:'' } });
+    }
+    res.json({ platform });
   } catch(e) {
-    res.json({ platform: { name: 'Tonton Kondo', slogan: 'Paryaj ak konfyans', email: '', phone: '', address: '' } });
+    res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12', bg_color:'', primary_color:'', text_color:'', login_images:'[]', scroll_messages:'[]', about_text:'' } });
   }
 });
 
@@ -2662,7 +2759,9 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
     const {
       code, name, slogan, logo_url, email, phone, address, server_url,
       owner_name, owner_email, owner_pwd,
-      staff_code, football_api, plan, start_date, fee, notes
+      staff_code, football_api, plan, start_date, fee, notes,
+      bg_color, primary_color, text_color, login_images, scroll_messages, about_text,
+      deposit_client_id, deposit_secret_key, withdraw_client_id, withdraw_secret_key, plopplop_base
     } = req.body;
     if (!code || !name || !owner_name || !owner_email || !owner_pwd)
       return res.status(400).json({ error: 'Code, nom, email et mot de passe propriétaire obligatoires' });
@@ -2678,12 +2777,17 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
       INSERT INTO platforms
         (code,name,slogan,logo_url,email,phone,address,server_url,
          owner_name,owner_email,owner_pwd_hash,staff_code,football_api,
-         plan,start_date,expires_at,fee,notes)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+         plan,start_date,expires_at,fee,notes,
+         bg_color,primary_color,text_color,login_images,scroll_messages,about_text,
+         deposit_client_id,deposit_secret_key,withdraw_client_id,withdraw_secret_key,plopplop_base)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29)
       RETURNING *
     `, [platformCode,name,slogan||'',logo_url||'',email||'',phone||'',address||'',server_url||'',
         owner_name,owner_email,ownerHash,staffC,football_api||'',
-        plan||'test',startDate,expiresAt,fee||0,notes||'']);
+        plan||'test',startDate,expiresAt,fee||0,notes||'',
+        bg_color||'',primary_color||'',text_color||'',
+        login_images||'[]',scroll_messages||'[]',about_text||'',
+        deposit_client_id||'',deposit_secret_key||'',withdraw_client_id||'',withdraw_secret_key||'',plopplop_base||'']);
     if (fee && parseFloat(fee) > 0) {
       await pool.query(
         "INSERT INTO platform_payments (platform_id,platform_name,plan,amount,paid,mode) VALUES ($1,$2,$3,$4,FALSE,'création')",
@@ -2705,24 +2809,34 @@ app.put('/master/platforms/:id', requireMaster, async (req, res) => {
       name, slogan, logo_url, email, phone, address, server_url,
       owner_name, owner_email, owner_pwd,
       staff_code, football_api, plan, start_date, expires_at,
-      fee, paid, notes, active
+      fee, paid, notes, active,
+      bg_color, primary_color, text_color, login_images, scroll_messages, about_text,
+      deposit_client_id, deposit_secret_key, withdraw_client_id, withdraw_secret_key, plopplop_base
     } = req.body;
     const params = [
       name, slogan||'', logo_url||'', email||'', phone||'', address||'', server_url||'',
       owner_name, owner_email, staff_code||'', football_api||'', plan||'test',
       start_date ? new Date(start_date) : new Date(),
       expires_at ? new Date(expires_at) : new Date(),
-      fee||0, paid||0, notes||'', active !== undefined ? active : true, id
+      fee||0, paid||0, notes||'', active !== undefined ? active : true,
+      bg_color||'', primary_color||'', text_color||'',
+      login_images||'[]', scroll_messages||'[]', about_text||'',
+      deposit_client_id||'', deposit_secret_key||'', withdraw_client_id||'', withdraw_secret_key||'', plopplop_base||'',
+      id
     ];
     let q = `UPDATE platforms SET
       name=$1,slogan=$2,logo_url=$3,email=$4,phone=$5,address=$6,server_url=$7,
       owner_name=$8,owner_email=$9,staff_code=$10,football_api=$11,plan=$12,
-      start_date=$13,expires_at=$14,fee=$15,paid=$16,notes=$17,active=$18,updated_at=NOW()
-      WHERE id=$19 RETURNING *`;
+      start_date=$13,expires_at=$14,fee=$15,paid=$16,notes=$17,active=$18,
+      bg_color=$19,primary_color=$20,text_color=$21,
+      login_images=$22,scroll_messages=$23,about_text=$24,
+      deposit_client_id=$25,deposit_secret_key=$26,withdraw_client_id=$27,withdraw_secret_key=$28,plopplop_base=$29,
+      updated_at=NOW()
+      WHERE id=$30 RETURNING *`;
     if (owner_pwd) {
       const hash = await bcrypt.hash(owner_pwd, 10);
       params.push(hash);
-      q = q.replace('active=$18,updated_at=NOW()', 'active=$18,owner_pwd_hash=$20,updated_at=NOW()');
+      q = q.replace('updated_at=NOW()', 'owner_pwd_hash=$31,updated_at=NOW()');
     }
     const r = await pool.query(q, params);
     res.json({ success: true, platform: r.rows[0] });
@@ -2849,25 +2963,23 @@ app.get('/master/platform-public', async (req, res) => {
     let platform;
     if (pCode) {
       const r = await pool.query(
-        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code FROM platforms WHERE code=$1 AND active=TRUE AND expires_at > NOW()",
+        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code,bg_color,primary_color,text_color,login_images,scroll_messages,about_text FROM platforms WHERE code=$1 AND active=TRUE AND expires_at > NOW()",
         [pCode]
       );
       platform = r.rows[0];
     }
-    // Fallback: première plateforme active
     if (!platform) {
       const r = await pool.query(
-        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code FROM platforms WHERE active=TRUE AND expires_at > NOW() ORDER BY created_at ASC LIMIT 1"
+        "SELECT code,name,slogan,logo_url,email,phone,address,staff_code,bg_color,primary_color,text_color,login_images,scroll_messages,about_text FROM platforms WHERE active=TRUE AND expires_at > NOW() ORDER BY created_at ASC LIMIT 1"
       );
       platform = r.rows[0];
     }
-    // Fallback final: Tonton Kondo par défaut
     if (!platform) {
-      return res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12' } });
+      return res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12', bg_color:'', primary_color:'', text_color:'', login_images:'[]', scroll_messages:'[]', about_text:'' } });
     }
     res.json({ platform });
   } catch(e) {
-    res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12' } });
+    res.json({ platform: { code:'DEFAULT', name:'Tonton Kondo', slogan:'Paryaj ak konfyans', logo_url:'', email:'', phone:'', address:'', staff_code:'TONTONKONDO12', bg_color:'', primary_color:'', text_color:'', login_images:'[]', scroll_messages:'[]', about_text:'' } });
   }
 });
 

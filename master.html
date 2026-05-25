@@ -434,6 +434,72 @@ tr:hover td{background:rgba(255,255,255,.02);}
           </div>
         </div>
 
+        <!-- THÈME & COULEURS -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-palette"></i> THÈME & COULEURS</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Laissez vide pour utiliser les couleurs par défaut. Format: #hexcode (ex: #061a2e)</div>
+          <div class="fgrid">
+            <div class="fg">
+              <label>COULEUR FOND (bg)</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="n-bg-picker" value="#061a2e" oninput="document.getElementById('n-bg-color').value=this.value" style="width:44px;height:38px;padding:2px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;">
+                <input type="text" id="n-bg-color" placeholder="#061a2e" oninput="syncColorPicker('n-bg-color','n-bg-picker')" style="flex:1;">
+              </div>
+            </div>
+            <div class="fg">
+              <label>COULEUR PRIMAIRE (boutons/accents)</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="n-primary-picker" value="#f5c800" oninput="document.getElementById('n-primary-color').value=this.value" style="width:44px;height:38px;padding:2px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;">
+                <input type="text" id="n-primary-color" placeholder="#f5c800" oninput="syncColorPicker('n-primary-color','n-primary-picker')" style="flex:1;">
+              </div>
+            </div>
+            <div class="fg">
+              <label>COULEUR TEXTE PRINCIPAL</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="n-text-picker" value="#ffffff" oninput="document.getElementById('n-text-color').value=this.value" style="width:44px;height:38px;padding:2px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;">
+                <input type="text" id="n-text-color" placeholder="#ffffff" oninput="syncColorPicker('n-text-color','n-text-picker')" style="flex:1;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMAGES & MESSAGES PAGE CONNEXION -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-images"></i> IMAGES & MESSAGES — PAGE CONNEXION</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Les images du slideshow et les messages défilants seront propres à ce paryaj.</div>
+          <div class="fg fg-full" style="margin-bottom:14px;">
+            <label>URLS DES IMAGES (une par ligne)</label>
+            <textarea id="n-login-images" rows="5" placeholder="https://i.imgur.com/image1.jpg&#10;https://i.imgur.com/image2.jpg&#10;https://i.imgur.com/image3.png" style="width:100%;padding:11px 14px;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;resize:vertical;outline:none;font-family:inherit;" oninput="previewLoginImages()"></textarea>
+          </div>
+          <div id="img-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;"></div>
+          <div class="fg fg-full">
+            <label>MESSAGES DÉFILANTS (un par ligne)</label>
+            <textarea id="n-scroll-messages" rows="4" placeholder="Byenveni sou MAMAPARYAJ !&#10;Jwe responsab — 18 an ak plis sèlman&#10;Kontakte nou: +509 00 00 0000" style="width:100%;padding:11px 14px;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;resize:vertical;outline:none;font-family:inherit;"></textarea>
+          </div>
+        </div>
+
+        <!-- À PROPOS -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-info-circle"></i> TEXTE "À PROPOS" DU PARYAJ</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Ce texte s'affichera quand un joueur clique sur "À propos". Si vide, un texte générique sera affiché.</div>
+          <div class="fg fg-full">
+            <textarea id="n-about-text" rows="6" placeholder="Ekri yon prezantasyon pou paryaj ou a... (nom, adres, istwa, enfòmasyon kontakt, règleman...)" style="width:100%;padding:11px 14px;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;resize:vertical;outline:none;font-family:inherit;"></textarea>
+          </div>
+        </div>
+
+        <!-- APIs DÉPÔT / RETRAIT -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-exchange-alt"></i> APIs DÉPÔT & RETRAIT (PlopPlop / Moncash / Natcash)</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Laissez vide pour utiliser les crédentials globaux du serveur. Remplissez pour que ce paryaj utilise ses propres comptes marchands.</div>
+          <div class="fgrid">
+            <div class="fg"><label>URL BASE PLOPPLOP</label><input type="text" id="n-plopplop-base" placeholder="https://plopplop.solutionip.app"></div>
+            <div class="fg"><label>CLIENT ID DÉPÔT</label><input type="text" id="n-deposit-client-id" placeholder="client_id marchand dépôt"></div>
+            <div class="fg"><label>SECRET KEY DÉPÔT</label><input type="password" id="n-deposit-secret-key" placeholder="••••••••••••"></div>
+            <div class="fg"><label>CLIENT ID RETRAIT</label><input type="text" id="n-withdraw-client-id" placeholder="client_id marchand retrait (si différent)"></div>
+            <div class="fg"><label>SECRET KEY RETRAIT</label><input type="password" id="n-withdraw-secret-key" placeholder="•••••••••••• (si différent)"></div>
+          </div>
+        </div>
+
         <div style="display:flex;gap:12px;margin-top:6px;"><button class="btn btn-gold" id="btn-create" onclick="createPlatform()"><i class="fas fa-save"></i> Créer le paryaj</button><button class="btn btn-outline" onclick="resetForm()"><i class="fas fa-times"></i> Réinitialiser</button></div>
         <div id="create-result" style="display:none;margin-top:18px;background:rgba(0,229,155,.08);border:1px solid rgba(0,229,155,.25);border-radius:14px;padding:20px;">
           <div style="font-size:1rem;font-weight:700;color:var(--green);margin-bottom:14px;"><i class="fas fa-check-circle"></i> Paryaj créé avec succès !</div>
@@ -539,8 +605,17 @@ let selPlanVal = 'test';
 function selPlan(plan) { selPlanVal = plan; document.getElementById('n-plan').value = plan; document.querySelectorAll('.plan').forEach(c=>c.classList.toggle('on',c.dataset.plan===plan)); document.getElementById('n-fee').value = CFG['price_'+plan]||0; }
 function onCodeInput() { const code = (document.getElementById('n-code').value||'').toUpperCase().replace(/\s/g,''); document.getElementById('n-code').value = code; const box = document.getElementById('link-prev-box'); if(code) { box.style.display='block'; document.getElementById('link-prev-url').textContent = `${API}/index.html?p=${code}`; } else box.style.display='none'; updatePreview(); }
 function updatePreview() { const name = document.getElementById('n-name').value.trim(); const slogan = document.getElementById('n-slogan').value.trim(); const logo = document.getElementById('n-logo').value.trim(); const code = document.getElementById('n-code').value.trim(); const box = document.getElementById('preview-box'); if(!name && !code) { box.style.display='none'; return; } box.style.display='block'; document.getElementById('prev-name').innerHTML = (name||code).toUpperCase(); document.getElementById('prev-slogan').innerHTML = slogan||'Paryaj ak konfyans'; const ini = document.getElementById('prev-initials'); ini.innerHTML = (name||code).substring(0,2).toUpperCase(); const lw = document.getElementById('prev-logo-wrap'); const limg = document.getElementById('prev-logo-img'); if(logo && logo.match(/^https?:\/\//)) { lw.style.display='block'; ini.style.display='none'; limg.src=logo; limg.onerror=()=>{ lw.style.display='none'; ini.style.display='flex'; }; } else { lw.style.display='none'; ini.style.display='flex'; } }
-async function createPlatform() { const al = document.getElementById('new-alert'); al.style.display='none'; const code = (document.getElementById('n-code').value||'').trim().toUpperCase(); const name = document.getElementById('n-name').value.trim(); const owner_name = document.getElementById('n-owner-name').value.trim(); const owner_email = document.getElementById('n-owner-email').value.trim(); const owner_pwd = document.getElementById('n-owner-pwd').value; if(!code || !name || !owner_name || !owner_email || !owner_pwd) { al.style.display='block'; al.className='alert err'; al.textContent='❌ Tous les champs avec * sont obligatoires'; return; } const btn = document.getElementById('btn-create'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Création...'; try { const payload = { code, name, slogan:document.getElementById('n-slogan').value.trim(), logo_url:document.getElementById('n-logo').value.trim(), email:document.getElementById('n-email').value.trim(), phone:document.getElementById('n-phone').value.trim(), address:document.getElementById('n-address').value.trim(), server_url:document.getElementById('n-server').value.trim()||API, owner_name, owner_email, owner_phone:document.getElementById('n-owner-phone').value.trim(), owner_pwd, staff_code:document.getElementById('n-staff').value.trim()||(code+'12'), football_api:document.getElementById('n-football').value.trim(), plan:selPlanVal, start_date:document.getElementById('n-start').value, fee:parseFloat(document.getElementById('n-fee').value)||0, notes:document.getElementById('n-notes').value.trim() }; const d = await req('POST','/master/platforms', payload); const p = d.platform; document.getElementById('cr-name').innerHTML = name.toUpperCase(); document.getElementById('cr-owner').innerHTML = owner_name; document.getElementById('cr-creds').innerHTML = `Email: ${owner_email}<br>Mot de passe: ${owner_pwd}`; document.getElementById('cr-staff').innerHTML = payload.staff_code; const link1 = `${API}/index.html?p=${code}`; const link2 = `${API}/app.html?p=${code}`; document.getElementById('cr-link1').innerHTML = link1; document.getElementById('cr-link2').innerHTML = link2; document.getElementById('create-result').style.display='block'; const r2 = await req('GET','/master/platforms'); allPlats = r2.platforms; } catch(e) { al.style.display='block'; al.className='alert err'; al.textContent='❌ '+e.message; } finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Créer le paryaj'; } }
-function resetForm() { ['n-code','n-name','n-logo','n-slogan','n-email','n-phone','n-address','n-owner-name','n-owner-email','n-owner-phone','n-owner-pwd','n-staff','n-football','n-notes'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; }); document.getElementById('n-server').value = API; document.getElementById('n-fee').value='0'; document.getElementById('n-start').value = new Date().toISOString().split('T')[0]; selPlan('test'); document.getElementById('preview-box').style.display='none'; document.getElementById('link-prev-box').style.display='none'; document.getElementById('create-result').style.display='none'; }
+async function createPlatform() { const al = document.getElementById('new-alert'); al.style.display='none'; const code = (document.getElementById('n-code').value||'').trim().toUpperCase(); const name = document.getElementById('n-name').value.trim(); const owner_name = document.getElementById('n-owner-name').value.trim(); const owner_email = document.getElementById('n-owner-email').value.trim(); const owner_pwd = document.getElementById('n-owner-pwd').value; if(!code || !name || !owner_name || !owner_email || !owner_pwd) { al.style.display='block'; al.className='alert err'; al.textContent='❌ Tous les champs avec * sont obligatoires'; return; } const btn = document.getElementById('btn-create'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Création...'; try { const rawImgs=(document.getElementById('n-login-images').value||'').split('\n').map(s=>s.trim()).filter(s=>s.startsWith('http')); const rawMsgs=(document.getElementById('n-scroll-messages').value||'').split('\n').map(s=>s.trim()).filter(Boolean); const payload = { code, name, slogan:document.getElementById('n-slogan').value.trim(), logo_url:document.getElementById('n-logo').value.trim(), email:document.getElementById('n-email').value.trim(), phone:document.getElementById('n-phone').value.trim(), address:document.getElementById('n-address').value.trim(), server_url:document.getElementById('n-server').value.trim()||API, owner_name, owner_email, owner_phone:document.getElementById('n-owner-phone').value.trim(), owner_pwd, staff_code:document.getElementById('n-staff').value.trim()||(code+'12'), football_api:document.getElementById('n-football').value.trim(), plan:selPlanVal, start_date:document.getElementById('n-start').value, fee:parseFloat(document.getElementById('n-fee').value)||0, notes:document.getElementById('n-notes').value.trim(), bg_color:document.getElementById('n-bg-color').value.trim(), primary_color:document.getElementById('n-primary-color').value.trim(), text_color:document.getElementById('n-text-color').value.trim(), login_images:JSON.stringify(rawImgs), scroll_messages:JSON.stringify(rawMsgs), about_text:document.getElementById('n-about-text').value.trim(), plopplop_base:document.getElementById('n-plopplop-base').value.trim(), deposit_client_id:document.getElementById('n-deposit-client-id').value.trim(), deposit_secret_key:document.getElementById('n-deposit-secret-key').value, withdraw_client_id:document.getElementById('n-withdraw-client-id').value.trim(), withdraw_secret_key:document.getElementById('n-withdraw-secret-key').value }; const d = await req('POST','/master/platforms', payload); const p = d.platform; document.getElementById('cr-name').innerHTML = name.toUpperCase(); document.getElementById('cr-owner').innerHTML = owner_name; document.getElementById('cr-creds').innerHTML = `Email: ${owner_email}<br>Mot de passe: ${owner_pwd}`; document.getElementById('cr-staff').innerHTML = payload.staff_code; const link1 = `${API}/index.html?p=${code}`; const link2 = `${API}/app.html?p=${code}`; document.getElementById('cr-link1').innerHTML = link1; document.getElementById('cr-link2').innerHTML = link2; document.getElementById('create-result').style.display='block'; const r2 = await req('GET','/master/platforms'); allPlats = r2.platforms; } catch(e) { al.style.display='block'; al.className='alert err'; al.textContent='❌ '+e.message; } finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Créer le paryaj'; } }
+function syncColorPicker(inputId, pickerId) {
+  const val = document.getElementById(inputId).value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) document.getElementById(pickerId).value = val;
+}
+function previewLoginImages() {
+  const box = document.getElementById('img-preview');
+  const urls = (document.getElementById('n-login-images').value||'').split('\n').map(s=>s.trim()).filter(s=>s.startsWith('http'));
+  box.innerHTML = urls.slice(0,8).map(u=>`<div style="position:relative;"><img src="${u}" style="width:80px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--border);" onerror="this.style.display='none'"><div style="font-size:9px;color:var(--muted);text-align:center;margin-top:3px;">#${urls.indexOf(u)+1}</div></div>`).join('');
+}
+function resetForm() { ['n-code','n-name','n-logo','n-slogan','n-email','n-phone','n-address','n-owner-name','n-owner-email','n-owner-phone','n-owner-pwd','n-staff','n-football','n-notes','n-bg-color','n-primary-color','n-text-color','n-about-text','n-plopplop-base','n-deposit-client-id','n-deposit-secret-key','n-withdraw-client-id','n-withdraw-secret-key'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; }); const imgTa=document.getElementById('n-login-images'); if(imgTa) imgTa.value=''; const msgTa=document.getElementById('n-scroll-messages'); if(msgTa) msgTa.value=''; document.getElementById('n-server').value = API; document.getElementById('n-fee').value='0'; document.getElementById('n-start').value = new Date().toISOString().split('T')[0]; selPlan('test'); document.getElementById('preview-box').style.display='none'; document.getElementById('link-prev-box').style.display='none'; document.getElementById('create-result').style.display='none'; document.getElementById('img-preview').innerHTML=''; }
 async function loadSubs() { try { const d = await req('GET','/master/platforms'); const tb = document.getElementById('subs-body'); if(!d.platforms.length) tb.innerHTML='<tr><td colspan="5">Aucune</td></tr>'; else tb.innerHTML = d.platforms.map(p=>`<tr><td>${p.name}</td><td>${p.owner_name}</td><td>${p.plan}</td><td>${p.expires_at?p.expires_at.split('T')[0]:'-'}</td><td>${p.active?'Actif':'Suspendu'}</td></tr>`).join(''); } catch(e){} }
 async function loadExp() { try { const d = await req('GET','/master/platforms'); const list = d.platforms.filter(p=>p.active && p.jours_restants>=0 && p.jours_restants<=7); document.getElementById('exp-list').innerHTML = list.length?list.map(p=>`<div class="prow"><div>${p.name}</div><div>J-${p.jours_restants}</div><button onclick="quickRenew(${p.id})">Renouveler</button></div>`).join(''):'<div class="empty">Aucune expiration proche</div>'; } catch(e){} }
 async function loadRev() { try { const d = await req('GET','/master/payments'); const total = d.payments.filter(p=>p.paid).reduce((a,b)=>a+parseFloat(b.amount),0); document.getElementById('rv-total').innerHTML = total.toLocaleString(); document.getElementById('rev-bars').innerHTML = '<div>Revenus affichés</div>'; } catch(e){} }
