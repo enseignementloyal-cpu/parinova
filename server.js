@@ -2372,8 +2372,8 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
       deposit_client_id, deposit_secret_key, withdraw_client_id, withdraw_secret_key, plopplop_base
     } = req.body;
 
-    if (!name || !owner_name || !owner_email) {
-      return res.status(400).json({ error: 'Nom plateforme, nom et email propriétaire obligatoires' });
+    if (!code || !name || !owner_name || !owner_email || !owner_pwd) {
+      return res.status(400).json({ error: 'Code, nom, email et mot de passe propriétaire obligatoires' });
     }
 
     const PLAN_DAYS = { test: 7, mensuel: 30, semestriel: 180, annuel: 365 };
@@ -2382,13 +2382,14 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
     const expiresAt = new Date(startDate);
     expiresAt.setDate(expiresAt.getDate() + days);
 
-    const generatedStaffCode = staff_code || name.replace(/\s/g, '').toUpperCase().substring(0, 10) + '12';
-    const platformCode = (code || name.replace(/\s/g,'').toUpperCase().substring(0,12)).toUpperCase();
+    const platformCode = code.toUpperCase().replace(/\s/g,'');
+    const generatedStaffCode = staff_code || platformCode + '12';
+    const ownerHash = await bcrypt.hash(owner_pwd, 10);
 
     const r = await pool.query(`
       INSERT INTO platforms
         (code, name, slogan, logo_url, email, phone, address, server_url,
-         owner_name, owner_email, owner_phone, owner_pwd,
+         owner_name, owner_email, owner_phone, owner_pwd_hash,
          staff_code, football_api, plan, start_date, expires_at, fee, notes,
          bg_color, primary_color, text_color, login_images, scroll_messages, about_text,
          deposit_client_id, deposit_secret_key, withdraw_client_id, withdraw_secret_key, plopplop_base)
@@ -2396,7 +2397,7 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
       RETURNING *
     `, [
       platformCode, name, slogan||'', logo_url||'', email||'', phone||'', address||'', server_url||'',
-      owner_name, owner_email, owner_phone||'', owner_pwd||'',
+      owner_name, owner_email, owner_phone||'', ownerHash,
       generatedStaffCode, football_api||'', plan||'test',
       startDate, expiresAt, fee||0, notes||'',
       bg_color||'', primary_color||'', text_color||'',
@@ -2406,7 +2407,6 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
 
     const platform = r.rows[0];
 
-    // Enregistrer paiement si frais > 0
     if (fee && parseFloat(fee) > 0) {
       await pool.query(
         "INSERT INTO platform_payments (platform_id, platform_name, plan, amount, paid, mode) VALUES ($1,$2,$3,$4,FALSE,'création')",
@@ -2415,7 +2415,10 @@ app.post('/master/platforms', requireMaster, async (req, res) => {
     }
 
     res.json({ success: true, platform });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    if (e.code === '23505') return res.status(409).json({ error: 'Code ou email déjà utilisé' });
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // ── ROUTE: MODIFIER UNE PLATEFORME ────────────────────────
@@ -2457,8 +2460,9 @@ app.put('/master/platforms/:id', requireMaster, async (req, res) => {
       WHERE id=$31 RETURNING *`;
 
     if (owner_pwd) {
-      params.push(owner_pwd);
-      q = q.replace('updated_at=NOW()', `owner_pwd=$32, updated_at=NOW()`);
+      const hash = await bcrypt.hash(owner_pwd, 10);
+      params.push(hash);
+      q = q.replace('updated_at=NOW()', `owner_pwd_hash=$32, updated_at=NOW()`);
     }
 
     const r = await pool.query(q, params);
